@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.*;
 import real.health.Patient.*;
+import real.health.SQL.HealthConn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -124,13 +125,8 @@ public class MedicalHistoryTab {
                         // Upload the new medication to the SQL server
                         try {
                             // Load the MySQL JDBC driver
-                            Class.forName("com.mysql.cj.jdbc.Driver");
-
-                            // Create a connection to the database
-                            String url = "jdbc:mysql://35.161.231.206:3306/patient";
-                            String dbUsername = "Hunter";
-                            String dbPassword = "H@mmer2525";
-                            Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+                            HealthConn newConnection = new HealthConn();
+                            Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new medication
                             String sql = "INSERT INTO medications (id, medication, dose, frequency, datePrescribed) VALUES (?, ?, ?, ?, ?)";

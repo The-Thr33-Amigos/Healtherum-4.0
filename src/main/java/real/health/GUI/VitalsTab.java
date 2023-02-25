@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import real.health.Patient.*;
+import real.health.SQL.HealthConn;
 import real.health.GUI.*;
 
 public class VitalsTab {
@@ -16,14 +17,8 @@ public class VitalsTab {
         // populate the table with the patient's current medications
         try {
             // Load the MySQL JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Create a connection to the database
-            String url = "jdbc:mysql://35.161.231.206:3306/patient";
-            String dbUsername = "Hunter";
-            String dbPassword = "H@mmer2525";
-            Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
-
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
             // Create a SQL statement to retrieve the patient's vital sign readings
             String sql = "SELECT id, weight, height, sysbp, diabp, hr, oxygen FROM vitals WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -114,13 +109,8 @@ public class VitalsTab {
                         // Upload the new medication to the SQL server
                         try {
                             // Load the MySQL JDBC driver
-                            Class.forName("com.mysql.cj.jdbc.Driver");
-
-                            // Create a connection to the database
-                            String url = "jdbc:mysql://35.161.231.206:3306/patient";
-                            String dbUsername = "Hunter";
-                            String dbPassword = "H@mmer2525";
-                            Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+                            HealthConn newConnection = new HealthConn();
+                            Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new vital
                             String sql = "INSERT INTO vitals (id, weight, height, sysbp, diabp, hr, oxygen) VALUES (?, ?, ?, ?, ?, ?, ?)";

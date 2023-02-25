@@ -372,7 +372,7 @@ public class App extends JFrame {
         frame.setVisible(true);
     }
 
-    private void patientInformationSystem(String id) {
+    private void patientInformationSystem(String id) throws ClassNotFoundException {
         setTitle("Patient Information System");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

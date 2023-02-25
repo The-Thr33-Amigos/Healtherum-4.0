@@ -4,13 +4,15 @@ import java.awt.*;
 import javax.swing.*;
 
 import real.health.Patient.Patient;
+import real.health.SQL.HealthConn;
+
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 
 public class PatientInformation {
-    public JComponent createPatientInformationTab(String id) {
+    public JComponent createPatientInformationTab(String id) throws ClassNotFoundException {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -57,9 +59,9 @@ public class PatientInformation {
         constraints.gridy = 6;
         panel.add(mailingAddressField, constraints);
 
+        HealthConn newConnection = new HealthConn();
         // Fetch the patient information from the SQL database using the patient ID
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://35.161.231.206:3306/patient", "Tyler",
-                "Penis@Penis.com");
+        try (Connection conn = newConnection.connect();
                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM basic WHERE id = ?")) {
             stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -126,12 +128,8 @@ public class PatientInformation {
                 // Save the updated patient information to the SQL database
                 try {
                     // Load the MySQL JDBC driver
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    // Create a connection to the database
-                    String url = "jdbc:mysql://35.161.231.206:3306/patient";
-                    String dbusername = "Hunter";
-                    String dbpass = "H@mmer2525";
-                    Connection con = DriverManager.getConnection(url, dbusername, dbpass);
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
 
                     // Create a SQL statement to insert the user's information
                     String sql = "UPDATE basic SET name=?, email=?, phone=?, mailing=? WHERE id=?";
