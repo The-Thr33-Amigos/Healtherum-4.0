@@ -4,6 +4,7 @@
 package real.health;
 
 import real.health.Patient.*;
+import real.health.SQL.HealthConn;
 import real.health.GUI.*;
 
 import java.sql.ResultSet;
@@ -176,14 +177,13 @@ public class App extends JFrame {
                     // Use SQL
                     try {
                         // Load the MySQL JDBC driver
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        // Create a connection to the database
-                        String url = "jdbc:mysql://35.161.231.206:3306/patient";
-                        String username = "Hunter";
-                        String pass = "H@mmer2525";
-                        Connection con = DriverManager.getConnection(url, username, pass);
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
 
-                        String id = "23535fd9g99wwdsg";
+                        UserPass newUser = new UserPass(user, password);
+                        String hash = newUser.hashGen();
+
+                        String id = hash;
 
                         // Create a SQL statement to insert the user's information
                         String sql = "INSERT INTO basic (id, name, email, phone, bdate, bio, race, mailing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

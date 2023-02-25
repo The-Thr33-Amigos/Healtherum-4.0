@@ -29,7 +29,7 @@ public class VitalsTab {
                     new Object[] { "weight", "height", "sysbp", "diabp", "hr", "oxygen" }, 0);
             // Populate the table model with the retrieved data
             while (result.next()) {
-                model.addRow(new Object[] { id, result.getDouble(1), result.getInt(2),
+                model.addRow(new Object[] { result.getDouble(1), result.getInt(2),
                         result.getInt(3), result.getInt(4), result.getInt(5), result.getDouble(6) });
             }
 
