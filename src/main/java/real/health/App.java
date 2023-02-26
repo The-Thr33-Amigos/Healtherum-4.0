@@ -70,6 +70,7 @@ public class App extends JFrame {
         newUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createNewUser();
+                frame.dispose();
             }
         });
         constraints.gridx = 0;
@@ -136,6 +137,8 @@ public class App extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dialog.dispose();
+                homeScreen();
+
             }
         });
 
@@ -315,13 +318,8 @@ public class App extends JFrame {
 
                 try {
                     // Load the MySQL JDBC driver
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-
-                    // Create a connection to the database
-                    String url = "jdbc:mysql://35.161.231.206:3306/patient";
-                    String dbUsername = "Hunter";
-                    String dbPassword = "H@mmer2525";
-                    Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
 
                     // Create a prepared statement to query the database for the user's login
                     // credentials
@@ -367,6 +365,7 @@ public class App extends JFrame {
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                homeScreen();
                 frame.dispose();
             }
         });
