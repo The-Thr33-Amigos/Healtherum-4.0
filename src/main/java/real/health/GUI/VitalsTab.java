@@ -20,7 +20,7 @@ public class VitalsTab {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
             // Create a SQL statement to retrieve the patient's vital sign readings
-            String sql = "SELECT id, weight, height, sysbp, diabp, hr, oxygen FROM vitals WHERE id = ?";
+            String sql = "SELECT weight, height, sysbp, diabp, hr, oxygen FROM vitals WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
@@ -126,7 +126,7 @@ public class VitalsTab {
 
                             // Refresh the vital table to show the newly added vital
                             DefaultTableModel tableModel = (DefaultTableModel) vitalSigns.getModel();
-                            tableModel.addRow(new Object[] { id, weight, height, sysbp, diabp, heartRate, oxygen });
+                            tableModel.addRow(new Object[] { weight, height, sysbp, diabp, heartRate, oxygen });
 
                             // Clean up resources
                             statement.close();
