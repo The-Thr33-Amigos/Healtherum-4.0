@@ -42,8 +42,6 @@ public class MedicalHistoryTab {
 
         try {
             // Load the MySQL JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
