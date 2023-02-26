@@ -164,7 +164,7 @@ public class PatientInformation {
         summaryPanel.add(nameField);
         summaryPanel.add(new JLabel("Date of Birth:"));
         summaryPanel.add(dobField);
-        summaryPanel.add(new JLabel("Gender:"));
+        summaryPanel.add(new JLabel("Biological Sex:"));
         summaryPanel.add(genderField);
         summaryPanel.add(new JLabel("Ethnicity:"));
         summaryPanel.add(ethnicityField);
