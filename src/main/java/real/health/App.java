@@ -62,6 +62,7 @@ public class App extends JFrame {
                 frame.dispose();
             }
         });
+        
         constraints.gridx = 0;
         constraints.gridy = 2;
         panel.add(existingUserButton, constraints);
