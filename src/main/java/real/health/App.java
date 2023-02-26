@@ -413,6 +413,8 @@ public class App extends JFrame {
 
     }
 
+    // TODO: Fix window popping up in upper left corner, replace current window instead
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new App());
 
