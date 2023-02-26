@@ -45,10 +45,8 @@ public class MedicalHistoryTab {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Create a connection to the database
-            String url = "jdbc:mysql://35.161.231.206:3306/patient";
-            String dbUsername = "Hunter";
-            String dbPassword = "H@mmer2525";
-            Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
 
             // Create a SQL statement to retrieve the patient's current medications
             String sql = "SELECT medication, dose, frequency, datePrescribed FROM medications WHERE id = ?";
