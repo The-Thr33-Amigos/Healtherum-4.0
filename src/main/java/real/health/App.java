@@ -26,6 +26,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
+import java.util.Scanner;
+
 public class App extends JFrame {
     private JTabbedPane tabs;
 
@@ -180,10 +182,13 @@ public class App extends JFrame {
                         HealthConn newConnection = new HealthConn();
                         Connection con = newConnection.connect();
 
-                        UserPass newUser = new UserPass(user, password);
-                        String hash = newUser.hashGen();
+                        // UserPass newUser = new UserPass(user, password);
+                        // String hash = newUser.hashGen();
 
-                        String id = hash;
+                        Scanner scan = new Scanner(System.in);
+                        System.out.print("Enter id: ");
+
+                        String id = scan.nextLine();
 
                         // Create a SQL statement to insert the user's information
                         String sql = "INSERT INTO basic (id, name, email, phone, bdate, bio, race, mailing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
