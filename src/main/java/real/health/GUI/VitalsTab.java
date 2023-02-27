@@ -26,7 +26,7 @@ public class VitalsTab {
             ResultSet result = statement.executeQuery();
 
             DefaultTableModel model = new DefaultTableModel(
-                    new Object[] { "weight", "height", "sysbp", "diabp", "hr", "oxygen" }, 0);
+                    new Object[] { "Weight", "Height", "Systemic Blood Pressure", "Diastolic Blood Pressure", "Heart Rate", "Oxygen" }, 0);
             // Populate the table model with the retrieved data
             while (result.next()) {
                 model.addRow(new Object[] { result.getDouble(1), result.getInt(2),
@@ -74,12 +74,12 @@ public class VitalsTab {
                 addVitalFrame.add(heightLabel);
                 addVitalFrame.add(heightField);
 
-                JLabel sysbpLabel = new JLabel("sysbp");
+                JLabel sysbpLabel = new JLabel("Systemic Blood Pressure");
                 JTextField sysbpField = new JTextField();
                 addVitalFrame.add(sysbpLabel);
                 addVitalFrame.add(sysbpField);
 
-                JLabel diabpLabel = new JLabel("diabp");
+                JLabel diabpLabel = new JLabel("Diastolic Blood Pressure");
                 JTextField diabpField = new JTextField();
                 addVitalFrame.add(diabpLabel);
                 addVitalFrame.add(diabpField);
