@@ -61,6 +61,7 @@ public class VitalsTab {
                 addVitalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 addVitalFrame.setSize(400, 200);
                 addVitalFrame.setLayout(new GridLayout(7, 2, 5, 5));
+                addVitalFrame.setLocationRelativeTo(null);
 
                 // Add form components for entering the medication details
                 JLabel weightLabel = new JLabel("Weight");
