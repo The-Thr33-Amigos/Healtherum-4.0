@@ -17,7 +17,6 @@ public class LabResultsTab {
         model.addColumn("Test");
         model.addColumn("Result");
         model.addColumn("Date");
-        model.addColumn("Reference Ranges");
         model.addColumn("Test Interpretation");
         model.addColumn("Date of Report");
         model.addColumn("Signature");
@@ -27,34 +26,12 @@ public class LabResultsTab {
         JScrollPane scrollPane = new JScrollPane(table);
         labResultsPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Read lab results from CSV file
-        // String filePath = "lab_results.csv";
-        // try (Reader reader = Files.newBufferedReader(Paths.get(filePath));
-        // CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
-        // for (CSVRecord csvRecord : csvParser) {
-        // // Accessing values by the names assigned to each column
-        // String test = csvRecord.get("Test");
-        // String result = csvRecord.get("Result");
-        // String date = csvRecord.get("Date");
-        // String referenceRanges = csvRecord.get("Reference Ranges");
-        // String testInterpretation = csvRecord.get("Test Interpretation");
-        // String dateOfReport = csvRecord.get("Date of Report");
-        // String signature = csvRecord.get("Signature");
-        // String comments = csvRecord.get("Comments");
 
-        // // Add the lab results to the table
-        // model.addRow(new Object[] { test, result, date, referenceRanges,
-        // testInterpretation, dateOfReport,
-        // signature, comments });
-        // }
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
 
         // Hardcode example lab results
-        model.addRow(new Object[] { "Complete Blood Count", "Normal", "02/01/2023", "4.5 - 5.5 x 10^6/uL",
+        model.addRow(new Object[] { "Complete Blood Count", "Normal", "02/01/2023",
                 "No abnormalities detected", "02/05/2023", "Dr. Smith", "" });
-        model.addRow(new Object[] { "Liver Function Test", "Elevated", "02/01/2023", "0 - 40 U/L",
+        model.addRow(new Object[] { "Liver Function Test", "Elevated", "02/01/2023",
                 "Further testing recommended", "02/05/2023", "Dr. Johnson", "Consult with liver specialist" });
 
         // Test Information

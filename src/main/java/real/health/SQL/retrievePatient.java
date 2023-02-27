@@ -60,6 +60,7 @@ public class retrievePatient {
                 String mailing = rs.getString("mailing");
                 tempPatient.setBasicInfo(first, last, email, phone, bdate, bio, mailing, race);
             }
+            conn.close();
         }
         catch (Exception e) {
             System.out.println(e);
