@@ -62,7 +62,7 @@ public class App extends JFrame {
                 frame.dispose();
             }
         });
-        
+
         constraints.gridx = 0;
         constraints.gridy = 2;
         panel.add(existingUserButton, constraints);
@@ -154,13 +154,60 @@ public class App extends JFrame {
 
     public JPanel createAccountPanel(String name, String bdate, String email, String phone, String bio,
             String mailing, String race) {
-        JPanel panel2 = new JPanel(new GridLayout(0, 2));
+        JPanel panel2 = new JPanel(new GridLayout(3, 2));
+        panel2.setPreferredSize(new Dimension(300, 100));
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+
+
         JLabel usernameLabel = new JLabel("Username:");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        panel2.add(usernameLabel, constraints);
+
         JTextField usernameField = new JTextField();
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        panel2.add(usernameField, constraints);
+
         JLabel passwordLabel = new JLabel("Password:");
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        panel2.add(passwordLabel, constraints);
+
         JPasswordField passwordField = new JPasswordField();
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        panel2.add(passwordField, constraints);
+
         JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        panel2.add(confirmPasswordLabel, constraints);
+
         JPasswordField confirmPasswordField = new JPasswordField();
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        panel2.add(confirmPasswordField, constraints);
+
+        JButton loginButton = new JButton("Create");
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        constraints.gridwidth = 1;
+        panel2.add(loginButton, constraints);
+
+        JButton cancelButton = new JButton("Cancel");
+        constraints.gridx = 2;
+        constraints.gridy = 3;
+        constraints.gridwidth = 1;
+        panel2.add(cancelButton, constraints);
+
 
         panel2.add(usernameLabel);
         panel2.add(usernameField);
@@ -168,9 +215,10 @@ public class App extends JFrame {
         panel2.add(passwordField);
         panel2.add(confirmPasswordLabel);
         panel2.add(confirmPasswordField);
+        panel2.add(loginButton);
+        panel2.add(cancelButton);
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(new ActionListener() {
+        loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String user = usernameField.getText();
                 String password = new String(passwordField.getPassword());
@@ -220,6 +268,7 @@ public class App extends JFrame {
                         con.close();
                         JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
                         dialog.dispose();
+                        homeScreen();
                     } catch (ClassNotFoundException ex) {
                         System.out.println("Error: unable to load MySQL JDBC driver");
                         ex.printStackTrace();
@@ -233,16 +282,16 @@ public class App extends JFrame {
             }
         });
 
-        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
+                createNewUser();
                 dialog.dispose();
             }
         });
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(submitButton);
+        buttonPanel.add(loginButton);
         buttonPanel.add(cancelButton);
 
         JPanel panel = new JPanel(new BorderLayout());

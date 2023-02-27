@@ -13,10 +13,23 @@ import java.awt.event.ActionListener;
 
 public class MedicalHistoryTab {
     public JComponent createMedicalHistoryTab(String id) {
-        JTabbedPane medicalHistoryTabs = new JTabbedPane();
+        UIManager.put("TabbedPane.tabInsets", new Insets(12, 10, 10, 10));
+        JTabbedPane medicalHistoryTabs = new JTabbedPane(JTabbedPane.LEFT);
+        Font font = new Font("Arial", Font.PLAIN, 14);  // change the font family and size as desired
+        medicalHistoryTabs.setFont(font);
         medicalHistoryTabs.addTab("Summary", createSummaryTab());
+        
         medicalHistoryTabs.addTab("Allergies", createAllergiesTab(id));
         medicalHistoryTabs.addTab("Medications", createMedicationsTab(id));
+        medicalHistoryTabs.addTab("Conditions", createConditionsTab(id));
+        medicalHistoryTabs.addTab("Surgeries", createSurgeriesTab(id));
+        medicalHistoryTabs.addTab("Chronic Conditions", createChronicTab(id));
+        medicalHistoryTabs.addTab("Family History", createFamilyTab(id));
+        medicalHistoryTabs.addTab("Vaccination History", createVaccinationTab(id));
+        medicalHistoryTabs.addTab("Lifestyle Factors", createLifestyleTab(id));
+        medicalHistoryTabs.addTab("Sexual History", createSexualTab(id));
+        medicalHistoryTabs.addTab("Mental Health History", createMentalTab(id));
+        medicalHistoryTabs.addTab("Developmental Milestones", createMilestonesTab(id));
 
         medicalHistoryTabs.addChangeListener((ChangeEvent e) -> {
             int index = medicalHistoryTabs.getSelectedIndex();
@@ -26,14 +39,70 @@ public class MedicalHistoryTab {
                 medicalHistoryTabs.setSelectedIndex(1); // Navigate to the allergies subtab
             } else if (index == 2) { // Medications tab
                 medicalHistoryTabs.setSelectedIndex(2); // Navigate to the medications subtab
+            } else if (index == 3) { // Conditions tab
+                medicalHistoryTabs.setSelectedIndex(3); // Navigate to the Conditions subtab
+            } else if (index == 4) { // Surgeries tab
+                medicalHistoryTabs.setSelectedIndex(4); // Navigate to the Surgeries subtab
+            } else if (index == 5) { // Chronic Conditions tab
+                medicalHistoryTabs.setSelectedIndex(5); // Navigate to the Chronic Conditions subtab
+            } else if (index == 6) { // Family Medical History tab
+                medicalHistoryTabs.setSelectedIndex(6); // Navigate to the Family Medical History subtab
+            } else if (index == 7) { // Vaccination History tab
+                medicalHistoryTabs.setSelectedIndex(7); // Navigate to the Vaccination History subtab
+            } else if (index == 8) { // Lifestyle Factors History tab
+                medicalHistoryTabs.setSelectedIndex(8); // Navigate to the Lifestyle Factors History subtab
+            } else if (index == 9) { // Sexual History tab
+                medicalHistoryTabs.setSelectedIndex(9); // Navigate to the Sexual History subtab
+            } else if (index == 10) { // Mental Health History tab
+                medicalHistoryTabs.setSelectedIndex(10); // Navigate to the Mental Health History subtab
+            } else if (index == 11) { // Developmental Milestones tab
+                medicalHistoryTabs.setSelectedIndex(11); // Navigate to the Developmental Milestones subtab
             }
         });
 
         JPanel medicalHistoryPanel = new JPanel();
         medicalHistoryPanel.setLayout(new BorderLayout());
         medicalHistoryPanel.add(medicalHistoryTabs, BorderLayout.CENTER);
+        GridLayout layout = new GridLayout(1, 1, 10, 55);
+        medicalHistoryPanel.setLayout(layout);
 
         return medicalHistoryPanel;
+    }
+
+    public Component createMilestonesTab(String id) {
+        return null;
+    }
+
+    public Component createMentalTab(String id) {
+        return null;
+    }
+
+    public Component createSexualTab(String id) {
+        return null;
+    }
+
+    public Component createLifestyleTab(String id) {
+        return null;
+    }
+
+    public Component createVaccinationTab(String id) {
+        return null;
+    }
+
+    public Component createFamilyTab(String id) {
+        return null;
+    }
+
+    public Component createChronicTab(String id) {
+        return null;
+    }
+
+    public Component createSurgeriesTab(String id) {
+        return null;
+    }
+
+    public Component createConditionsTab(String id) {
+        return null;
     }
 
     private JComponent createMedicationsTab(String id) {
@@ -53,10 +122,10 @@ public class MedicalHistoryTab {
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
-            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Medication", "Dosage", "Frequency" },
+            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Medication", "Dosage", "Frequency", "Date Prescribed" },
                     0);
             while (result.next()) {
-                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
+                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3), result.getString(4) });
             }
             medicationsTable.setModel(tableModel);
 
@@ -85,6 +154,7 @@ public class MedicalHistoryTab {
                     addMedicationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     addMedicationFrame.setSize(400, 200);
                     addMedicationFrame.setLayout(new GridLayout(5, 2, 10, 10));
+                    addMedicationFrame.setLocationRelativeTo(null);
 
                     // Add form components for entering the medication details
                     JLabel nameLabel = new JLabel("Name:");
@@ -252,7 +322,7 @@ public class MedicalHistoryTab {
         constraints.gridy = 5;
         panel.add(familyMedicalHistoryField, constraints);
 
-        JLabel vaccinationHistoryLabel = new JLabel("Vaccination History:");
+        JLabel vaccinationHistoryLabel = new JLabel("Vaccinations:");
         constraints.gridx = 0;
         constraints.gridy = 6;
         panel.add(vaccinationHistoryLabel, constraints);
@@ -383,6 +453,7 @@ public class MedicalHistoryTab {
                     addAllergiesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     addAllergiesFrame.setSize(400, 200);
                     addAllergiesFrame.setLayout(new GridLayout(5, 2, 10, 10));
+                    addAllergiesFrame.setLocationRelativeTo(null);
 
                     // Add form components for entering the medication details
                     JLabel nameLabel = new JLabel("Name:");
