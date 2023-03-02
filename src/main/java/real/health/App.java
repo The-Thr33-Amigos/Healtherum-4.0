@@ -159,7 +159,6 @@ public class App extends JFrame {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
 
-
         JLabel usernameLabel = new JLabel("Username:");
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -207,7 +206,6 @@ public class App extends JFrame {
         constraints.gridy = 3;
         constraints.gridwidth = 1;
         panel2.add(cancelButton, constraints);
-
 
         panel2.add(usernameLabel);
         panel2.add(usernameField);
@@ -373,7 +371,7 @@ public class App extends JFrame {
 
                     // Create a prepared statement to query the database for the user's login
                     // credentials
-                    String sql = "SELECT id, password FROM userpass WHERE user=?";
+                    String sql = "SELECT id, password FROM userpass WHERE user = ?";
                     PreparedStatement statement = con.prepareStatement(sql);
                     statement.setString(1, username);
                     ResultSet rs = statement.executeQuery();
@@ -384,9 +382,21 @@ public class App extends JFrame {
                         // Compare the password entered by the user with the password stored in the
                         // database
                         if (userPassword.equals(new String(password))) {
-                            // Authentication succeeArraysded
-                            frame.dispose();
-                            patientInformationSystem(id);
+                            // Authentication succeeded
+                            LoadingScreen loadingScreen = new LoadingScreen(frame, () -> {
+                                // Perform loading process here
+                                // Call loadingScreen.setProgress(progress) to update progress as it occurs
+                                try {
+                                    
+                                    patientInformationSystem(id);
+                                    
+                                } catch (ClassNotFoundException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                }
+                                frame.dispose();
+                            });
+                            loadingScreen.showLoadingScreen();
                         } else {
                             // Authentication failed
                             JOptionPane.showMessageDialog(panel, "Invalid username or password.", "Login Error",
@@ -447,23 +457,24 @@ public class App extends JFrame {
         VitalsTab VitalsTab = new VitalsTab();
         tabs.addTab("Vital Signs", VitalsTab.createVitalSignsTab(id));
 
-        // Create a new instance of the NotesTab class
-        NotesTab NotesTab = new NotesTab();
-        tabs.addTab("Notes and Progress", NotesTab.createNotesAndProgressTab());
+        // Create a new instance of the LabResultsTab class
+        LabResultsTab LabResultsTab = new LabResultsTab();
+        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();
         tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab());
 
-        // Create a new instance of the LabResultsTab class
-        LabResultsTab LabResultsTab = new LabResultsTab();
-        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
+        // Create a new instance of the NotesTab class
+        NotesTab NotesTab = new NotesTab();
+        tabs.addTab("Notes and Progress", NotesTab.createNotesAndProgressTab());
 
         setVisible(true);
 
     }
 
-    // TODO: Fix window popping up in upper left corner, replace current window instead
+    // TODO: Fix window popping up in upper left corner, replace current window
+    // instead
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new App());
