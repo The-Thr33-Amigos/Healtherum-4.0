@@ -4,28 +4,43 @@ import real.health.Patient.*;
 import java.sql.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
 
 
 public class BTest {
-    public BloodTest newTest = new BloodTest("White");
+    private String patientID;
 
-    // public static void main(String[] args) {
-    //     BloodTest test = new BloodTest("White");
-    //     double[] resul = test.getResultNumbers();
-    //     for (int i = 0; i < resul.length; i++) {
-    //         System.out.println(resul[i]);
-    //     }
+    public BTest(String id) {
+        this.patientID = id;
+    }
 
-    // }
-    public void addNewTest() throws ClassNotFoundException {
+    private ArrayList<BloodTest> testHistory = new ArrayList<>();
+
+    public BloodTest jsonToBT(String json) {
         try {
-            HealthConn newConnection = new HealthConn();
-            Connection conn = newConnection.connect();
-            String jsonData = new Gson().toJson(newTest);
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Gson gson = new Gson();
+            BloodTest bloodTest = gson.fromJson(json, BloodTest.class);
+            return bloodTest;
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String BJson(BloodTest bloodTest) {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(bloodTest);
+            return json;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void addToList(BloodTest newBlood) {
+        testHistory.add(newBlood);
     }
 }

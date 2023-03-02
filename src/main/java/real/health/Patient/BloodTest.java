@@ -1,4 +1,5 @@
 package real.health.Patient;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,16 +19,16 @@ public class BloodTest {
         return race;
     }
 
-    public String testName = "Full Blood Panel";
-    public String[] resultIndicator = {"Normal", "Elevated", "Severe"};
-    public String testDate;
+    public String testName;
+    public String resultIndicator;
+    public LocalDate testDate;
     public String testInterp;
-    public String resultDate;
+    public LocalDate resultDate;
     public String signature;
     public String comment;
 
 
-    public HashMap getMap() {
+    public HashMap<String, BloodItem> getMap() {
         return bloodTest;
     }
 

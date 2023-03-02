@@ -1,5 +1,7 @@
 package real.health.Patient;
 
+import java.util.ArrayList;
+
 // The main patient class which takes in all of the smaller classes and uses them in coherent unit will probably need helper functions eventually but we will see
 public class Patient {
      private UserPass userPass;
