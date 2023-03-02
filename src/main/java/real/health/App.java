@@ -217,7 +217,7 @@ public class App extends JFrame {
         panel2.add(confirmPasswordField);
         panel2.add(loginButton);
         panel2.add(cancelButton);
-
+        // TODO: One Call per file for sql
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String user = usernameField.getText();
@@ -457,7 +457,7 @@ public class App extends JFrame {
 
         // Create a new instance of the LabResultsTab class
         LabResultsTab LabResultsTab = new LabResultsTab();
-        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab());
+        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
 
         setVisible(true);
 
