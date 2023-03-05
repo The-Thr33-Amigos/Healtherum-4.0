@@ -5,8 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.*;
-import real.health.Patient.*;
-import real.health.SQL.HealthConn;
+import real.health.SQL.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +14,10 @@ public class MedicalHistoryTab {
     public JComponent createMedicalHistoryTab(String id) {
         UIManager.put("TabbedPane.tabInsets", new Insets(12, 10, 10, 10));
         JTabbedPane medicalHistoryTabs = new JTabbedPane(SwingConstants.LEFT);
-        Font font = new Font("Arial", Font.PLAIN, 14);  // change the font family and size as desired
+        Font font = new Font("Arial", Font.PLAIN, 14); // change the font family and size as desired
         medicalHistoryTabs.setFont(font);
         medicalHistoryTabs.addTab("Summary", createSummaryTab());
-        
+
         medicalHistoryTabs.addTab("Allergies", createAllergiesTab(id));
         medicalHistoryTabs.addTab("Medications", createMedicationsTab(id));
         medicalHistoryTabs.addTab("Conditions", createConditionsTab(id));
@@ -108,7 +107,6 @@ public class MedicalHistoryTab {
     private JComponent createMedicationsTab(String id) {
         JTable medicationsTable = new JTable();
         // populate the table with the patient's current medications
-
         try {
             // Load the MySQL JDBC driver
             // Create a connection to the database
@@ -122,10 +120,12 @@ public class MedicalHistoryTab {
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
-            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Medication", "Dosage", "Frequency", "Date Prescribed" },
+            DefaultTableModel tableModel = new DefaultTableModel(
+                    new Object[] { "Medication", "Dosage", "Frequency", "Date Prescribed" },
                     0);
             while (result.next()) {
-                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3), result.getString(4) });
+                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
+                        result.getString(4) });
             }
             medicationsTable.setModel(tableModel);
 
@@ -144,42 +144,43 @@ public class MedicalHistoryTab {
 
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
-            // Create the add button and add an ActionListener to upload the new medication to the SQL server
-            JButton addButton = new JButton("Add");
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Create the form for entering the new medication details
-                    JFrame addMedicationFrame = new JFrame("Add Medication");
-                    addMedicationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    addMedicationFrame.setSize(400, 200);
-                    addMedicationFrame.setLayout(new GridLayout(5, 2, 10, 10));
-                    addMedicationFrame.setLocationRelativeTo(null);
+        // Create the add button and add an ActionListener to upload the new medication
+        // to the SQL server
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Create the form for entering the new medication details
+                JFrame addMedicationFrame = new JFrame("Add Medication");
+                addMedicationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                addMedicationFrame.setSize(400, 200);
+                addMedicationFrame.setLayout(new GridLayout(5, 2, 10, 10));
+                addMedicationFrame.setLocationRelativeTo(null);
 
-                    // Add form components for entering the medication details
-                    JLabel nameLabel = new JLabel("Name:");
-                    JTextField nameField = new JTextField();
-                    addMedicationFrame.add(nameLabel);
-                    addMedicationFrame.add(nameField);
+                // Add form components for entering the medication details
+                JLabel nameLabel = new JLabel("Name:");
+                JTextField nameField = new JTextField();
+                addMedicationFrame.add(nameLabel);
+                addMedicationFrame.add(nameField);
 
-                    JLabel doseLabel = new JLabel("Dose:");
-                    JTextField doseField = new JTextField();
-                    addMedicationFrame.add(doseLabel);
-                    addMedicationFrame.add(doseField);
+                JLabel doseLabel = new JLabel("Dose:");
+                JTextField doseField = new JTextField();
+                addMedicationFrame.add(doseLabel);
+                addMedicationFrame.add(doseField);
 
-                    JLabel frequencyLabel = new JLabel("Frequency:");
-                    JTextField frequencyField = new JTextField();
-                    addMedicationFrame.add(frequencyLabel);
-                    addMedicationFrame.add(frequencyField);
+                JLabel frequencyLabel = new JLabel("Frequency:");
+                JTextField frequencyField = new JTextField();
+                addMedicationFrame.add(frequencyLabel);
+                addMedicationFrame.add(frequencyField);
 
-                    JLabel datePrescribedLabel = new JLabel("Date Prescribed:");
-                    JTextField datePrescribedField = new JTextField();
-                    addMedicationFrame.add(datePrescribedLabel);
-                    addMedicationFrame.add(datePrescribedField);
+                JLabel datePrescribedLabel = new JLabel("Date Prescribed:");
+                JTextField datePrescribedField = new JTextField();
+                addMedicationFrame.add(datePrescribedLabel);
+                addMedicationFrame.add(datePrescribedField);
 
-                    // Add a button for submitting the form
-                    JButton submitButton = new JButton("Submit");
-                    submitButton.addActionListener(new ActionListener() {
+                // Add a button for submitting the form
+                JButton submitButton = new JButton("Submit");
+                submitButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
@@ -225,21 +226,21 @@ public class MedicalHistoryTab {
                 });
                 addMedicationFrame.add(submitButton);
 
-
-            // Display the add medication frame
-            addMedicationFrame.setVisible(true);
-    }});
+                // Display the add medication frame
+                addMedicationFrame.setVisible(true);
+            }
+        });
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         addButtonPanel.add(addButton);
 
-        // Create the medications tab panel and add the medications table and add button panel
+        // Create the medications tab panel and add the medications table and add button
+        // panel
         JPanel medicationsTabPanel = new JPanel(new BorderLayout());
         medicationsTabPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
         medicationsTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
-
 
         return medicationsTabPanel;
     }
@@ -421,7 +422,8 @@ public class MedicalHistoryTab {
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
-            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Name", "Type", "Reaction", "Severity" },
+            DefaultTableModel tableModel = new DefaultTableModel(
+                    new Object[] { "Name", "Type", "Reaction", "Severity" },
                     0);
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
@@ -443,42 +445,43 @@ public class MedicalHistoryTab {
 
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
-            // Create the add button and add an ActionListener to upload the new medication to the SQL server
-            JButton addButton = new JButton("Add");
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Create the form for entering the new medication details
-                    JFrame addAllergiesFrame = new JFrame("Add Allergy");
-                    addAllergiesFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    addAllergiesFrame.setSize(400, 200);
-                    addAllergiesFrame.setLayout(new GridLayout(5, 2, 10, 10));
-                    addAllergiesFrame.setLocationRelativeTo(null);
+        // Create the add button and add an ActionListener to upload the new medication
+        // to the SQL server
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Create the form for entering the new medication details
+                JFrame addAllergiesFrame = new JFrame("Add Allergy");
+                addAllergiesFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                addAllergiesFrame.setSize(400, 200);
+                addAllergiesFrame.setLayout(new GridLayout(5, 2, 10, 10));
+                addAllergiesFrame.setLocationRelativeTo(null);
 
-                    // Add form components for entering the medication details
-                    JLabel nameLabel = new JLabel("Name:");
-                    JTextField nameField = new JTextField();
-                    addAllergiesFrame.add(nameLabel);
-                    addAllergiesFrame.add(nameField);
+                // Add form components for entering the medication details
+                JLabel nameLabel = new JLabel("Name:");
+                JTextField nameField = new JTextField();
+                addAllergiesFrame.add(nameLabel);
+                addAllergiesFrame.add(nameField);
 
-                    JLabel typeLabel = new JLabel("Type:");
-                    JTextField typeField = new JTextField();
-                    addAllergiesFrame.add(typeLabel);
-                    addAllergiesFrame.add(typeField);
+                JLabel typeLabel = new JLabel("Type:");
+                JTextField typeField = new JTextField();
+                addAllergiesFrame.add(typeLabel);
+                addAllergiesFrame.add(typeField);
 
-                    JLabel reactionLabel = new JLabel("Reaction:");
-                    JTextField reactionField = new JTextField();
-                    addAllergiesFrame.add(reactionLabel);
-                    addAllergiesFrame.add(reactionField);
+                JLabel reactionLabel = new JLabel("Reaction:");
+                JTextField reactionField = new JTextField();
+                addAllergiesFrame.add(reactionLabel);
+                addAllergiesFrame.add(reactionField);
 
-                    JLabel severityLabel = new JLabel("Severity:");
-                    JTextField severityField = new JTextField();
-                    addAllergiesFrame.add(severityLabel);
-                    addAllergiesFrame.add(severityField);
+                JLabel severityLabel = new JLabel("Severity:");
+                JTextField severityField = new JTextField();
+                addAllergiesFrame.add(severityLabel);
+                addAllergiesFrame.add(severityField);
 
-                    // Add a button for submitting the form
-                    JButton submitButton = new JButton("Submit");
-                    submitButton.addActionListener(new ActionListener() {
+                // Add a button for submitting the form
+                JButton submitButton = new JButton("Submit");
+                submitButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
@@ -524,17 +527,18 @@ public class MedicalHistoryTab {
                 });
                 addAllergiesFrame.add(submitButton);
 
-
-            // Display the add medication frame
-            addAllergiesFrame.setVisible(true);
-    }});
+                // Display the add medication frame
+                addAllergiesFrame.setVisible(true);
+            }
+        });
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         addButtonPanel.add(addButton);
 
-        // Create the medications tab panel and add the medications table and add button panel
+        // Create the medications tab panel and add the medications table and add button
+        // panel
         JPanel allergyTabPanel = new JPanel(new BorderLayout());
         allergyTabPanel.add(new JScrollPane(allergiesTable), BorderLayout.CENTER);
         allergyTabPanel.add(addButtonPanel, BorderLayout.SOUTH);

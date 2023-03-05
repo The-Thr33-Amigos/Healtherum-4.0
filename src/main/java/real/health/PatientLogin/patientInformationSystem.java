@@ -39,7 +39,7 @@ public class patientInformationSystem {
         NotesTab NotesTab = new NotesTab();
         tabs.addTab("Notes and Progress", NotesTab.createNotesAndProgressTab());
 
-        patient.setVisible(true);
+        patient.setVisible(false);
         return patient;
 
     }
