@@ -46,7 +46,7 @@ public class LabResultsTab {
                 // JPanel newPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
                 newFrame.setSize(600, 400);
                 newFrame.setLayout(new GridLayout(6, 2, 5, 5));
-                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 newFrame.setLocationRelativeTo(null);
 
                 JLabel emptyLabel = new JLabel();

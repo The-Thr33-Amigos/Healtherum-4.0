@@ -81,7 +81,11 @@ public class showLoginScreen extends patientInformationSystem {
                         // Compare the password entered by the user with the password stored in the
                         // database
                         if (userPassword.equals(new String(password))) {
-                            // Authentication succeeded
+                            // Authentication succeeded, locks text fields
+                            usernameField.setEditable(false);
+                            passwordField.setEditable(false);
+                            cancelButton.setEnabled(false);
+                            loginButton.setEnabled(false);
                             // Show the loading screen here
                             JFrame loadingFrame = new JFrame("Loading...");
                             loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -121,6 +125,7 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected void done() {
                                     // Once patientInformationSystem has finished loading, dispose of the loading
                                     // screen
+                                    frame.dispose();
                                     loadingFrame.dispose();
                                 }
                             };

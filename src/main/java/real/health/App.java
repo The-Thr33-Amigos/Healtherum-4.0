@@ -23,15 +23,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
-
 import java.util.Scanner;
 
 public class App extends JFrame {
-
     public App() {
         homeScreen();
     }
@@ -83,16 +80,12 @@ public class App extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
-
     public class IdGenerator {
         public String generateUniqueId() {
             return "987654321"; // replace this with your desired ID
             // return UUID.randomUUID().toString();
         }
     }
-
-
     // TODO: Fix window popping up in upper left corner, replace current window
     // instead
 
