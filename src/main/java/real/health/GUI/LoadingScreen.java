@@ -2,8 +2,7 @@ package real.health.GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Random;
 
 public class LoadingScreen extends JDialog {
@@ -37,12 +36,10 @@ public class LoadingScreen extends JDialog {
         // Initialize progress label
         progressLabel = new JLabel();
         getContentPane().add(progressLabel, BorderLayout.CENTER);
-
         pack();
         setVisible(false);
 
         random = new Random();
-
         Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -5,17 +5,12 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import javax.swing.table.*;
-
-import real.health.Patient.BloodTest;
-import real.health.Patient.Patient;
-import real.health.Patient.BloodItem;
+import real.health.Patient.*;
 import real.health.SQL.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class LabResultsTab {
     public BloodTest newBloodTest = new BloodTest("White");
@@ -60,31 +55,24 @@ public class LabResultsTab {
                 nextButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 nextButtonPanel.add(nextButton);
                 
-        
                 String[] testName = {"Generic Blood Panel"};
-                JComboBox<String> nameCombo = new JComboBox<String>(testName);
+                JComboBox<String> nameCombo = new JComboBox<>(testName);
                 JLabel tNameLabel = new JLabel("Test Name:");
-                
-                
-        
+
                 String[] result = {"Normal", "Elevated", "Severe"};
-                JComboBox<String> resultCombo = new JComboBox<String>(result);
+                JComboBox<String> resultCombo = new JComboBox<>(result);
                 JLabel resultLabel = new JLabel("Result:");
-                
-                
-        
+
                 LocalDate currentDate = LocalDate.now();
         
                 String[] interp = {"No Action", "Further Testing", "See Specialist"};
-                JComboBox<String> interpCombo = new JComboBox<String>(interp);
+                JComboBox<String> interpCombo = new JComboBox<>(interp);
                 JLabel interpLabel = new JLabel("Interpretation:");
                
-        
                 LocalDate oldDate = currentDate.minusDays(4);
         
                 JLabel sigLabel = new JLabel("Signature:");
                 JTextField sigField = new JTextField(20);
-
 
                 JLabel commentLabel = new JLabel("Comments:");
                 JTextField commentField = new JTextField(20);
@@ -142,20 +130,13 @@ public class LabResultsTab {
                         JTable table = new JTable(model);
                         table.setEnabled(false);
                         JScrollPane scrollPane = new JScrollPane(table);
-                        bloodTest.add(scrollPane, BorderLayout.CENTER);
-                        
-
-                        
+                        bloodTest.add(scrollPane, BorderLayout.CENTER);              
                     }
                 });
             }
         });
 
-        
-
-
         // Add button panel to the bottom right of labResultsPanel
-
         try {
             HealthConn newConnection = new HealthConn();
             Connection conn = newConnection.connect();
@@ -170,9 +151,7 @@ public class LabResultsTab {
                 newBlood = newTest.jsonToBT(result.getString(2));
                 newTest.addToList(newBlood);
                 model.addRow(new Object[] {newBlood.testName, newBlood.resultIndicator, newBlood.testDate, newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment, newBlood});
-
             }
-
             table.addMouseListener(new MouseInputAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
@@ -187,14 +166,10 @@ public class LabResultsTab {
                 }
             });
             table.setModel(model);
-
             // Clean up resources
             result.close();
             statement.close();
             conn.close();
-
-
-
         }
         catch(ClassNotFoundException c) {
             c.printStackTrace();
@@ -202,9 +177,6 @@ public class LabResultsTab {
         catch(SQLException e) {
             e.printStackTrace();
         }
-
-
-
 
         // Test Information
         JPanel testInformationPanel = new JPanel();
