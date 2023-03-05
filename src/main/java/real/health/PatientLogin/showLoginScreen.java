@@ -1,31 +1,24 @@
 package real.health.PatientLogin;
-import real.health.Patient.*;
+
+import real.health.PatientLogin.*;
 import real.health.GUI.*;
 import real.health.*;
 import javax.swing.*;
-import javax.swing.table.*;
 import java.sql.*;
-import real.health.Patient.*;
-import real.health.PatientLogin.*;
 import real.health.SQL.*;
-import real.health.GUI.*;
-import java.sql.*;
 import java.awt.*;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.*;
-import javax.swing.event.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 
-
-public class showLoginScreen {
+public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen() {
         JFrame frame = new JFrame("Login Screen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
+        frame.setLocationRelativeTo(null);
 
         JLabel usernameLabel = new JLabel("Username:");
         constraints.gridx = 0;
@@ -89,20 +82,56 @@ public class showLoginScreen {
                         // database
                         if (userPassword.equals(new String(password))) {
                             // Authentication succeeded
-                            LoadingScreen loadingScreen = new LoadingScreen(frame, () -> {
-                                // Perform loading process here
-                                // Call loadingScreen.setProgress(progress) to update progress as it occurs
-                                try {
+                            // Show the loading screen here
+                            JFrame loadingFrame = new JFrame("Loading...");
+                            loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                            loadingFrame.setSize(400, 100);
+                            JPanel panel = new JPanel(new BorderLayout());
+                            JProgressBar progressBar = new JProgressBar(0, 100);
+                            progressBar.setValue(0);
+                            progressBar.setStringPainted(true);
+                            panel.add(progressBar, BorderLayout.CENTER);
+                            loadingFrame.add(panel);
+                            loadingFrame.setLocationRelativeTo(null);
+                            loadingFrame.setVisible(true);
 
-                                    patientInformationSystem.patientInformationSystem(id);
-
-                                } catch (ClassNotFoundException e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
+                            // Create a SwingWorker object to execute patientInformationSystem on a separate
+                            // thread
+                            SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
+                                JFrame patientFrame;
+                                @Override
+                                protected Void doInBackground() throws Exception {
+                                    int progress = 0;
+                                    while (progress < 100) {
+                                        // Increment the progress bar every 5ms
+                                        Thread.sleep(5);
+                                        progress++;
+                                        progressBar.setValue(progress);
+                                        if (progress == 50) {
+                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id);
+                                            patientFrame.setVisible(false);
+                                        }
+                                    }
+                                    // Call the patientInformationSystem method and store the returned JFrame object in a variable
+                                    patientFrame.setVisible(true);
+                                    return null;
                                 }
-                                frame.dispose();
+
+                                @Override
+                                protected void done() {
+                                    // Once patientInformationSystem has finished loading, dispose of the loading
+                                    // screen
+                                    loadingFrame.dispose();
+                                }
+                            };
+
+                            // Schedule the SwingWorker to be executed on the Event Dispatch Thread
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    worker.execute();
+                                }
                             });
-                            loadingScreen.showLoadingScreen();
                         } else {
                             // Authentication failed
                             JOptionPane.showMessageDialog(panel, "Invalid username or password.", "Login Error",

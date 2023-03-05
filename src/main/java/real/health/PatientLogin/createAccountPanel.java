@@ -1,24 +1,12 @@
 package real.health.PatientLogin;
 
-import real.health.Patient.*;
-import real.health.GUI.*;
 import real.health.*;
 import javax.swing.*;
-import javax.swing.table.*;
 import java.sql.*;
-import real.health.Patient.*;
-import real.health.PatientLogin.*;
 import real.health.SQL.*;
-import real.health.GUI.*;
-import java.sql.*;
 import java.awt.*;
-import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
-import javax.swing.event.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class createAccountPanel {
     public static JPanel createAccountPanel(String name, String bdate, String email, String phone, String bio,

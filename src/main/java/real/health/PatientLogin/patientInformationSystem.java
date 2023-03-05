@@ -1,33 +1,15 @@
 package real.health.PatientLogin;
 
-import real.health.Patient.*;
 import real.health.GUI.*;
-import real.health.*;
 import javax.swing.*;
-import javax.swing.table.*;
-import java.sql.*;
-import real.health.Patient.*;
-import real.health.PatientLogin.*;
-import real.health.SQL.*;
-import real.health.GUI.*;
-import java.sql.*;
 import java.awt.*;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.*;
-import javax.swing.event.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.DefaultTableModel;
 
 public class patientInformationSystem {
-    private static JTabbedPane tabs;
-
-    static void patientInformationSystem(String id) throws ClassNotFoundException {
+    static Component patientInformationSystem(String id) throws ClassNotFoundException {
+        JTabbedPane tabs;
         JFrame patient = new JFrame("Patient Information System");
         patient.setSize(1000, 600);
-        patient.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        patient.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         patient.setLayout(new BorderLayout());
         patient.setLocationRelativeTo(null);
         tabs = new JTabbedPane();
@@ -58,6 +40,7 @@ public class patientInformationSystem {
         tabs.addTab("Notes and Progress", NotesTab.createNotesAndProgressTab());
 
         patient.setVisible(true);
+        return patient;
 
     }
 }

@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 public class MedicalHistoryTab {
     public JComponent createMedicalHistoryTab(String id) {
         UIManager.put("TabbedPane.tabInsets", new Insets(12, 10, 10, 10));
-        JTabbedPane medicalHistoryTabs = new JTabbedPane(JTabbedPane.LEFT);
+        JTabbedPane medicalHistoryTabs = new JTabbedPane(SwingConstants.LEFT);
         Font font = new Font("Arial", Font.PLAIN, 14);  // change the font family and size as desired
         medicalHistoryTabs.setFont(font);
         medicalHistoryTabs.addTab("Summary", createSummaryTab());
@@ -151,7 +151,7 @@ public class MedicalHistoryTab {
                 public void actionPerformed(ActionEvent e) {
                     // Create the form for entering the new medication details
                     JFrame addMedicationFrame = new JFrame("Add Medication");
-                    addMedicationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    addMedicationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     addMedicationFrame.setSize(400, 200);
                     addMedicationFrame.setLayout(new GridLayout(5, 2, 10, 10));
                     addMedicationFrame.setLocationRelativeTo(null);
@@ -450,7 +450,7 @@ public class MedicalHistoryTab {
                 public void actionPerformed(ActionEvent e) {
                     // Create the form for entering the new medication details
                     JFrame addAllergiesFrame = new JFrame("Add Allergy");
-                    addAllergiesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    addAllergiesFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     addAllergiesFrame.setSize(400, 200);
                     addAllergiesFrame.setLayout(new GridLayout(5, 2, 10, 10));
                     addAllergiesFrame.setLocationRelativeTo(null);

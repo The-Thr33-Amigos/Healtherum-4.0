@@ -153,6 +153,7 @@ public class LabResultsTab {
                 model.addRow(new Object[] {newBlood.testName, newBlood.resultIndicator, newBlood.testDate, newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment, newBlood});
             }
             table.addMouseListener(new MouseInputAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
                         JTable target = (JTable)e.getSource();
