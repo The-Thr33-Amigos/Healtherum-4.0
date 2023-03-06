@@ -16,6 +16,7 @@ public class createNewUser {
         JPanel panel1 = new JPanel(new GridLayout(0, 2));
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField();
+
         JLabel dobLabel = new JLabel("Date of Birth (MM/DD/YYYY):");
         JTextField dobField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");

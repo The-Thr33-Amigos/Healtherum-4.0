@@ -150,7 +150,7 @@ public class VitalsTab {
         addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         addButtonPanel.add(addButton);
 
-        // Create the medications tab panel and add the medications table and add button
+        // Create the vital signs tab panel and add the vital signs table and add button
         // panel
         JPanel vitalSignsPanel = new JPanel(new BorderLayout());
         vitalSignsPanel.add(new JScrollPane(vitalSigns), BorderLayout.CENTER);

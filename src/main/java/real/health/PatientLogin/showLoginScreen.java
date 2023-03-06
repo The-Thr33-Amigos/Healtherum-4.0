@@ -1,15 +1,11 @@
 package real.health.PatientLogin;
 
-import real.health.PatientLogin.*;
-import real.health.GUI.*;
 import real.health.*;
 import javax.swing.*;
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
-import java.beans.PropertyChangeListener;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen() {

@@ -5,10 +5,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.*;
+import real.health.GUI.MedicalHistoryTabs.*;
 import real.health.SQL.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class MedicalHistoryTab {
     public JComponent createMedicalHistoryTab(String id) {
@@ -20,15 +20,42 @@ public class MedicalHistoryTab {
 
         medicalHistoryTabs.addTab("Allergies", createAllergiesTab(id));
         medicalHistoryTabs.addTab("Medications", createMedicationsTab(id));
-        medicalHistoryTabs.addTab("Conditions", createConditionsTab(id));
-        medicalHistoryTabs.addTab("Surgeries", createSurgeriesTab(id));
-        medicalHistoryTabs.addTab("Chronic Conditions", createChronicTab(id));
-        medicalHistoryTabs.addTab("Family History", createFamilyTab(id));
-        medicalHistoryTabs.addTab("Vaccination History", createVaccinationTab(id));
-        medicalHistoryTabs.addTab("Lifestyle Factors", createLifestyleTab(id));
-        medicalHistoryTabs.addTab("Sexual History", createSexualTab(id));
-        medicalHistoryTabs.addTab("Mental Health History", createMentalTab(id));
-        medicalHistoryTabs.addTab("Developmental Milestones", createMilestonesTab(id));
+
+        // Create a new instance of the createConditionsTab class
+        createConditionsTab createConditionsTab = new createConditionsTab();
+        medicalHistoryTabs.addTab("Conditions", createConditionsTab.createConditionsTab(id));
+
+        // Create a new instance of the createSurgeriesTab class
+        createSurgeriesTab createSurgeriesTab = new createSurgeriesTab();
+        medicalHistoryTabs.addTab("Surgeries", createSurgeriesTab.createSurgeriesTab(id));
+
+        // Create a new instance of the createChronicTab class
+        createChronicTab createChronicTab = new createChronicTab();
+        medicalHistoryTabs.addTab("Chronic Conditions", createChronicTab.createChronicTab(id));
+
+        // Create a new instance of the createFamilyTab class
+        createFamilyTab createFamilyTab = new createFamilyTab();
+        medicalHistoryTabs.addTab("Family History", createFamilyTab.createFamilyTab(id));
+
+        // Create a new instance of the createVaccinationTab class
+        createVaccinationTab createVaccinationTab = new createVaccinationTab();
+        medicalHistoryTabs.addTab("Vaccination History", createVaccinationTab.createVaccinationTab(id));
+
+        // Create a new instance of the createLifestyleTab class
+        createLifestyleTab createLifestyleTab = new createLifestyleTab();
+        medicalHistoryTabs.addTab("Lifestyle Factors", createLifestyleTab.createLifestyleTab(id));
+
+        // Create a new instance of the createSexualTab class
+        createSexualTab createSexualTab = new createSexualTab();
+        medicalHistoryTabs.addTab("Sexual History", createSexualTab.createSexualTab(id));
+
+        // Create a new instance of the createMentalTab class
+        createMentalTab createMentalTab = new createMentalTab();
+        medicalHistoryTabs.addTab("Mental Health History", createMentalTab.createMentalTab(id));
+
+        // Create a new instance of the createLifestyleTab class
+        createMilestonesTab createMilestonesTab = new createMilestonesTab();
+        medicalHistoryTabs.addTab("Developmental Milestones", createMilestonesTab.createMilestonesTab(id));
 
         medicalHistoryTabs.addChangeListener((ChangeEvent e) -> {
             int index = medicalHistoryTabs.getSelectedIndex();
@@ -66,42 +93,6 @@ public class MedicalHistoryTab {
         medicalHistoryPanel.setLayout(layout);
 
         return medicalHistoryPanel;
-    }
-
-    public Component createMilestonesTab(String id) {
-        return null;
-    }
-
-    public Component createMentalTab(String id) {
-        return null;
-    }
-
-    public Component createSexualTab(String id) {
-        return null;
-    }
-
-    public Component createLifestyleTab(String id) {
-        return null;
-    }
-
-    public Component createVaccinationTab(String id) {
-        return null;
-    }
-
-    public Component createFamilyTab(String id) {
-        return null;
-    }
-
-    public Component createChronicTab(String id) {
-        return null;
-    }
-
-    public Component createSurgeriesTab(String id) {
-        return null;
-    }
-
-    public Component createConditionsTab(String id) {
-        return null;
     }
 
     private JComponent createMedicationsTab(String id) {
@@ -142,8 +133,6 @@ public class MedicalHistoryTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new medication
-        // to the SQL server
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
         JButton addButton = new JButton("Add");

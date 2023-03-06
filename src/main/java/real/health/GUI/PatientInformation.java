@@ -2,10 +2,7 @@ package real.health.GUI;
 
 import java.awt.*;
 import javax.swing.*;
-
-import real.health.Patient.Patient;
 import real.health.SQL.HealthConn;
-
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
