@@ -3,7 +3,7 @@
  */
 package real.health;
 
-import real.health.Patient.*;
+
 import real.health.SQL.HealthConn;
 import real.health.GUI.*;
 

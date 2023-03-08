@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent;
 
 public class LabResultsTab {
     public BloodTest newBloodTest = new BloodTest("White");
-    
+
     public JComponent createLabResultsTab(String id) {
 
         JPanel labResultsPanel = new JPanel(new BorderLayout());
@@ -42,7 +42,7 @@ public class LabResultsTab {
         JButton newButton = new JButton("New Test");
         JButton nextButton = new JButton("Next");
         nextButton.setPreferredSize(new Dimension(100, nextButton.getPreferredSize().height));
-        
+
 
         newButton.addActionListener(new ActionListener() {
             @Override
@@ -51,7 +51,7 @@ public class LabResultsTab {
                 // JPanel newPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
                 newFrame.setSize(600, 400);
                 newFrame.setLayout(new GridLayout(6, 2, 5, 5));
-                newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 newFrame.setLocationRelativeTo(null);
 
                 JLabel emptyLabel = new JLabel();
@@ -59,29 +59,29 @@ public class LabResultsTab {
                 JPanel nextButtonPanel = new JPanel();
                 nextButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 nextButtonPanel.add(nextButton);
-                
-        
+
+
                 String[] testName = {"Generic Blood Panel"};
                 JComboBox<String> nameCombo = new JComboBox<String>(testName);
                 JLabel tNameLabel = new JLabel("Test Name:");
-                
-                
-        
+
+
+
                 String[] result = {"Normal", "Elevated", "Severe"};
                 JComboBox<String> resultCombo = new JComboBox<String>(result);
                 JLabel resultLabel = new JLabel("Result:");
-                
-                
-        
+
+
+
                 LocalDate currentDate = LocalDate.now();
-        
+
                 String[] interp = {"No Action", "Further Testing", "See Specialist"};
                 JComboBox<String> interpCombo = new JComboBox<String>(interp);
                 JLabel interpLabel = new JLabel("Interpretation:");
-               
-        
+
+
                 LocalDate oldDate = currentDate.minusDays(4);
-        
+
                 JLabel sigLabel = new JLabel("Signature:");
                 JTextField sigField = new JTextField(20);
 
@@ -129,9 +129,16 @@ public class LabResultsTab {
 
                         newFrame.dispose();
 
-                        JPanel bloodTest = new JPanel();
+                        JFrame bloodFrame = new JFrame(testName + " " + newBloodTest.testDate);
+                        bloodFrame.setSize(800, 600);
 
-                        DefaultTableModel model = new DefaultTableModel();
+                        DefaultTableModel model = new DefaultTableModel() {
+                            @Override
+                            public boolean isCellEditable(int row, int column) {
+                                return column == 1;
+                            }
+                        };
+
                         model.addColumn("Name");
                         model.addColumn("Result");
                         model.addColumn("Lower Bound");
@@ -139,19 +146,61 @@ public class LabResultsTab {
                         model.addColumn("Units");
                         model.addColumn("Flag");
 
-                        JTable table = new JTable(model);
-                        table.setEnabled(false);
-                        JScrollPane scrollPane = new JScrollPane(table);
-                        bloodTest.add(scrollPane, BorderLayout.CENTER);
-                        
+                        HashMap<String, BloodItem> newBloodMap = newBloodTest.getMap();
 
-                        
+                        for (HashMap.Entry<String, BloodItem> entry : newBloodMap.entrySet()) {
+                            BloodItem current = entry.getValue();
+                            model.addRow(new Object[] {current.getTestName(), current.getResult(), current.getLow(), current.getHigh(), current.getUnits(), current.getFlag()});
+                        }
+
+                        JTable bloodTable = new JTable(model);
+                        JScrollPane scrollPane = new JScrollPane(bloodTable);
+
+                        JButton saveButton = new JButton("Save");
+                        JPanel saveButtonPanel = new JPanel();
+                        saveButtonPanel.setLayout(new BorderLayout());
+                        saveButtonPanel.add(saveButton);
+
+
+
+                        bloodFrame.add(scrollPane,BorderLayout.CENTER);
+                        bloodFrame.add(saveButtonPanel,BorderLayout.SOUTH);
+                        bloodFrame.setLocationRelativeTo(null);
+                        bloodFrame.setVisible(true);
+
+                        // Create a new "Save" button
+
+
+                        // Add an action listener to the "Save" button
+                        saveButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Save the test information to the database
+
+                                // Add the new test to the table on the first screen
+                                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                                model.addRow(new Object[] { newBloodTest.testName, newBloodTest.resultIndicator, newBloodTest.testDate,
+                                                newBloodTest.testInterp, newBloodTest.resultDate, newBloodTest.signature, newBloodTest.comment });
+
+                                // Clear the test information fields
+                                nameCombo.setSelectedIndex(0);
+                                resultCombo.setSelectedIndex(0);
+                                interpCombo.setSelectedIndex(0);
+                                sigField.setText("");
+                                commentField.setText("");
+
+                                // Show the first screen
+                                labResultsPanel.setVisible(false);
+                                newFrame.setVisible(false);
+                                bloodFrame.setVisible(false);
+                            }
+
+                        });
                     }
-                });
+                    });
+
             }
         });
-
-        
 
 
         // Add button panel to the bottom right of labResultsPanel
