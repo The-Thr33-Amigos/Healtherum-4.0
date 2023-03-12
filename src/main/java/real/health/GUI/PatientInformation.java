@@ -163,7 +163,7 @@ public class PatientInformation {
         summaryPanel.add(dobField);
         summaryPanel.add(new JLabel("Biological Sex:"));
         summaryPanel.add(genderField);
-        summaryPanel.add(new JLabel("Ethnicity:"));
+        summaryPanel.add(new JLabel("Race:"));
         summaryPanel.add(ethnicityField);
         summaryPanel.add(new JLabel("Phone Number:"));
         summaryPanel.add(phoneNumberField);

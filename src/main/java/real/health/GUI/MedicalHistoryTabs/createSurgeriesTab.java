@@ -132,68 +132,16 @@ public class createSurgeriesTab {
             }
         });
 
-        // Create the delete button and add an ActionListener to delete the selected surgery
-        // from the SQL server and the table
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Get the index of the selected row in the table
-                int selectedRow = surgeriesTable.getSelectedRow();
-
-                // If a row is selected, delete the corresponding surgery record from the SQL server and the table
-                if (selectedRow != -1) {
-                    try {
-                        // Load the MySQL JDBC driver
-                        HealthConn newConnection = new HealthConn();
-                        Connection con = newConnection.connect();
-
-                        // Get the values from the selected row in the table
-                        String date = (String) surgeriesTable.getValueAt(selectedRow, 0);
-                        String procedure = (String) surgeriesTable.getValueAt(selectedRow, 1);
-                        String surgeon = (String) surgeriesTable.getValueAt(selectedRow, 2);
-                        String location = (String) surgeriesTable.getValueAt(selectedRow, 3);
-
-                        // Create a SQL statement to delete the selected surgery record from the database
-                        String sql = "DELETE FROM surgeries WHERE id = ? AND date = ? AND procedure = ? AND surgeon = ? AND location = ?";
-                        PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id);
-                        statement.setString(2, date);
-                        statement.setString(3, procedure);
-                        statement.setString(4, surgeon);
-                        statement.setString(5, location);
-                        statement.executeUpdate();
-
-                        // Remove the selected row from the table
-                        DefaultTableModel tableModel = (DefaultTableModel) surgeriesTable.getModel();
-                        tableModel.removeRow(selectedRow);
-
-                        // Clean up resources
-                        statement.close();
-                        con.close();
-                    } catch (ClassNotFoundException ex) {
-                        System.out.println("Error: unable to load MySQL JDBC driver");
-                        ex.printStackTrace();
-                    } catch (SQLException ex) {
-                        System.out.println("Error: unable to connect to MySQL database");
-                        ex.printStackTrace();
-                    }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Please select a row to delete");
-                        }
-                }
-            });
-                        // Add the table and buttons to the panel
+        // Add the table and buttons to the panel
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(surgeriesTable), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setLayout(new BorderLayout());
         buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
 
-        panel.add(buttonPanel, BorderLayout.SOUTH);
+        panel.add(buttonPanel, BorderLayout.PAGE_END);
 
         return panel;
     }

@@ -127,14 +127,14 @@ public class createMentalTab {
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
         // Create the mental health tab panel and add the mental health table and add button
         // panel
         JPanel mentalTabPanel = new JPanel(new BorderLayout());
         mentalTabPanel.add(new JScrollPane(mentalTable), BorderLayout.CENTER);
-        mentalTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        mentalTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return mentalTabPanel;
     }

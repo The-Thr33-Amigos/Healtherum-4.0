@@ -124,62 +124,14 @@ public class createChronicTab {
         }
     });
 
-    // Create the delete button and add an ActionListener to delete the selected chronic condition
-    // from the SQL server and the table
-    JButton deleteButton = new JButton("Delete");
-    deleteButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // Get the index of the selected row in the table
-            int selectedRow = chronicTable.getSelectedRow();
-
-            // If a row is selected, delete the corresponding chronic condition record from the SQL server and the table
-            if (selectedRow != -1) {
-                try {
-                    // Load the MySQL JDBC driver
-                    HealthConn newConnection = new HealthConn();
-                    Connection con = newConnection.connect();
-
-                    // Get the values from the selected row in the table
-                    String condition = (String) chronicTable.getValueAt(selectedRow, 0);
-                    String diagnosisDate = (String) chronicTable.getValueAt(selectedRow, 1);
-                    String treatment = (String) chronicTable.getValueAt(selectedRow, 2);
-
-                    // Create a SQL statement to delete the selected chronic condition record from the database
-                    String sql = "DELETE FROM chronic_conditions WHERE id = ? AND condition = ? AND diagnosisDate = ? AND treatment = ?";
-                    PreparedStatement statement = con.prepareStatement(sql);
-                    statement.setString(1, id);
-                    statement.setString(2, condition);
-                    statement.setString(3, diagnosisDate);
-                    statement.setString(4, treatment);
-                    statement.executeUpdate();
-
-                    // Remove the selected row from the table
-                    DefaultTableModel tableModel = (DefaultTableModel) chronicTable.getModel();
-                    tableModel.removeRow(selectedRow);
-
-                    // Clean up resources
-                    statement.close();
-                    con.close();
-                } catch (ClassNotFoundException ex) {
-                    System.out.println("Error: unable to load MySQL JDBC driver");
-                    ex.printStackTrace();
-                } catch (SQLException ex) {
-                    System.out.println("Error: unable to connect to MySQL database");
-                    ex.printStackTrace();
-                }
-            }
-        }
-    });
-
     // Create the scroll pane and add the chronic condition table and buttons to it
     JScrollPane scrollPane = new JScrollPane(chronicTable);
     JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(new BorderLayout());
     buttonPanel.add(addButton);
-    buttonPanel.add(deleteButton);
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(buttonPanel, BorderLayout.SOUTH);
+    panel.add(buttonPanel, BorderLayout.PAGE_END);
 
     return panel;
 }

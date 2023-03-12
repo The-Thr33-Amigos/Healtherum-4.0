@@ -2,8 +2,7 @@ package real.health.GUI;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.plaf.basic.DefaultMenuLayout;
+import javax.swing.event.*;
 import javax.swing.table.*;
 import real.health.Patient.*;
 import real.health.SQL.*;

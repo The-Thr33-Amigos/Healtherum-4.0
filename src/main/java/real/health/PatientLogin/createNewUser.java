@@ -8,7 +8,7 @@ public class createNewUser {
     public static void createNewUser() {
         JDialog dialog = new JDialog();
         dialog.setTitle("Create New User");
-        dialog.setSize(400, 400);
+        dialog.setSize(500, 500);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.setLocationRelativeTo(null);
 
@@ -16,19 +16,23 @@ public class createNewUser {
         JPanel panel1 = new JPanel(new GridLayout(0, 2));
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField();
-
         JLabel dobLabel = new JLabel("Date of Birth (MM/DD/YYYY):");
         JTextField dobField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
         JTextField emailField = new JTextField();
         JLabel phoneLabel = new JLabel("Phone Number:");
         JTextField phoneField = new JTextField();
+
+        String[] bioSexOptions = {"Male", "Female"};
+        JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
         JLabel bioLabel = new JLabel("Biological Sex:");
-        JTextField bioField = new JTextField();
+
         JLabel mailingLabel = new JLabel("Mailing Address:");
         JTextField mailingField = new JTextField();
+
+        String[] raceNames = {"Black", "White", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander"};
+        JComboBox<String> raceCombo = new JComboBox<>(raceNames);
         JLabel raceLabel = new JLabel("Race:");
-        JTextField raceField = new JTextField();
 
         panel1.add(nameLabel);
         panel1.add(nameField);
@@ -39,11 +43,11 @@ public class createNewUser {
         panel1.add(phoneLabel);
         panel1.add(phoneField);
         panel1.add(bioLabel);
-        panel1.add(bioField);
+        panel1.add(bioCombo);
         panel1.add(mailingLabel);
         panel1.add(mailingField);
         panel1.add(raceLabel);
-        panel1.add(raceField);
+        panel1.add(raceCombo);
 
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(new ActionListener() {
@@ -51,7 +55,7 @@ public class createNewUser {
                 dialog.getContentPane().removeAll();
                 dialog.add(createAccountPanel.createAccountPanel(nameField.getText(), dobField.getText(),
                         emailField.getText(),
-                        phoneField.getText(), bioField.getText(), mailingField.getText(), raceField.getText()));
+                        phoneField.getText(), (String) bioCombo.getSelectedItem(), mailingField.getText(), (String) raceCombo.getSelectedItem()));
                 dialog.pack();
                 dialog.revalidate();
             }

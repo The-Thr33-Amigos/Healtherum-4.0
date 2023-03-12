@@ -120,14 +120,14 @@ public class createMilestonesTab {
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
         // Create the milestones tab panel and add the milestones table and add button
         // panel
         JPanel milestonesTabPanel = new JPanel(new BorderLayout());
         milestonesTabPanel.add(new JScrollPane(milestonesTable), BorderLayout.CENTER);
-        milestonesTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        milestonesTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return milestonesTabPanel;
     }

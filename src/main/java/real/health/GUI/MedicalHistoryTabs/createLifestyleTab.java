@@ -119,7 +119,7 @@ public class createLifestyleTab {
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
         // Create the lifestyle factors tab panel and add the lifestyle factors table
@@ -127,7 +127,7 @@ public class createLifestyleTab {
         // panel
         JPanel lifestyleTabPanel = new JPanel(new BorderLayout());
         lifestyleTabPanel.add(new JScrollPane(lifestyleTable), BorderLayout.CENTER);
-        lifestyleTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        lifestyleTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return lifestyleTabPanel;
     }

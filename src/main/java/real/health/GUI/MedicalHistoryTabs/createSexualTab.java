@@ -135,13 +135,13 @@ public class createSexualTab {
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
         // Create the sexual history tab panel and add the sexual history table and add button panel
         JPanel sexualTabPanel = new JPanel(new BorderLayout());
         sexualTabPanel.add(new JScrollPane(sexualTable), BorderLayout.CENTER);
-        sexualTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        sexualTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return sexualTabPanel;
     }

@@ -121,7 +121,7 @@ public class createConditionsTab {
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
         // Create the medical conditions tab panel and add the medical conditions table
@@ -129,7 +129,7 @@ public class createConditionsTab {
         // panel
         JPanel conditionsTabPanel = new JPanel(new BorderLayout());
         conditionsTabPanel.add(new JScrollPane(conditionsTable), BorderLayout.CENTER);
-        conditionsTabPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        conditionsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return conditionsTabPanel;
     }
