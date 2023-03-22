@@ -20,7 +20,7 @@ public class createFamilyTab {
             Connection con = newConnection.connect();
 
             // Create a SQL statement to retrieve the patient's family history
-            String sql = "SELECT relationship, condition FROM family_history WHERE id = ?";
+            String sql = "SELECT relationship, health_condition FROM family_history WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
@@ -86,7 +86,8 @@ public class createFamilyTab {
                             Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new family member into the database
-                            String sql = "INSERT INTO family_history (id, relationship, condition) VALUES (?, ?, ?)";
+                            String sql = "INSERT INTO family_history (id, relationship, health_condition) VALUES (?, ?, ?)";
+                            
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, relationship);

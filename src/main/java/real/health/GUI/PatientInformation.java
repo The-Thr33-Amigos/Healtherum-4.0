@@ -56,24 +56,37 @@ public class PatientInformation {
         constraints.gridy = 6;
         panel.add(mailingAddressField, constraints);
 
-        HealthConn newConnection = new HealthConn();
         // Fetch the patient information from the SQL database using the patient ID
-        try (Connection conn = newConnection.connect();
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM basic WHERE id = ?")) {
-            stmt.setString(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+        try {
+            // Load the MySQL JDBC driver
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+            String sql = "SELECT * FROM basic WHERE id = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
                 // Populate the text fields with the patient information
-                nameField.setText(rs.getString("name"));
-                dobField.setText(rs.getString("bdate"));
-                genderField.setText(rs.getString("bio"));
-                ethnicityField.setText(rs.getString("race"));
-                phoneNumberField.setText(rs.getString("phone"));
-                emailAddressField.setText(rs.getString("email"));
-                mailingAddressField.setText(rs.getString("mailing"));
+                nameField.setText(result.getString("name"));
+                dobField.setText(result.getString("bdate"));
+                genderField.setText(result.getString("bio"));
+                ethnicityField.setText(result.getString("race"));
+                phoneNumberField.setText(result.getString("phone"));
+                emailAddressField.setText(result.getString("email"));
+                mailingAddressField.setText(result.getString("mailing"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        // Clean up resources
+        result.close();
+        statement.close();
+        con.close();
+
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Error: unable to load MySQL JDBC driver");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Error: unable to connect to MySQL database");
+            ex.printStackTrace();
         }
 
         JLabel pictureLabel = new JLabel("Insurance Card:");

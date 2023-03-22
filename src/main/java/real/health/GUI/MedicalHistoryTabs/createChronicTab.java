@@ -18,14 +18,14 @@ public class createChronicTab {
             Connection con = newConnection.connect();
 
             // Create a SQL statement to retrieve the patient's chronic condition history
-            String sql = "SELECT condition, diagnosisDate, treatment FROM chronic_conditions WHERE id = ?";
+            String sql = "SELECT chronic_condition, treatment, diagnosisDate FROM chronic_conditions WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
-                    new Object[] { "Condition", "Diagnosis Date", "Treatment" },
+                    new Object[] { "Condition", "Treatment", "Diagnosis Date" },
                     0);
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
@@ -91,7 +91,7 @@ public class createChronicTab {
                             Connection con = newConnection.connect();
 
                         // Create a SQL statement to insert the new chronic condition record into the database
-                        String sql = "INSERT INTO chronic_conditions (id, condition, diagnosisDate, treatment) VALUES (?, ?, ?, ?)";
+                        String sql = "INSERT INTO chronic_conditions (id, chronic_condition, diagnosisDate, treatment) VALUES (?, ?, ?, ?)";
                         PreparedStatement statement = con.prepareStatement(sql);
                         statement.setString(1, id);
                         statement.setString(2, condition);

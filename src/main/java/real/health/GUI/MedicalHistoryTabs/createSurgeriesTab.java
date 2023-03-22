@@ -18,14 +18,14 @@ public class createSurgeriesTab {
             Connection con = newConnection.connect();
     
             // Create a SQL statement to retrieve the patient's surgery history
-            String sql = "SELECT date, procedure, surgeon, location FROM surgeries WHERE id = ?";
+            String sql = "SELECT surgery_procedure, surgeon, location, date FROM surgeries WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
-                    new Object[] { "Date", "Procedure", "Surgeon", "Location" },
+                    new Object[] { "Procedure", "Surgeon", "Location", "Date" },
                     0);
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),

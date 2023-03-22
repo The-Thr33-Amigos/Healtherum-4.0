@@ -8,7 +8,6 @@ import real.health.SQL.*;
 import java.awt.*;
 
 public class createMedicationsTab {
-
     public JComponent createMedicationsTab(String id) {
         JTable medicationsTable = new JTable();
         // populate the table with the patient's current medications

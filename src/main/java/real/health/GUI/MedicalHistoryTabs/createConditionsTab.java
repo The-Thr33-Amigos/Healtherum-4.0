@@ -18,7 +18,7 @@ public class createConditionsTab {
             Connection con = newConnection.connect();
 
             // Create a SQL statement to retrieve the patient's current medical conditions
-            String sql = "SELECT condition, status FROM conditions WHERE id = ?";
+            String sql = "SELECT * FROM conditions WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
@@ -85,18 +85,18 @@ public class createConditionsTab {
                             HealthConn newConnection = new HealthConn();
                             Connection con = newConnection.connect();
 
-                            // Create a SQL statement to insert the new medical condition
-                            String sql = "INSERT INTO conditions (id, condition, status) VALUES (?, ?, ?)";
+                            // Create a SQL statement to insert the new medication
+                            String sql = "INSERT INTO conditions (id, health_condition, status) VALUES (?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, condition);
                             statement.setString(3, status);
-                            statement.executeUpdate();
+                            statement.executeUpdate(); 
 
-                            // Refresh the medical conditions table to show the newly added medical
-                            // condition
+                            // Refresh the medications table to show the newly added medication
                             DefaultTableModel tableModel = (DefaultTableModel) conditionsTable.getModel();
-                            tableModel.addRow(new Object[] { condition, status });
+                            tableModel.addRow(new Object[] { condition, status});
+
                             // Clean up resources
                             statement.close();
                             con.close();
