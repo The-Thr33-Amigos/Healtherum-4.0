@@ -84,7 +84,7 @@ public class createLifestyleTab {
                             Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new lifestyle factor
-                            String sql = "INSERT INTO lifestyle_factors (id, factor, status) VALUES (?, ?, ?)";
+                            String sql = "INSERT INTO lifestyle (id, factor, status) VALUES (?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, factor);

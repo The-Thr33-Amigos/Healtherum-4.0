@@ -98,7 +98,7 @@ public class createSexualTab {
                             Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new sexual history
-                            String sql = "INSERT INTO sexual_history (id, activity, partners, last_activity, protection) VALUES (?, ?, ?, ?, ?)";
+                            String sql = "INSERT INTO sexual_history (id, sexual_activity, partners, last_activity, protection) VALUES (?, ?, ?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, sexualActivity);

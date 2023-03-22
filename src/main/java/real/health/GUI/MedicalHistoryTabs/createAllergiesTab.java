@@ -10,10 +10,8 @@ import java.awt.*;
 public class createAllergiesTab {
 
     public JComponent createAllergiesTab(String id) {
-
         JTable allergiesTable = new JTable();
         // populate the table with the patient's current medications
-
         try {
             // Load the MySQL JDBC driver
             // Create a connection to the database
@@ -31,7 +29,7 @@ public class createAllergiesTab {
                     new Object[] { "Name", "Type", "Reaction", "Severity" },
                     0);
             while (result.next()) {
-                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
+                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3), result.getString(4) });
             }
             allergiesTable.setModel(tableModel);
 

@@ -98,7 +98,7 @@ public class createSurgeriesTab {
                             Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new surgery record into the database
-                            String sql = "INSERT INTO surgeries (id, date, procedure, surgeon, location) VALUES (?, ?, ?, ?, ?)";
+                            String sql = "INSERT INTO surgeries (id, date, surgery_procedure, surgeon, location) VALUES (?, ?, ?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, date);

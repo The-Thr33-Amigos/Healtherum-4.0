@@ -18,7 +18,7 @@ public class createConditionsTab {
             Connection con = newConnection.connect();
 
             // Create a SQL statement to retrieve the patient's current medical conditions
-            String sql = "SELECT * FROM conditions WHERE id = ?";
+            String sql = "SELECT medical_condition, status FROM conditions WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
@@ -86,7 +86,7 @@ public class createConditionsTab {
                             Connection con = newConnection.connect();
 
                             // Create a SQL statement to insert the new medication
-                            String sql = "INSERT INTO conditions (id, health_condition, status) VALUES (?, ?, ?)";
+                            String sql = "INSERT INTO conditions (id, medical_condition, status) VALUES (?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, condition);
