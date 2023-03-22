@@ -55,7 +55,7 @@ public class createMilestonesTab {
                 JFrame addMilestoneFrame = new JFrame("Add Developmental Milestone");
                 addMilestoneFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 addMilestoneFrame.setSize(400, 150);
-                addMilestoneFrame.setLayout(new GridLayout(2, 2, 10, 10));
+                addMilestoneFrame.setLayout(new GridLayout(3, 2, 10, 10));
                 addMilestoneFrame.setLocationRelativeTo(null);
 
                 // Add form components for entering the milestone details
@@ -99,6 +99,8 @@ public class createMilestonesTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add milestone frame
+                            addMilestoneFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -106,27 +108,32 @@ public class createMilestonesTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add milestone frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addMilestoneFrame.dispose();
                     }
                 });
+                addMilestoneFrame.add(cancelButton);
                 addMilestoneFrame.add(submitButton);
-
                 // Display the add milestone frame
                 addMilestoneFrame.setVisible(true);
             }
         });
+
+        // Create the milestones tab panel and add the milestones table and add button
+        // panel
+        JPanel milestonesTabPanel = new JPanel();
+        milestonesTabPanel.setLayout(new BorderLayout());
+        milestonesTabPanel.add(new JScrollPane(milestonesTable), BorderLayout.CENTER);
 
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
-        // Create the milestones tab panel and add the milestones table and add button
-        // panel
-        JPanel milestonesTabPanel = new JPanel(new BorderLayout());
-        milestonesTabPanel.add(new JScrollPane(milestonesTable), BorderLayout.CENTER);
         milestonesTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return milestonesTabPanel;

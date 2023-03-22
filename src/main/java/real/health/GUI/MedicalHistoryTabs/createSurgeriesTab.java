@@ -124,7 +124,14 @@ public class createSurgeriesTab {
                         }
                     }
                 });
-                addSurgeryFrame.add(new JPanel());
+                
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addSurgeryFrame.dispose();
+                    }
+                });
+                addSurgeryFrame.add(cancelButton);
                 addSurgeryFrame.add(submitButton);
 
                 // Display the form for entering the new surgery details
@@ -132,15 +139,14 @@ public class createSurgeriesTab {
             }
         });
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.add(addButton);
+        
         // Add the table and buttons to the panel
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(surgeriesTable), BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(addButton);
-
         panel.add(buttonPanel, BorderLayout.PAGE_END);
 
         return panel;

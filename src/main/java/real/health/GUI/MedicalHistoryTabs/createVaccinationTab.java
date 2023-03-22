@@ -125,7 +125,13 @@ public class createVaccinationTab {
                         }
                     }
                 });
-                addVaccinationFrame.add(new JPanel());
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addVaccinationFrame.dispose();
+                    }
+                });
+                addVaccinationFrame.add(cancelButton);
                 addVaccinationFrame.add(submitButton);
 
                 // Display the form for entering the new vaccination details

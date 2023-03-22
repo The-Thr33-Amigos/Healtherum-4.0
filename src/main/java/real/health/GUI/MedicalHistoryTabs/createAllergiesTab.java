@@ -116,6 +116,8 @@ public class createAllergiesTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add medication frame
+                            addAllergiesFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -123,13 +125,16 @@ public class createAllergiesTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add medication frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addAllergiesFrame.dispose();
                     }
                 });
+                addAllergiesFrame.add(cancelButton);
                 addAllergiesFrame.add(submitButton);
-
                 // Display the add medication frame
                 addAllergiesFrame.setVisible(true);
             }

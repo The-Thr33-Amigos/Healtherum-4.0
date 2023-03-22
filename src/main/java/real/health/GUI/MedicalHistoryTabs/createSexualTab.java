@@ -8,7 +8,7 @@ import real.health.SQL.*;
 import java.awt.*;
 
 public class createSexualTab {
-    public JComponent createSexualTab(String id) {
+    public static JComponent createSexualTab(String id) {
         JTable sexualTable = new JTable();
         // populate the table with the patient's sexual history
         try {
@@ -114,6 +114,8 @@ public class createSexualTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add sexual history frame
+                            addSexualFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -121,13 +123,17 @@ public class createSexualTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add sexual history frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addSexualFrame.dispose();
                     }
                 });
+                
+                addSexualFrame.add(cancelButton);
                 addSexualFrame.add(submitButton);
-
                 // Display the add sexual history frame
                 addSexualFrame.setVisible(true);
             }
@@ -139,7 +145,8 @@ public class createSexualTab {
         addButtonPanel.add(addButton);
 
         // Create the sexual history tab panel and add the sexual history table and add button panel
-        JPanel sexualTabPanel = new JPanel(new BorderLayout());
+        JPanel sexualTabPanel = new JPanel();
+        sexualTabPanel.setLayout(new BorderLayout());
         sexualTabPanel.add(new JScrollPane(sexualTable), BorderLayout.CENTER);
         sexualTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 

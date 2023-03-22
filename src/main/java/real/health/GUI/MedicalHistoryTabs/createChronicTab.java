@@ -116,9 +116,14 @@ public class createChronicTab {
                     }
                 }
             });
-            addChronicFrame.add(new JPanel());
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addChronicFrame.dispose();
+                }
+            });
+            addChronicFrame.add(cancelButton);
             addChronicFrame.add(submitButton);
-
             // Display the form for entering the new chronic condition details
             addChronicFrame.setVisible(true);
         }

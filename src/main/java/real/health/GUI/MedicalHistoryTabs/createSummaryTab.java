@@ -3,8 +3,6 @@ package real.health.GUI.MedicalHistoryTabs;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
 
@@ -181,9 +179,6 @@ public class createSummaryTab {
         HealthConn newConnection = new HealthConn();
         Connection con = newConnection.connect();
 
-        // Fetch the patient's data using SQL queries
-        // Replace the queries with the appropriate ones for your database structure
-
         // Fetch allergies
         String allergiesSql = "SELECT name FROM allergies WHERE id = ?";
         PreparedStatement allergiesStatement = con.prepareStatement(allergiesSql);
@@ -199,7 +194,6 @@ public class createSummaryTab {
         }
         patientData.put("allergies", allergies.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch chronic_condition
         String chronicSql = "SELECT chronic_condition FROM chronic_conditions WHERE id = ?";
         PreparedStatement chronicStatement = con.prepareStatement(chronicSql);
@@ -215,7 +209,6 @@ public class createSummaryTab {
         }
         patientData.put("chronicConditions", chronic.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch conditions
         String conditionsSql = "SELECT medical_condition FROM conditions WHERE id = ?";
         PreparedStatement conditionsStatement = con.prepareStatement(conditionsSql);
@@ -230,8 +223,7 @@ public class createSummaryTab {
             conditions.append(conditionsResult.getString(1));
         }
         patientData.put("conditions", conditions.toString());
-        
-        // Add other queries and put the data into the patientData map
+
         // Fetch family
         String familySql = "SELECT health_condition FROM family_history WHERE id = ?";
         PreparedStatement familyStatement = con.prepareStatement(familySql);
@@ -247,7 +239,6 @@ public class createSummaryTab {
         }
         patientData.put("familyMedicalHistory", family.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch lifestyle
         String lifestyleSql = "SELECT factor FROM lifestyle WHERE id = ?";
         PreparedStatement lifestyleStatement = con.prepareStatement(lifestyleSql);
@@ -263,7 +254,6 @@ public class createSummaryTab {
         }
         patientData.put("lifestyleFactors", lifestyle.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch medications
         String medicationsSql = "SELECT medication FROM medications WHERE id = ?";
         PreparedStatement medicationsStatement = con.prepareStatement(medicationsSql);
@@ -279,7 +269,6 @@ public class createSummaryTab {
         }
         patientData.put("medications", medications.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch mental
         String mentalSql = "SELECT issue FROM mental_health WHERE id = ?";
         PreparedStatement mentalStatement = con.prepareStatement(mentalSql);
@@ -295,7 +284,6 @@ public class createSummaryTab {
         }
         patientData.put("mentalHealthHistory", mental.toString());
 
-        // Add other queries and put the data into the patientData map
         // Fetch milestones
         String milestonesSql = "SELECT milestone FROM milestones WHERE id = ?";
         PreparedStatement milestonesStatement = con.prepareStatement(milestonesSql);
@@ -380,7 +368,6 @@ public class createSummaryTab {
         vaccinationsResult.close();
         vaccinationsStatement.close();
         // Close other resources
-        // ...
         con.close();
 
         return patientData;

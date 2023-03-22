@@ -106,6 +106,8 @@ public class createMentalTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add mental health issue frame
+                            addMentalFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -113,11 +115,15 @@ public class createMentalTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add mental health issue frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addMentalFrame.dispose();
                     }
                 });
+                addMentalFrame.add(cancelButton);
                 addMentalFrame.add(submitButton);
 
                 // Display the add mental health issue frame

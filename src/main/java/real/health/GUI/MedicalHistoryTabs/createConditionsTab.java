@@ -100,6 +100,8 @@ public class createConditionsTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add medical condition frame
+                            addConditionFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -107,11 +109,15 @@ public class createConditionsTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add medical condition frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addConditionFrame.dispose();
                     }
                 });
+                addConditionFrame.add(cancelButton);
                 addConditionFrame.add(submitButton);
 
                 // Display the add medical condition frame

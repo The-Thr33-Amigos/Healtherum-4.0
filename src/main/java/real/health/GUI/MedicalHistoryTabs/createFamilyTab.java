@@ -101,6 +101,8 @@ public class createFamilyTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add family member form
+                            addFamilyMemberFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -108,11 +110,15 @@ public class createFamilyTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add family member form
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addFamilyMemberFrame.dispose();
                     }
                 });
+                addFamilyMemberFrame.add(cancelButton);
                 addFamilyMemberFrame.add(submitButton);
 
                 // Display the add family member form

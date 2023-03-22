@@ -150,7 +150,10 @@ public class PatientInformation {
                     statement.setString(4, mailingAddressField.getText());
                     statement.setString(5, id); // id is the patient's unique identifier
                     statement.executeUpdate();
+
+                    // Clean up resources
                     statement.close();
+                    con.close();
                 } catch (SQLException ex) {
                     System.out.println("SQL Exception: " + ex.getMessage());
                 } catch (ClassNotFoundException e1) {

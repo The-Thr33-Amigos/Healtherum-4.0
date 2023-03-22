@@ -98,6 +98,8 @@ public class createLifestyleTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add lifestyle factor frame
+                            addFactorFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -106,10 +108,16 @@ public class createLifestyleTab {
                             ex.printStackTrace();
                         }
 
-                        // Close the add lifestyle factor frame
+
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addFactorFrame.dispose();
                     }
                 });
+                addFactorFrame.add(cancelButton);
                 addFactorFrame.add(submitButton);
 
                 // Display the add lifestyle factor frame

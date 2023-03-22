@@ -95,6 +95,7 @@ public class showLoginScreen extends patientInformationSystem {
                             loadingFrame.add(panel);
                             loadingFrame.setLocationRelativeTo(null);
                             loadingFrame.setVisible(true);
+                            frame.setVisible(false);
 
                             // Create a SwingWorker object to execute patientInformationSystem on a separate
                             // thread

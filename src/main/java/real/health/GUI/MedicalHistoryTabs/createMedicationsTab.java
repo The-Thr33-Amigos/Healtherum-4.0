@@ -114,6 +114,8 @@ public class createMedicationsTab {
                             // Clean up resources
                             statement.close();
                             con.close();
+                            // Close the add medication frame
+                            addMedicationFrame.dispose();
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
@@ -121,11 +123,15 @@ public class createMedicationsTab {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
                         }
-
-                        // Close the add medication frame
+                    }
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         addMedicationFrame.dispose();
                     }
                 });
+                addMedicationFrame.add(cancelButton);
                 addMedicationFrame.add(submitButton);
 
                 // Display the add medication frame
