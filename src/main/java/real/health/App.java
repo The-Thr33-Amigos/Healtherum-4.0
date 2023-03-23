@@ -387,10 +387,13 @@ public class App extends JFrame {
                                 // Perform loading process here
                                 // Call loadingScreen.setProgress(progress) to update progress as it occurs
                                 try {
-                                    
+                                    System.out.println("yeahhhh");
                                     patientInformationSystem(id);
                                     
                                 } catch (ClassNotFoundException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                } catch (IOException e1) {
                                     // TODO Auto-generated catch block
                                     e1.printStackTrace();
                                 }
@@ -436,7 +439,7 @@ public class App extends JFrame {
         frame.setVisible(true);
     }
 
-    private void patientInformationSystem(String id) throws ClassNotFoundException {
+    private void patientInformationSystem(String id) throws ClassNotFoundException, IOException {
         setTitle("Patient Information System");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -463,7 +466,7 @@ public class App extends JFrame {
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();
-        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab());
+        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab(id));
 
         // Create a new instance of the NotesTab class
         NotesTab NotesTab = new NotesTab();
