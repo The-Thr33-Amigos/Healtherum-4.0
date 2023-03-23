@@ -58,7 +58,7 @@ public class createMedicationsTab {
                 addMedicationFrame.setSize(400, 200);
                 addMedicationFrame.setLayout(new GridLayout(5, 2, 10, 10));
                 addMedicationFrame.setLocationRelativeTo(null);
-
+                
                 // Add form components for entering the medication details
                 JLabel nameLabel = new JLabel("Name:");
                 JTextField nameField = new JTextField();

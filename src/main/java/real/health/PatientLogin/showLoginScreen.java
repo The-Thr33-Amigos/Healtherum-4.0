@@ -110,7 +110,7 @@ public class showLoginScreen extends patientInformationSystem {
                                         progress++;
                                         progressBar.setValue(progress);
                                         if (progress == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id);
+                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar);
                                             patientFrame.setVisible(false);
                                         }
                                     }
