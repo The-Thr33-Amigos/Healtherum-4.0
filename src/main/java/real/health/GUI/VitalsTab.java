@@ -3,13 +3,9 @@ package real.health.GUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
-
-import real.health.Patient.*;
 import real.health.SQL.HealthConn;
-import real.health.GUI.*;
 
 public class VitalsTab {
     public JComponent createVitalSignsTab(String id) {
@@ -48,8 +44,6 @@ public class VitalsTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new medication
-        // to the SQL server
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
         JButton addButton = new JButton("Add");
@@ -112,7 +106,7 @@ public class VitalsTab {
                             // Load the MySQL JDBC driver
                             HealthConn newConnection = new HealthConn();
                             Connection con = newConnection.connect();
-
+                            
                             // Create a SQL statement to insert the new vital
                             String sql = "INSERT INTO vitals (id, weight, height, sysbp, diabp, hr, oxygen) VALUES (?, ?, ?, ?, ?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);
@@ -156,7 +150,7 @@ public class VitalsTab {
         addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         addButtonPanel.add(addButton);
 
-        // Create the medications tab panel and add the medications table and add button
+        // Create the vital signs tab panel and add the vital signs table and add button
         // panel
         JPanel vitalSignsPanel = new JPanel(new BorderLayout());
         vitalSignsPanel.add(new JScrollPane(vitalSigns), BorderLayout.CENTER);

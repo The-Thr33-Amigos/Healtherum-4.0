@@ -2,7 +2,6 @@ package real.health.GUI;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.*;
 
 public class NotesTab {
     public JComponent createNotesAndProgressTab() {

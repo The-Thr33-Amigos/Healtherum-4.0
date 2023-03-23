@@ -1,8 +1,6 @@
 package real.health.Patient;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.*;
+import java.util.regex.*;
 
 public class BasicInfo {
     private String firstName;

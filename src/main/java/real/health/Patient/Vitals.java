@@ -2,6 +2,8 @@ package real.health.Patient;
 
 import java.util.HashMap;
 
+import javax.management.remote.rmi.RMIConnector;
+
 public class Vitals {
 
     private double weight;
