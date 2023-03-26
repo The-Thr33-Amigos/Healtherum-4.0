@@ -1,24 +1,14 @@
 package real.health.Patient;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class BloodTest {
     public HashMap<String,BloodItem> bloodTest = new HashMap<>();
     // Will combine all the test for one person into a personal hash map
-    public String race;
-
-    // blood test is the first iteration of a generic blood panel
-    public BloodTest(String newRace) {
-        this.race = newRace;
-        this.createBloodTestGen();
-    }
-
-    // Race of patient is important for GFR which means creatine levels, people with african heritage have a higher level of GFR then other races/ethnicities
-    public String getRace() {
-        return race;
-    }
-
+    
     public String testName;
     public String resultIndicator;
     public LocalDate testDate;
@@ -27,28 +17,67 @@ public class BloodTest {
     public String signature;
     public String comment;
 
+    public String mgDL = "mg/dL";
+    public String mmol = "mmol/L";
+    public String gdl = "g/dL";
+    public String IUL = "IU/L";
+
+    public String race;
+
+    // blood test is the first iteration of a generic blood panel
+    public BloodTest(String newRace) {
+        this.race = newRace;
+        this.createBloodTestGen();
+        this.initResults();
+    }
+
+
+    // Race of patient is important for GFR which means creatine levels, people with african heritage have a higher level of GFR then other races/ethnicities
+    public String getRace() {
+        return race;
+    }
 
     public HashMap<String, BloodItem> getMap() {
         return bloodTest;
     }
 
-
-    public double[] getResultNumbers() {
-        double[] results = new double[18];
-        int count = 0;
-        for (Map.Entry<String, BloodItem> entry : bloodTest.entrySet()) {
-            double result = entry.getValue().getResult();
-            results[count] = result;
-            count += 1;
-
+    public ArrayList<Double> generateBloodTest() {
+        ArrayList<String> testNames = new ArrayList<>();
+        ArrayList<Double> results = new ArrayList<>();
+        for (HashMap.Entry<String, BloodItem> entry : bloodTest.entrySet()) {
+            testNames.add(entry.getKey());
         }
+
+        for (String i : testNames) {
+            double min = bloodTest.get(i).getLow();
+            double max = bloodTest.get(i).getHigh();
+
+            min = min - (min * 0.1);
+            max = max + (max * 0.1);
+
+            Random rand = new Random();
+            double randomDouble = rand.nextDouble();
+            double randomRes = min + (randomDouble * (max - min));
+            randomRes = Math.round(randomRes * 100.0) / 100.0;
+
+            results.add(randomRes);
+        }
+
         return results;
+        
     }
 
-    public String mgDL = "mg/dL";
-    public String mmol = "mmol/L";
-    public String gdl = "g/dL";
-    public String IUL = "IU/L";
+    public void initResults() {
+        ArrayList<Double> randResults = generateBloodTest();
+        int i = 0;
+        for (HashMap.Entry<String, BloodItem> entry : bloodTest.entrySet()) {
+            
+            entry.getValue().setResult(randResults.get(i));
+            i++;
+            entry.getValue().setFlag(entry.getValue().getResult());
+        }
+    }
+
 
     // generic blood test, hard coded, eventually it will be dynamic in the sense that you could customize it to specific test, for example a liver panel
     public BloodItem glucose = new BloodItem("Glucose", 0, 65.0, 99.0, mgDL, false);
@@ -122,25 +151,5 @@ public class BloodTest {
         this.add_Item(ALT.getTestName(), ALT);
     }
 
-    // This is possibly not the best way to do this, but it will work for now.
-    public void updateResult(String resultName, double Result) {
-        BloodItem tempItem = this.getItem(resultName);
-        tempItem.setResult(Result);
 
-        if ((Result != 0) && ((Result > tempItem.getHigh())||(Result < tempItem.getLow()))) {
-            tempItem.setFlag(Result);
-        }
-
-        bloodTest.put(tempItem.getTestName(), tempItem);
-    }
-
-    // test function
-    public void printTest() {
-        BloodItem temp1 = this.getItem("Glucose");
-        BloodItem temp2 = this.getItem("BUN");
-        BloodItem temp3 = this.getItem("Creatine");
-        System.out.println("Name: " + temp1.getTestName() + " Result " + temp1.getResult() + " Units: " + temp1.getUnits() + " Range: " + temp1.getLow() + "-" + temp1.getHigh() + " Flag: " + temp1.getFlag());
-        System.out.println("Name: " + temp2.getTestName() + " Result " + temp2.getResult() + " Units: " + temp2.getUnits() + " Range: " + temp2.getLow() + "-" + temp2.getHigh() + " Flag: " + temp2.getFlag());
-        System.out.println("Name: " + temp3.getTestName() + " Result " + temp3.getResult() + " Units: " + temp3.getUnits() + " Range: " + temp3.getLow() + "-" + temp3.getHigh() + " Flag: " + temp3.getFlag());
-    }
 }
