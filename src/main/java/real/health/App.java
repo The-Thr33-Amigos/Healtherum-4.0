@@ -4,9 +4,11 @@
 package real.health;
 
 
+import real.health.Patient.*;
+import real.health.PatientLogin.createNewUser;
+import real.health.PatientLogin.showLoginScreen;
 import real.health.SQL.HealthConn;
 import real.health.GUI.*;
-
 import java.sql.ResultSet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,11 +23,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
-
 import java.util.Scanner;
 
 public class App extends JFrame {
@@ -387,9 +387,9 @@ public class App extends JFrame {
                                 // Perform loading process here
                                 // Call loadingScreen.setProgress(progress) to update progress as it occurs
                                 try {
-                                    
+
                                     patientInformationSystem(id);
-                                    
+
                                 } catch (ClassNotFoundException e1) {
                                     // TODO Auto-generated catch block
                                     e1.printStackTrace();
