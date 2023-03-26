@@ -32,9 +32,9 @@ public class patientInformationSystem {
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the LabResultsTab class
-        LabResultsTab LabResultsTab = new LabResultsTab();
-        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
-        progressBar.setValue(progressBar.getValue() + 5);
+        ////LabResultsTab LabResultsTab = new LabResultsTab();
+        //tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
+        //progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();
