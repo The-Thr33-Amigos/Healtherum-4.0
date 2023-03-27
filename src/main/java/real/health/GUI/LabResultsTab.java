@@ -30,7 +30,7 @@ public class LabResultsTab {
         }
         return columnValues;
     }
-
+    // TODO add race as a parameter to be based on patient race
     public JComponent createLabResultsTab(String id) {
 
         JPanel labResultsPanel = new JPanel(new BorderLayout());
@@ -147,9 +147,12 @@ public class LabResultsTab {
                 BloodTest newBloodTest = new BloodTest("White");
                 LocalDate currentDate = LocalDate.now();
                 LocalDate oldDate = currentDate.minusDays(4);
+                
+                String curr = currentDate.toString();
+                String old = oldDate.toString();
 
-                newBloodTest.testDate = oldDate;
-                newBloodTest.resultDate = currentDate;
+                newBloodTest.testDate = old;
+                newBloodTest.resultDate = curr;
                 String testName = (String) nameCombo.getSelectedItem();
                 newBloodTest.testName = testName;
 
@@ -221,6 +224,28 @@ public class LabResultsTab {
                         int rowIndex = table.getRowCount();
                         bloodTestMap.put(rowIndex, newBloodTest);
 
+                        try {
+                            BTest convert = new BTest(id);
+                            String json = convert.bloodToJSON(newBloodTest);
+
+                            HealthConn newConnection = new HealthConn();
+                            Connection conn = newConnection.connect();
+                            String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
+
+                            PreparedStatement statement = conn.prepareStatement(sql);
+                            statement.setString(1,id);
+                            statement.setString(2, json);
+                            statement.executeUpdate();
+
+                            statement.close();
+                            conn.close();
+                            
+                        } catch (ClassNotFoundException c) {
+                            c.printStackTrace();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+
                         model.addRow(new Object[] { newBloodTest.testName, newBloodTest.resultIndicator,
                                 newBloodTest.testDate,
                                 newBloodTest.testInterp, newBloodTest.resultDate, newBloodTest.signature,
@@ -255,12 +280,15 @@ public class LabResultsTab {
             ResultSet result2 = statement.executeQuery();
 
             BTest newTest = new BTest(id);
+            int count = 0;
             while (result2.next()) {
                 BloodTest newBlood;
-                newBlood = newTest.jsonToBT(result2.getString(2));
+                newBlood = newTest.jsonToBT(result2.getString(1));
                 newTest.addToList(newBlood);
                 model.addRow(new Object[] { newBlood.testName, newBlood.resultIndicator, newBlood.testDate,
-                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment, newBlood });
+                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment});
+                        bloodTestMap.put(count, newBlood);
+                count++;
             }
 
             table.setModel(model);
@@ -275,6 +303,33 @@ public class LabResultsTab {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // try {
+        //     BTest convert = new BTest(id);
+        //     ArrayList<BloodTest> toBeAdded = new ArrayList<>();
+        //     for (BloodTest curr : bloodTestMap.values()) {
+        //         toBeAdded.add(curr);
+        //     }
+
+        //     ArrayList<String> toJson = convert.BJson(toBeAdded);
+
+        //     HealthConn newConnection = new HealthConn();
+        //     Connection conn = newConnection.connect();
+        //     String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
+
+        //     PreparedStatement statement = conn.prepareStatement(sql);
+        //     for (String json : toJson) {
+        //         statement.setString(1,id);
+        //         statement.setString(2, json);
+        //         System.out.println("test");
+        //         statement.executeUpdate();
+        //     }
+
+        // } catch (ClassNotFoundException c) {
+        //     c.printStackTrace();
+        // } catch (SQLException e) {
+        //     e.printStackTrace();
+        // }
 
         // Test Information
         JPanel testInformationPanel = new JPanel();
