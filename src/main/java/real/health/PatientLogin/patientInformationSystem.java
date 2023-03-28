@@ -4,9 +4,10 @@ import real.health.GUI.*;
 import real.health.PatientLogin.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class patientInformationSystem {
-    static Component patientInformationSystem(String id, JProgressBar progressBar) throws ClassNotFoundException {
+    static Component patientInformationSystem(String id, JProgressBar progressBar) throws ClassNotFoundException, IOException {
         JTabbedPane tabs;
         JFrame patient = new JFrame("Patient Information System");
         patient.setSize(1000, 600);
