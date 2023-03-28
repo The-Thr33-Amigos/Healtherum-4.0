@@ -23,6 +23,11 @@ public class patientInformationSystem {
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the MedicalHistoryTab class
+        InsuranceTab InsuranceTab = new InsuranceTab();
+        tabs.addTab("Insurance", InsuranceTab.createInsuranceTab(id));
+        progressBar.setValue(progressBar.getValue() + 5);
+
+        // Create a new instance of the MedicalHistoryTab class
         MedicalHistoryTab medicalHistoryTab = new MedicalHistoryTab();
         tabs.addTab("Medical History", medicalHistoryTab.createMedicalHistoryTab(id));
         progressBar.setValue(progressBar.getValue() + 5);
@@ -39,7 +44,7 @@ public class patientInformationSystem {
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();
-        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab());
+        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab(id));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the NotesTab class
