@@ -11,9 +11,9 @@ public class BloodTest {
     
     public String testName;
     public String resultIndicator;
-    public LocalDate testDate;
+    public String testDate;
     public String testInterp;
-    public LocalDate resultDate;
+    public String resultDate;
     public String signature;
     public String comment;
 
