@@ -16,7 +16,7 @@ import org.jdatepicker.util.*;
 import org.jdatepicker.*;
 
 public class AppointmentsTab {
-    public JComponent createAppointmentsTab() {
+    public JComponent createAppointmentsTab(String id) {
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
         JTable appointmentsTable = new JTable();
 
