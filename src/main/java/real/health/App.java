@@ -80,6 +80,7 @@ public class App extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
     public class IdGenerator {
         public String generateUniqueId() {
             return "987654321"; // replace this with your desired ID
