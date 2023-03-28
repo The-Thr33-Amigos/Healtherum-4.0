@@ -54,6 +54,10 @@ public class App extends JFrame {
         panel.add(infoLabel, constraints);
 
         JButton existingUserButton = new JButton("Existing User");
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        panel.add(existingUserButton, constraints);
+
         existingUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showLoginScreen.showLoginScreen();
@@ -61,20 +65,18 @@ public class App extends JFrame {
             }
         });
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        panel.add(existingUserButton, constraints);
-
         JButton newUserButton = new JButton("New User");
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        panel.add(newUserButton, constraints);
+
         newUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createNewUser.createNewUser();
                 frame.dispose();
             }
         });
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        panel.add(newUserButton, constraints);
+
         frame.add(panel);
         frame.pack();
         frame.setLocationRelativeTo(null);

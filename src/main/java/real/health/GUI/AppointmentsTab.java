@@ -102,12 +102,15 @@ public class AppointmentsTab {
                 int result = JOptionPane.showConfirmDialog(null, datePicker, "Select Date",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    Calendar selectedDate = (Calendar) datePicker.getModel().getValue();
+                    Date selectedDate = (Date) datePicker.getModel().getValue();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(selectedDate);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String formattedDate = dateFormat.format(selectedDate.getTime());
+                    String formattedDate = dateFormat.format(calendar.getTime());
                     dateField.setText(formattedDate);
                 }
             }
+
         });
 
         JLabel timeLabel = new JLabel("Appointment Time:");
