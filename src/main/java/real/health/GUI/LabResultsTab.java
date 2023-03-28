@@ -6,6 +6,8 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import javax.swing.table.*;
 
+import com.mysql.cj.conf.ConnectionUrl.Type;
+
 import real.health.Patient.BloodTest;
 import real.health.Patient.Patient;
 import real.health.Patient.BloodItem;
@@ -18,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class LabResultsTab {
 
@@ -30,8 +33,8 @@ public class LabResultsTab {
         }
         return columnValues;
     }
-
-    public JComponent createLabResultsTab(String id) {
+    // TODO add race as a parameter to be based on patient race
+    public JComponent createLabResultsTab(String id) throws IOException {
 
         JPanel labResultsPanel = new JPanel(new BorderLayout());
 
@@ -134,7 +137,6 @@ public class LabResultsTab {
         newButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 // newFrame.pack();
                 newFrame.setVisible(true);
 
@@ -148,8 +150,11 @@ public class LabResultsTab {
                 LocalDate currentDate = LocalDate.now();
                 LocalDate oldDate = currentDate.minusDays(4);
 
-                newBloodTest.testDate = oldDate;
-                newBloodTest.resultDate = currentDate;
+                String curr = currentDate.toString();
+                String old = oldDate.toString();
+
+                newBloodTest.testDate = old;
+                newBloodTest.resultDate = curr;
                 String testName = (String) nameCombo.getSelectedItem();
                 newBloodTest.testName = testName;
 
@@ -221,6 +226,28 @@ public class LabResultsTab {
                         int rowIndex = table.getRowCount();
                         bloodTestMap.put(rowIndex, newBloodTest);
 
+                        try {
+                            BTest convert = new BTest(id);
+                            String json = convert.bloodToJSON(newBloodTest);
+
+                            HealthConn newConnection = new HealthConn();
+                            Connection conn = newConnection.connect();
+                            String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
+
+                            PreparedStatement statement = conn.prepareStatement(sql);
+                            statement.setString(1,id);
+                            statement.setString(2, json);
+                            statement.executeUpdate();
+
+                            statement.close();
+                            conn.close();
+
+                        } catch (ClassNotFoundException c) {
+                            c.printStackTrace();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+
                         model.addRow(new Object[] { newBloodTest.testName, newBloodTest.resultIndicator,
                                 newBloodTest.testDate,
                                 newBloodTest.testInterp, newBloodTest.resultDate, newBloodTest.signature,
@@ -255,12 +282,15 @@ public class LabResultsTab {
             ResultSet result2 = statement.executeQuery();
 
             BTest newTest = new BTest(id);
+            int count = 0;
             while (result2.next()) {
                 BloodTest newBlood;
-                newBlood = newTest.jsonToBT(result2.getString(2));
+                newBlood = newTest.jsonToBT(result2.getString(1));
                 newTest.addToList(newBlood);
                 model.addRow(new Object[] { newBlood.testName, newBlood.resultIndicator, newBlood.testDate,
-                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment, newBlood });
+                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment});
+                        bloodTestMap.put(count, newBlood);
+                count++;
             }
 
             table.setModel(model);
@@ -277,24 +307,102 @@ public class LabResultsTab {
         }
 
         // Test Information
-        JPanel testInformationPanel = new JPanel();
-        testInformationPanel.setLayout(new BoxLayout(testInformationPanel, BoxLayout.Y_AXIS));
-        JLabel testDateLabel = new JLabel("Test Date:");
-        JTextField testDateField = new JTextField();
-        testDateField.setEditable(false);
-        JLabel testTypeLabel = new JLabel("Test Type:");
-        JTextField testTypeField = new JTextField();
-        testTypeField.setEditable(false);
-        JLabel orderingProviderLabel = new JLabel("Ordering Provider:");
-        JTextField orderingProviderField = new JTextField();
-        orderingProviderField.setEditable(false);
-        testInformationPanel.add(testDateLabel);
-        testInformationPanel.add(testDateField);
-        testInformationPanel.add(testTypeLabel);
-        testInformationPanel.add(testTypeField);
-        testInformationPanel.add(orderingProviderLabel);
-        testInformationPanel.add(orderingProviderField);
+        JPanel testInformationPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(0, 5, 10, 5);
+        JPanel statusPanel = new JPanel();
+        JPanel statusPanel1 = new JPanel();
+        JPanel statusPanel2 = new JPanel();
+
+        JLabel testDateLabel = new JLabel("Disease Indicator:");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        testInformationPanel.add(testDateLabel, constraints);
+
+        JLabel accuracyLabel = new JLabel();
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        testInformationPanel.add(accuracyLabel, constraints);
+
+        JLabel statusLabel = new JLabel();
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        statusPanel.add(statusLabel);
+        testInformationPanel.add(statusPanel, constraints);
+
+        JButton predBtn = new JButton("Predict");
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        testInformationPanel.add(predBtn, constraints);
+
+        JLabel testTypeLabel = new JLabel("Heart Disease:");
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        testInformationPanel.add(testTypeLabel, constraints);
+
+        JLabel statusLabel1 = new JLabel();
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        statusPanel1.add(statusLabel1, constraints);
+
+        JButton predBtn1 = new JButton("Predict");
+        constraints.gridx = 0;
+        constraints.gridy = 8;
+        testInformationPanel.add(predBtn1, constraints);
+
+        JLabel orderingProviderLabel = new JLabel("Diabetes:");
+        constraints.gridx = 0;
+        constraints.gridy = 12;
+        testInformationPanel.add(orderingProviderLabel, constraints);
+
+        JLabel statusLabel2 = new JLabel();
+        constraints.gridx = 0;
+        constraints.gridy = 13;
+        statusPanel2.add(statusLabel2, constraints);
+
+        JButton predBtn2 = new JButton("Predict");
+        constraints.gridx = 0;
+        constraints.gridy = 14;
+        testInformationPanel.add(predBtn2, constraints);
+
         labResultsPanel.add(testInformationPanel, BorderLayout.WEST);
+
+        predBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)  {
+                try {
+
+                    heartDisease newHD = new heartDisease(id);
+                    ArrayList<String> predic = newHD.predict();
+                    String acc = predic.get(0);
+                    accuracyLabel.setText(acc);
+
+                    String pred = predic.get(1);
+
+                    if ("Absence".equals(pred)) {
+                        statusLabel.setText("Absence");
+                        statusPanel.setBackground(Color.GREEN);
+                        statusPanel.add(statusLabel);
+                    } else if ("Presence".equals(pred)) {
+                        statusLabel.setText("Presence Detected");
+                        statusPanel.setBackground(Color.RED);
+                        statusPanel.add(statusLabel);
+                    } else {
+                        statusLabel.setText(pred);
+                        statusPanel.setBackground(Color.GRAY);
+                        statusPanel.add(statusLabel);
+                    }
+                    System.out.println(pred);
+
+                    predBtn.setVisible(false);
+                    predBtn.setEnabled(false);
+
+                } catch (IOException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+        });
 
         // Download/Print Options
         JPanel downloadPrintPanel = new JPanel();
