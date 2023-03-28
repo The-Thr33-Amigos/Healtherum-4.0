@@ -25,7 +25,7 @@ public class createConditionsTab {
 
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
-                    new Object[] { "Condition", "Status" },
+                    new Object[] { "Conditionssss", "Status" },
                     0);
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
@@ -91,7 +91,7 @@ public class createConditionsTab {
                             statement.setString(1, id);
                             statement.setString(2, condition);
                             statement.setString(3, status);
-                            statement.executeUpdate(); 
+                            statement.executeUpdate();
 
                             // Refresh the medications table to show the newly added medication
                             DefaultTableModel tableModel = (DefaultTableModel) conditionsTable.getModel();
