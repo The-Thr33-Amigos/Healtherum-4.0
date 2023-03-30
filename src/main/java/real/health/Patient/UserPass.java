@@ -28,26 +28,24 @@ public class UserPass {
         return currentPassword;
     }
 
-
-    public String hashGen() {
-        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*_-+=?1234567890";
+    public static String generateUniqueId() {
+        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         Random rand = new Random();
 
-        int length = 26;
-        StringBuilder newHash = new StringBuilder();
+        int length = 20; // Adjust the length of the ID as needed
+        StringBuilder newId = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
             int randomIndex = rand.nextInt(letters.length());
             char randomChar = letters.charAt(randomIndex);
-            newHash.append(randomChar);
+            newId.append(randomChar);
         }
 
-        return newHash.toString();
-
+        return newId.toString();
     }
 
     public void initializeHash() {
-        hash = hashGen();
+        hash = generateUniqueId();
     }
 
     public String getHash() {

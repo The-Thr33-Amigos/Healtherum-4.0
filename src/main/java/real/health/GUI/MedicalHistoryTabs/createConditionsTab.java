@@ -26,7 +26,12 @@ public class createConditionsTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Conditionssss", "Status" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
             }
@@ -95,7 +100,7 @@ public class createConditionsTab {
 
                             // Refresh the medications table to show the newly added medication
                             DefaultTableModel tableModel = (DefaultTableModel) conditionsTable.getModel();
-                            tableModel.addRow(new Object[] { condition, status});
+                            tableModel.addRow(new Object[] { condition, status });
 
                             // Clean up resources
                             statement.close();

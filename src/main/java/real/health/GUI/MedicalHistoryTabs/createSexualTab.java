@@ -16,7 +16,7 @@ public class createSexualTab {
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-    
+
             // Create a SQL statement to retrieve the patient's sexual history
             String sql = "SELECT sexual_activity, partners, last_activity, protection FROM sexual_history WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -26,7 +26,12 @@ public class createSexualTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Sexual Activity", "Partners", "Last Activity", "Protection" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getInt(2), result.getString(3),
                         result.getString(4) });
@@ -46,7 +51,8 @@ public class createSexualTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new sexual history
+        // Create the add button and add an ActionListener to upload the new sexual
+        // history
         // to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
@@ -109,7 +115,7 @@ public class createSexualTab {
 
                             // Refresh the sexual history table to show the newly added history
                             DefaultTableModel tableModel = (DefaultTableModel) sexualTable.getModel();
-                            tableModel.addRow(new Object[]{sexualActivity, partners, lastActivity, protection});
+                            tableModel.addRow(new Object[] { sexualActivity, partners, lastActivity, protection });
 
                             // Clean up resources
                             statement.close();
@@ -131,7 +137,7 @@ public class createSexualTab {
                         addSexualFrame.dispose();
                     }
                 });
-                
+
                 addSexualFrame.add(cancelButton);
                 addSexualFrame.add(submitButton);
                 // Display the add sexual history frame
@@ -144,7 +150,8 @@ public class createSexualTab {
         addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
-        // Create the sexual history tab panel and add the sexual history table and add button panel
+        // Create the sexual history tab panel and add the sexual history table and add
+        // button panel
         JPanel sexualTabPanel = new JPanel();
         sexualTabPanel.setLayout(new BorderLayout());
         sexualTabPanel.add(new JScrollPane(sexualTable), BorderLayout.CENTER);

@@ -16,7 +16,7 @@ public class createSurgeriesTab {
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-    
+
             // Create a SQL statement to retrieve the patient's surgery history
             String sql = "SELECT surgery_procedure, surgeon, location, date FROM surgeries WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -26,7 +26,12 @@ public class createSurgeriesTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Procedure", "Surgeon", "Location", "Date" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
                         result.getString(4) });
@@ -124,7 +129,7 @@ public class createSurgeriesTab {
                         }
                     }
                 });
-                
+
                 JButton cancelButton = new JButton("Cancel");
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -142,7 +147,7 @@ public class createSurgeriesTab {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.add(addButton);
-        
+
         // Add the table and buttons to the panel
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());

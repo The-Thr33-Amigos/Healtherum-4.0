@@ -3,6 +3,10 @@ package real.health.GUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.*;
 import java.util.*;
 import java.beans.*;
@@ -11,6 +15,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import com.toedter.calendar.*;
+
+import real.health.SQL.HealthConn;
+
 import org.jdatepicker.impl.*;
 import org.jdatepicker.util.*;
 import org.jdatepicker.*;
@@ -20,7 +27,34 @@ public class AppointmentsTab {
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
         JTable appointmentsTable = new JTable();
 
-        // TODO: Populate the table with existing data from SQL database
+        // Populate the table with existing data from SQL database
+        try {
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+
+            String sql = "SELECT appointment_date, appointment_time, appointment_type FROM appointments WHERE id = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            DefaultTableModel model = new DefaultTableModel(
+                    new Object[][] {},
+                    new String[] { "Appointment Date", "Appointment Time", "Appointment Type" });
+
+            while (resultSet.next()) {
+                model.addRow(new Object[] { resultSet.getString("appointment_date"),
+                        resultSet.getString("appointment_time"), resultSet.getString("appointment_type") });
+            }
+
+            appointmentsTable.setModel(model);
+
+            statement.close();
+            con.close();
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("Error: unable to connect to MySQL database");
+            ex.printStackTrace();
+        }
 
         JScrollPane scrollPane = new JScrollPane(appointmentsTable);
         appointmentsPanel.add(scrollPane, BorderLayout.CENTER);
@@ -29,7 +63,7 @@ public class AppointmentsTab {
         JButton addAppointmentButton = new JButton("Add Appointment");
         addAppointmentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addAppointment(appointmentsTable);
+                addAppointment(appointmentsTable, id);
             }
         });
 
@@ -57,7 +91,7 @@ public class AppointmentsTab {
      * Check if there is no existing appointment for the same date and time.
      */
 
-    private void addAppointment(JTable appointmentsTable) {
+    private void addAppointment(JTable appointmentsTable, String id) {
         JFrame addAppointmentFrame = new JFrame("Add Appointment");
         addAppointmentFrame.setSize(400, 200);
         addAppointmentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -170,6 +204,32 @@ public class AppointmentsTab {
                     // Add the new appointment to the table
                     DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
                     model.addRow(newAppointment);
+
+                    // Add the new appointment to the SQL database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+
+                        String sql = "INSERT INTO appointments (id, appointment_date, appointment_time, appointment_type) VALUES (?, ?, ?, ?)";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id);
+                        statement.setString(2, newAppointment[0]);
+                        statement.setString(3, newAppointment[1]);
+                        statement.setString(4, newAppointment[2]);
+
+                        int rowsInserted = statement.executeUpdate();
+                        if (rowsInserted > 0) {
+                            System.out.println("A new appointment was inserted successfully!");
+                        }
+
+                        statement.close();
+                        con.close();
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        System.out.println("Error: unable to connect to MySQL database");
+                        ex.printStackTrace();
+                    }
+
                     addAppointmentFrame.dispose();
                 } else {
                     JOptionPane.showMessageDialog(addAppointmentFrame,
