@@ -26,6 +26,9 @@ import java.util.UUID;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.util.Scanner;
 
 public class App extends JFrame {
@@ -34,6 +37,12 @@ public class App extends JFrame {
     }
 
     public static void homeScreen() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
         JFrame frame = new JFrame("Healthereum");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

@@ -44,6 +44,67 @@ public class VitalsTab {
             ex.printStackTrace();
         }
 
+        vitalSigns.addMouseListener(new MouseAdapter() {
+            private Timer timer;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                timer = new Timer(500, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent c) {
+                        // Get the row that was clicked
+                        int row = vitalSigns.rowAtPoint(e.getPoint());
+
+                        Object[] values = new Object[vitalSigns.getColumnCount()];
+                        for (int i = 0; i < values.length; i++) {
+                            values[i] = vitalSigns.getValueAt(row, i);
+                        }
+
+                        int confirm = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete this vital sign?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            try {
+                                HealthConn newConnection = new HealthConn();
+                                Connection con = newConnection.connect();
+                                String sql = "DELETE FROM vitals WHERE id = ? AND weight = ? AND height = ? AND sysbp = ? AND diabp = ? AND hr = ? AND oxygen = ?";
+                                PreparedStatement statement = con.prepareStatement(sql);
+                                statement.setString(1, id);
+                                statement.setObject(2, values[0]);
+                                statement.setObject(3, values[1]);
+                                statement.setObject(4, values[2]);
+                                statement.setObject(5, values[3]);
+                                statement.setObject(6, values[4]);
+                                statement.setObject(7, values[5]);
+                                statement.executeUpdate();
+
+                                DefaultTableModel tableModel = (DefaultTableModel) vitalSigns.getModel();
+                                tableModel.removeRow(row);
+
+                                statement.close();
+                                con.close();
+    
+                            } catch (ClassNotFoundException ex) {
+                                ex.printStackTrace();
+                            } catch (SQLException s) {
+                                s.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                timer.setRepeats(false);
+                timer.start();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (timer != null) {
+                    timer.stop();
+                }
+            }
+        });
+        
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
         JButton addButton = new JButton("Add");

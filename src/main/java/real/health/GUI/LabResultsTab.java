@@ -6,6 +6,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import javax.swing.table.*;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.mysql.cj.conf.ConnectionUrl.Type;
 
 import real.health.Patient.BloodTest;
@@ -33,8 +34,16 @@ public class LabResultsTab {
         }
         return columnValues;
     }
+
+    
     // TODO add race as a parameter to be based on patient race
     public JComponent createLabResultsTab(String id) throws IOException {
+
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
 
         JPanel labResultsPanel = new JPanel(new BorderLayout());
 
@@ -375,6 +384,7 @@ public class LabResultsTab {
                     heartDisease newHD = new heartDisease(id);
                     ArrayList<String> predic = newHD.predict();
                     String acc = predic.get(0);
+                    acc = acc.substring(2,4) + "%";
                     accuracyLabel.setText(acc);
 
                     String pred = predic.get(1);
