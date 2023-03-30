@@ -25,6 +25,7 @@ public class createNewUser {
 
         String[] bioSexOptions = {"Male", "Female"};
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
+        bioCombo.setSelectedItem(null);
         JLabel bioLabel = new JLabel("Biological Sex:");
 
         JLabel mailingLabel = new JLabel("Mailing Address:");
@@ -32,6 +33,7 @@ public class createNewUser {
 
         String[] raceNames = {"Black", "White", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander"};
         JComboBox<String> raceCombo = new JComboBox<>(raceNames);
+        raceCombo.setSelectedItem(null);
         JLabel raceLabel = new JLabel("Race:");
 
         panel1.add(nameLabel);

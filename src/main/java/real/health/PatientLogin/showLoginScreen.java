@@ -2,6 +2,9 @@ package real.health.PatientLogin;
 
 import real.health.*;
 import javax.swing.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
@@ -10,6 +13,11 @@ import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
         JFrame frame = new JFrame("Login Screen");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(new GridBagLayout());

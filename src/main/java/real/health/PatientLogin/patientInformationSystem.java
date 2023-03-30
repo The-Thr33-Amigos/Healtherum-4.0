@@ -3,11 +3,19 @@ package real.health.PatientLogin;
 import real.health.GUI.*;
 import real.health.PatientLogin.*;
 import javax.swing.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.awt.*;
 import java.io.IOException;
 
 public class patientInformationSystem {
     static Component patientInformationSystem(String id, JProgressBar progressBar) throws ClassNotFoundException, IOException {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
         JTabbedPane tabs;
         JFrame patient = new JFrame("Patient Information System");
         patient.setSize(1000, 600);
