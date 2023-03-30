@@ -26,7 +26,12 @@ public class createFamilyTab {
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
-            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Relationship", "Condition" }, 0);
+            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Relationship", "Condition" }, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
             }
@@ -87,7 +92,7 @@ public class createFamilyTab {
 
                             // Create a SQL statement to insert the new family member into the database
                             String sql = "INSERT INTO family_history (id, relationship, health_condition) VALUES (?, ?, ?)";
-                            
+
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, relationship);

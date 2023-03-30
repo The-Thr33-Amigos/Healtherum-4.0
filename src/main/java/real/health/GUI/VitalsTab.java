@@ -22,7 +22,14 @@ public class VitalsTab {
             ResultSet result = statement.executeQuery();
 
             DefaultTableModel model = new DefaultTableModel(
-                    new Object[] { "Weight", "Height", "Systemic Blood Pressure", "Diastolic Blood Pressure", "Heart Rate", "Oxygen" }, 0);
+                    new Object[] { "Weight", "Height", "Systemic Blood Pressure", "Diastolic Blood Pressure",
+                            "Heart Rate", "Oxygen" },
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             // Populate the table model with the retrieved data
             while (result.next()) {
                 model.addRow(new Object[] { result.getDouble(1), result.getInt(2),
@@ -61,8 +68,8 @@ public class VitalsTab {
                         }
 
                         int confirm = JOptionPane.showConfirmDialog(null,
-                        "Are you sure you want to delete this vital sign?", "Confirm Deletion",
-                        JOptionPane.YES_NO_OPTION);
+                                "Are you sure you want to delete this vital sign?", "Confirm Deletion",
+                                JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             try {
                                 HealthConn newConnection = new HealthConn();
@@ -83,7 +90,7 @@ public class VitalsTab {
 
                                 statement.close();
                                 con.close();
-    
+
                             } catch (ClassNotFoundException ex) {
                                 ex.printStackTrace();
                             } catch (SQLException s) {
@@ -104,7 +111,7 @@ public class VitalsTab {
                 }
             }
         });
-        
+
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
         JButton addButton = new JButton("Add");
@@ -167,7 +174,7 @@ public class VitalsTab {
                             // Load the MySQL JDBC driver
                             HealthConn newConnection = new HealthConn();
                             Connection con = newConnection.connect();
-                            
+
                             // Create a SQL statement to insert the new vital
                             String sql = "INSERT INTO vitals (id, weight, height, sysbp, diabp, hr, oxygen) VALUES (?, ?, ?, ?, ?, ?, ?)";
                             PreparedStatement statement = con.prepareStatement(sql);

@@ -26,7 +26,12 @@ public class createMentalTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Issue", "Status", "Date Diagnosed" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
             }
@@ -45,7 +50,8 @@ public class createMentalTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new mental health issue
+        // Create the add button and add an ActionListener to upload the new mental
+        // health issue
         // to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
@@ -136,7 +142,8 @@ public class createMentalTab {
         addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
-        // Create the mental health tab panel and add the mental health table and add button
+        // Create the mental health tab panel and add the mental health table and add
+        // button
         // panel
         JPanel mentalTabPanel = new JPanel(new BorderLayout());
         mentalTabPanel.add(new JScrollPane(mentalTable), BorderLayout.CENTER);
