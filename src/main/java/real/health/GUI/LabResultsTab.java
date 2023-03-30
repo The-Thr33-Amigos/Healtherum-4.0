@@ -314,7 +314,7 @@ public class LabResultsTab {
         JPanel statusPanel1 = new JPanel();
         JPanel statusPanel2 = new JPanel();
 
-        JLabel testDateLabel = new JLabel("Disease Indicator:");
+        JLabel testDateLabel = new JLabel("Heart Disease Indicator:");
         constraints.gridx = 0;
         constraints.gridy = 0;
         testInformationPanel.add(testDateLabel, constraints);
@@ -335,7 +335,7 @@ public class LabResultsTab {
         constraints.gridy = 3;
         testInformationPanel.add(predBtn, constraints);
 
-        JLabel testTypeLabel = new JLabel("Heart Disease:");
+        JLabel testTypeLabel = new JLabel("Lung Cancer:");
         constraints.gridx = 0;
         constraints.gridy = 6;
         testInformationPanel.add(testTypeLabel, constraints);
@@ -371,7 +371,6 @@ public class LabResultsTab {
             @Override
             public void actionPerformed(ActionEvent e)  {
                 try {
-
                     heartDisease newHD = new heartDisease(id);
                     ArrayList<String> predic = newHD.predict();
                     String acc = predic.get(0);

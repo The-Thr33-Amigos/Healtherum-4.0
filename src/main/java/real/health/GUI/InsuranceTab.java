@@ -16,216 +16,291 @@ import real.health.SQL.*;
 import real.health.Patient.BloodTest;
 import real.health.Patient.Patient;
 import real.health.Patient.BloodItem;
-import real.health.SQL.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import real.health.SQL.HealthConn;
 
 public class InsuranceTab {
-
-    private static boolean DEBUG = false;
-
     public static JComponent createInsuranceTab(String id) {
-        System.out.println("Inside createInsuranceTab method");
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel panel = new JPanel(new BorderLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5);
 
         // Create the table to display insurance information
-        InsuranceTableModel model = new InsuranceTableModel(id);
-        JTable table = new JTable(model);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 120));
+        DefaultTableModel tableModel = new DefaultTableModel(
+                new String[] { "Provider Name", "Policy Number", "Group Number" }, 0);
+        JTable table = new JTable(tableModel);
+        table.setPreferredScrollableViewportSize(new Dimension(800, 500));
         table.setFillsViewportHeight(true);
 
-        // Create the scroll pane and add the table to it.
+        // Fetch insurance information from the database
+        try {
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+
+            String sql = "SELECT provider_name, policy_number, group_number FROM insurance WHERE id = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, id);
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
+            }
+
+            result.close();
+            statement.close();
+            con.close();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Error: unable to load MySQL JDBC driver");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Error: unable to connect to MySQL database");
+            ex.printStackTrace();
+        }
+
         JScrollPane scrollPane = new JScrollPane(table);
-        panel.add(scrollPane);
+        panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add the "New" button
-        JButton newButton = new JButton("New");
-        panel.add(newButton);
+        // Create the top panel with upload button
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        panel.add(topPanel, BorderLayout.NORTH);
 
-        // Add the "Delete" button
-        JButton deleteButton = new JButton("Delete");
-        panel.add(deleteButton);
-
-        // Add the "Edit" button
-        JButton editButton = new JButton("Edit");
-        editButton.setVisible(false);
-        panel.add(editButton);
-
-        // Add the "Submit" button
-        JButton submitButton = new JButton("Submit");
-        submitButton.setVisible(false);
-        panel.add(submitButton);
-
-        // Add the "Upload Insurance Card" button
         JButton uploadButton = new JButton("Upload Insurance Card");
-        panel.add(uploadButton);
 
-        // Add the new insurance info form
-        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-        JLabel providerLabel = new JLabel("Provider Name:");
-        JTextField providerField = new JTextField();
-        JLabel policyNumberLabel = new JLabel("Policy Number:");
-        JTextField policyNumberField = new JTextField();
-        JLabel groupNumberLabel = new JLabel("Group Number:");
-        JTextField groupNumberField = new JTextField();
-        JLabel policyHolderNameLabel = new JLabel("Policy Holder Name:");
-        JTextField policyHolderNameField = new JTextField();
-        JLabel policyHolderDOBLabel = new JLabel("Policy Holder DOB:");
-        JTextField policyHolderDOBField = new JTextField();
-        JLabel policyHolderSSNLabel = new JLabel("Policy Holder SSN:");
-        JTextField policyHolderSSNField = new JTextField();
+        c.anchor = GridBagConstraints.EAST;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 3;
+        topPanel.add(uploadButton, c);
 
-        formPanel.add(providerLabel);
-        formPanel.add(providerField);
-        formPanel.add(policyNumberLabel);
-        formPanel.add(policyNumberField);
-        formPanel.add(groupNumberLabel);
-        formPanel.add(groupNumberField);
-        formPanel.add(policyHolderNameLabel);
-        formPanel.add(policyHolderNameField);
-        formPanel.add(policyHolderDOBLabel);
-        formPanel.add(policyHolderDOBField);
-        formPanel.add(policyHolderSSNLabel);
-        formPanel.add(policyHolderSSNField);
+        // Create the bottom panel with buttons
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
-        panel.add(formPanel);
-        formPanel.setVisible(false);
+        JButton addButton = new JButton("Add");
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 1;
+        bottomPanel.add(addButton, c);
+        JButton deleteButton = new JButton("Delete");
+        c.gridx = 1;
+        bottomPanel.add(deleteButton, c);
+        JButton editButton = new JButton("Edit");
+        c.gridx = 2;
+        bottomPanel.add(editButton, c);
 
-        // Action listener for "New" button
-        newButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                table.setEnabled(false);
-                editButton.setVisible(false);
-                submitButton.setVisible(false);
-                formPanel.setVisible(true);
-            }
-        });
+        // Add action listener for the "Add" button
+        addButton.addActionListener(e -> {
+            JFrame addFrame = createAddInsuranceFrame(tableModel, id);
+            addFrame.setVisible(true);
+            JButton submitButton = new JButton("Submit");
+            // Add JLabel and JTextField for Provider
+            c.gridx = 0;
+            c.gridy = 0;
+            addFrame.add(new JLabel("Provider:"), c);
 
-        // Action listener for "Delete" button
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[] selectedRows = table.getSelectedRows();
-                List<Integer> insuranceIds = new ArrayList<>();
-                for (int selectedRow : selectedRows) {
-                    String insuranceId = (String) model.getValueAt(selectedRow, 0);
-                    insuranceIds.add(Integer.parseInt(insuranceId));
-                }
-                model.deleteInsurance(insuranceIds);
-                table.clearSelection();
-            }
-        });
+            c.gridx = 1;
+            c.gridy = 0;
+            addFrame.add(providerField, c);
 
-        // Action listener for "Edit" button
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                table.setEnabled(true);
-                editButton.setVisible(false);
-                submitButton.setVisible(true);
-            }
-        });
+            // Add JLabel and JTextField for Policy Number
+            c.gridx = 0;
+            c.gridy = 1;
+            addFrame.add(new JLabel("Policy Number:"), c);
 
-        // Action listener for "Submit" button
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Save the new insurance information
+            c.gridx = 1;
+            c.gridy = 1;
+            addFrame.add(policyNumberField, c);
+
+            // Add JLabel and JTextField for Group Number
+            c.gridx = 0;
+            c.gridy = 2;
+            addFrame.add(new JLabel("Group Number:"), c);
+
+            c.gridx = 1;
+            c.gridy = 2;
+            addFrame.add(groupNumberField, c);
+
+            // Add submit button
+            c.gridx = 0;
+            c.gridy = 3;
+            c.gridwidth = 2;
+            c.anchor = GridBagConstraints.CENTER;
+            addFrame.add(submitButton, c);
+
+            // Add back button
+            c.gridx = 0;
+            c.gridy = 4;
+            c.gridwidth = 2;
+            c.anchor = GridBagConstraints.CENTER;
+            //addFrame.add(backButton, c);
+
+            submitButton.addActionListener(e1 -> {
+                // Get the values from the form fields
                 String provider = providerField.getText();
                 String policyNumber = policyNumberField.getText();
                 String groupNumber = groupNumberField.getText();
-                String policyHolderName = policyHolderNameField.getText();
-                String policyHolderDOB = policyHolderDOBField.getText();
-                String policyHolderSSN = policyHolderSSNField.getText();
-                table.setEnabled(false);
-                editButton.setVisible(true);
-                submitButton.setVisible(false);
-                formPanel.setVisible(false);
+                // Upload the new insurance record to the SQL server
+                try {
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
+
+                    String sql = "INSERT INTO insurance (id, provider_name, policy_number, group_number) VALUES (?, ?, ?, ?)";
+                    PreparedStatement statement = con.prepareStatement(sql);
+                    statement.setString(1, id);
+                    statement.setString(2, provider);
+                    statement.setString(3, policyNumber);
+                    statement.setString(4, groupNumber);
+                    statement.executeUpdate();
+
+                    // Refresh the insurance table to show the newly added record
+                    tableModel.addRow(new Object[] { provider, policyNumber, groupNumber });
+
+                    // Clean up resources
+                    statement.close();
+                    con.close();
+                    addFrame.dispose();
+                } catch (ClassNotFoundException ex) {
+                    System.out.println("Error: unable to load MySQL JDBC driver");
+                    ex.printStackTrace();
+                } catch (SQLException ex) {
+                    System.out.println("Error: unable to connect to MySQL database");
+                    ex.printStackTrace();
+                }
+            });
+        });
+
+        // Add action listener for the "Delete" button
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                tableModel.removeRow(selectedRow);
             }
         });
 
-        // Action listener for "Upload Insurance Card" button
-        uploadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int returnValue = fileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
+        // Add action listener for the "Edit" button
+        editButton.addActionListener(e -> {
+            int editSelectedRow = table.getSelectedRow();
+            if (editSelectedRow != -1) {
+                String oldProvider = tableModel.getValueAt(editSelectedRow, 0).toString();
+                String oldPolicyNumber = tableModel.getValueAt(editSelectedRow, 1).toString();
+                String oldGroupNumber = tableModel.getValueAt(editSelectedRow, 2).toString();
+
+                // Create a dialog to input the new insurance information
+                JTextField providerField = new JTextField(20);
+                JTextField policyNumberField = new JTextField(20);
+                JTextField groupNumberField = new JTextField(20);
+                JPanel inputPanel = new JPanel(new GridLayout(0, 1));
+                inputPanel.add(new JLabel("New Provider:"));
+                inputPanel.add(providerField);
+                inputPanel.add(new JLabel("New Policy Number:"));
+                inputPanel.add(policyNumberField);
+                inputPanel.add(new JLabel("New Group Number:"));
+                inputPanel.add(groupNumberField);
+
+                int result = JOptionPane.showConfirmDialog(null, inputPanel,
+                        "Update Insurance Information", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String newProvider = providerField.getText();
+                    String newPolicyNumber = policyNumberField.getText();
+                    String newGroupNumber = groupNumberField.getText();
+
+                    // Use the new insurance information in the PreparedStatement
                     try {
-                        BufferedImage insuranceCard = ImageIO.read(file);
-                        // Save the image to the database or file system here
-                    } catch (IOException ex) {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+
+                        String sql = "UPDATE insurance SET provider_name = ?, policy_number = ?, group_number = ? WHERE id = ? AND provider_name = ? AND policy_number = ? AND group_number = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, newProvider);
+                        statement.setString(2, newPolicyNumber);
+                        statement.setString(3, newGroupNumber);
+                        statement.setString(4, id);
+                        statement.setString(5, oldProvider);
+                        statement.setString(6, oldPolicyNumber);
+                        statement.setString(7, oldGroupNumber);
+
+                        int updateResult = statement.executeUpdate();
+
+                        if (updateResult > 0) {
+                            tableModel.setValueAt(newProvider, editSelectedRow, 0);
+                            tableModel.setValueAt(newPolicyNumber, editSelectedRow, 1);
+                            tableModel.setValueAt(newGroupNumber, editSelectedRow, 2);
+                        }
+
+                        statement.close();
+                        con.close();
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println("Error: unable to load MySQL JDBC driver");
+                        ex.printStackTrace();
+                    } catch (SQLException ex) {
+                        System.out.println("Error: unable to connect to MySQL database");
                         ex.printStackTrace();
                     }
                 }
             }
         });
 
-        return panel;
+        // Add action listener to the upload button
+        uploadButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showOpenDialog(new JFrame());
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+            }
+        });
 
+        return panel;
     }
 
-    public static class InsuranceTableModel extends AbstractTableModel {
-        private String[] columnNames = { "Insurance ID", "Provider Name", "Policy Number", "Group Number",
-                "Policy Holder Name", "Policy Holder DOB", "Policy Holder SSN" };
-        private List<Object[]> data = new ArrayList<>();
-        private String id;
-        private HealthConn conn;
-        private String insuranceProvider;
-        private String policyNumber;
-        private String groupNumber;
+    private static JFrame createAddInsuranceFrame(DefaultTableModel tableModel, String id) {
+        JFrame addFrame = new JFrame("Add Insurance Information");
+        addFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addFrame.setSize(400, 300);
+        addFrame.setLocationRelativeTo(null);
 
-        public InsuranceTableModel(String id) {
-            this.id = id;
-            this.conn = new HealthConn();
-            loadData(id);
-        }
+        // Define the fields within the method
+        JTextField providerField = new JTextField(20);
+        JTextField policyNumberField = new JTextField(20);
+        JTextField groupNumberField = new JTextField(20);
 
-        public void createNewInsurance() {
-            // Create new insurance data with empty fields
-            Object[] newData = new Object[] {
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    ""
-            };
-            data.add(newData);
-            fireTableRowsInserted(data.size() - 1, data.size() - 1);
-        }
+        JPanel formPanel = new JPanel(new GridBagLayout());
 
-        public void loadData(String id) {
-            // Create a connection to the database
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5);
+
+        JButton submitButton = new JButton("Submit");
+        // Add action listeners for the submit and back buttons
+        submitButton.addActionListener(e -> {
+            String provider = providerField.getText();
+            String policyNumber = policyNumberField.getText();
+            String groupNumber = groupNumberField.getText();
+            // Upload the new insurance record to the SQL server
             try {
                 HealthConn newConnection = new HealthConn();
                 Connection con = newConnection.connect();
 
-                // Create a SQL statement to retrieve insurance data
-                String sql = "SELECT * FROM insurance WHERE id = ?";
+                String sql = "INSERT INTO insurance (id, provider_name, policy_number, group_number) VALUES (?, ?, ?, ?)";
                 PreparedStatement statement = con.prepareStatement(sql);
-                statement.setString(1, this.id);
-                ResultSet result = statement.executeQuery();
+                statement.setString(1, id);
+                statement.setString(2, provider);
+                statement.setString(3, policyNumber);
+                statement.setString(4, groupNumber);
+                statement.executeUpdate();
 
-                // Update insurance object with retrieved data
-                if (result.next()) {
-                    this.insuranceProvider = result.getString("provider");
-                    this.policyNumber = result.getString("policy_number");
-                    this.groupNumber = result.getString("group_number");
-                }
+                // Refresh the insurance table to show the newly added record
+                tableModel.addRow(new Object[] { provider, policyNumber, groupNumber });
 
                 // Clean up resources
-                result.close();
                 statement.close();
                 con.close();
-
+                addFrame.dispose();
             } catch (ClassNotFoundException ex) {
                 System.out.println("Error: unable to load MySQL JDBC driver");
                 ex.printStackTrace();
@@ -233,176 +308,126 @@ public class InsuranceTab {
                 System.out.println("Error: unable to connect to MySQL database");
                 ex.printStackTrace();
             }
-        }
+        });
 
-        public void deleteInsurance(List<Integer> insuranceIds) {
-            try {
-                HealthConn connection = new HealthConn();
-                Connection con = connection.connect();
-                for (Integer insuranceId : insuranceIds) {
-                    PreparedStatement preparedStatement = con
-                            .prepareStatement("DELETE FROM insurance WHERE insurance_id = ?");
-                    preparedStatement.setInt(1, insuranceId);
-                    preparedStatement.executeUpdate();
-                }
-                loadData();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            addFrame.dispose();
+        });
 
-        public void submitChanges() {
-            try {
-                HealthConn connection = new HealthConn();
-                Connection con = connection.connect();
-                for (Object[] rowData : data) {
-                    if (rowData[0].equals("")) {
-                        // This is a new insurance record
-                        PreparedStatement preparedStatement = con.prepareStatement(
-                                "INSERT INTO insurance (patient_id, provider_name, policy_number, group_number, policy_holder_name, policy_holder_dob, policy_holder_ssn) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                        preparedStatement.setString(1, id);
-                        preparedStatement.setString(2, (String) rowData[1]);
-                        preparedStatement.setString(3, (String) rowData[2]);
-                        preparedStatement.setString(4, (String) rowData[3]);
-                        preparedStatement.setString(5, (String) rowData[4]);
-                        preparedStatement.setDate(6, (java.sql.Date) rowData[5]);
-                        preparedStatement.setString(7, (String) rowData[6]);
-                        preparedStatement.executeUpdate();
-                    }
-                }
-                loadData(id);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        // Add JLabel and JTextField for Provider
+        c.gridx = 0;
+        c.gridy = 0;
+        formPanel.add(new JLabel("Provider:"), c);
 
-        public void loadData() {
-            // Create a connection to the database
-            try {
-                HealthConn connection = new HealthConn();
-                Connection con = connection.connect();
+        c.gridx = 1;
+        c.gridy = 0;
+        formPanel.add(providerField, c);
 
-                // Create a SQL statement to retrieve insurance data
-                String sql = "SELECT * FROM insurance WHERE patient_id = ?";
-                PreparedStatement statement = con.prepareStatement(sql);
-                statement.setString(1, this.id);
-                ResultSet result = statement.executeQuery();
+        // Add JLabel and JTextField for Policy Number
+        c.gridx = 0;
+        c.gridy = 1;
+        formPanel.add(new JLabel("Policy Number:"), c);
 
-                // Clear the current data list
-                data.clear();
+        c.gridx = 1;
+        c.gridy = 1;
+        formPanel.add(policyNumberField, c);
 
-                // Update insurance object with retrieved data
-                while (result.next()) {
-                    Object[] newData = new Object[] {
-                            result.getInt("insurance_id"),
-                            result.getString("provider_name"),
-                            result.getString("policy_number"),
-                            result.getString("group_number"),
-                            result.getString("policy_holder_name"),
-                            result.getDate("policy_holder_dob"),
-                            result.getString("policy_holder_ssn")
-                    };
-                    data.add(newData);
-                }
+        // Add JLabel and JTextField for Group Number
+        c.gridx = 0;
+        c.gridy = 2;
+        formPanel.add(new JLabel("Group Number:"), c);
 
-                // Clean up resources
-                result.close();
-                statement.close();
-                con.close();
+        c.gridx = 1;
+        c.gridy = 2;
+        formPanel.add(groupNumberField, c);
 
-                fireTableDataChanged();
+        // Add submit button
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        formPanel.add(submitButton, c);
 
-            } catch (ClassNotFoundException ex) {
-                System.out.println("Error: unable to load MySQL JDBC driver");
-                ex.printStackTrace();
-            } catch (SQLException ex) {
-                System.out.println("Error: unable to connect to MySQL database");
-                ex.printStackTrace();
-            }
-        }
+        // Add back button
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        formPanel.add(backButton, c);
 
-        @Override
-        public int getColumnCount() {
-            return columnNames.length;
-        }
+        // Finally, add the formPanel to the addFrame
+        addFrame.add(formPanel);
+        return addFrame;
+    }
 
-        @Override
-        public int getRowCount() {
-            return data.size();
-        }
+    private static JFrame createEditInsuranceFrame(DefaultTableModel tableModel, int selectedRow) {
+        JFrame editFrame = new JFrame("Edit Insurance Information");
+        editFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        editFrame.setSize(400, 300);
+        editFrame.setLocationRelativeTo(null);
 
-        @Override
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        editFrame.add(formPanel);
 
-        @Override
-        public Object getValueAt(int row, int col) {
-            return data.get(row)[col];
-        }
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5);
 
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell. If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
-         * rather than a check box.
-         */
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
+        // Add the insurance form with labels and text fields
+        JLabel providerLabel = new JLabel("Provider Name:");
+        JTextField providerField = new JTextField(tableModel.getValueAt(selectedRow, 0).toString(), 20);
+        JLabel policyNumberLabel = new JLabel("Policy Number:");
+        JTextField policyNumberField = new JTextField(tableModel.getValueAt(selectedRow, 1).toString(), 20);
+        JLabel groupNumberLabel = new JLabel("Group Number:");
+        JTextField groupNumberField = new JTextField(tableModel.getValueAt(selectedRow, 2).toString(), 20);
 
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
-        public boolean isCellEditable(int row, int col) {
-            // Note that the field name column is not editable
-            if (col == 0) {
-                return false;
+        c.gridx = 0;
+        c.gridy = 0;
+        formPanel.add(providerLabel, c);
+        c.gridx = 1;
+        formPanel.add(providerField, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        formPanel.add(policyNumberLabel, c);
+        c.gridx = 1;
+        formPanel.add(policyNumberField, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        formPanel.add(groupNumberLabel, c);
+        c.gridx = 1;
+        formPanel.add(groupNumberField, c);
+
+        // Add the update and back buttons
+        JButton updateButton = new JButton("Update");
+        JButton backButton = new JButton("Back");
+        c.gridx = 1;
+        c.gridy = 3;
+        formPanel.add(updateButton, c);
+        c.gridx = 0;
+        formPanel.add(backButton, c);
+
+        // Add action listeners for the update and back buttons
+        updateButton.addActionListener(e -> {
+            String provider = providerField.getText();
+            String policyNumber = policyNumberField.getText();
+            String groupNumber = groupNumberField.getText();
+
+            if (!provider.isEmpty() && !policyNumber.isEmpty() && !groupNumber.isEmpty()) {
+                tableModel.setValueAt(provider, selectedRow, 0);
+                tableModel.setValueAt(policyNumber, selectedRow, 1);
+                tableModel.setValueAt(groupNumber, selectedRow, 2);
+                JOptionPane.showMessageDialog(editFrame, "Insurance information updated successfully!");
+                editFrame.dispose();
             } else {
-                return true;
+                JOptionPane.showMessageDialog(editFrame, "Please fill in all fields.");
             }
-        }
+        });
 
-        /*
-         * Don't need to implement this method unless your table's
-         * data can change.
-         */
-        public void setValueAt(Object value, int row, int col) {
-            if (DEBUG) {
-                System.out.println("Setting value at " + row + "," + col
-                        + " to " + value
-                        + " (an instance of "
-                        + value.getClass() + ")");
-            }
+        backButton.addActionListener(e -> {
+            editFrame.dispose();
+        });
 
-            data.get(row)[col] = value;
-            fireTableCellUpdated(row, col);
-
-            if (DEBUG) {
-                System.out.println("New value of data:");
-                printDebugData();
-            }
-        }
-
-        private void printDebugData() {
-            int numRows = getRowCount();
-            int numCols = getColumnCount();
-
-            for (int i = 0; i < numRows; i++) {
-                System.out.print("    row " + i + ":");
-                for (int j = 0; j < numCols; j++) {
-                    System.out.print("  " + getValueAt(i, j));
-                }
-                System.out.println();
-            }
-            System.out.println("--------------------------");
-        }
-
+        return editFrame;
     }
 
 }

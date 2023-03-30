@@ -4,9 +4,16 @@ import real.health.*;
 import javax.swing.*;
 import java.sql.*;
 import real.health.SQL.*;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.*;
+import java.util.List;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen() {
@@ -101,25 +108,28 @@ public class showLoginScreen extends patientInformationSystem {
                             // thread
                             SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
                                 JFrame patientFrame;
+
                                 @Override
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
-                                        progressBar.setValue(progressBar.getValue());
                                         // Increment the progress bar every 5ms
                                         Thread.sleep(5);
                                         progress++;
-                                        progressBar.setValue(progress);
+                                        publish(progress);
                                         if (progress == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar);
+                                            patientFrame = (JFrame) patientInformationSystem
+                                                    .patientInformationSystem(id, progressBar);
                                             patientFrame.setVisible(false);
-                                        } else {
-                                            progressBar.setValue(progressBar.getValue());
                                         }
                                     }
-                                    // Call the patientInformationSystem method and store the returned JFrame object in a variable
-                                    patientFrame.setVisible(true);
                                     return null;
+                                }
+
+                                @Override
+                                protected void process(List<Integer> chunks) {
+                                    // Update the progress bar with the latest published progress value
+                                    progressBar.setValue(chunks.get(chunks.size() - 1));
                                 }
 
                                 @Override
@@ -128,6 +138,7 @@ public class showLoginScreen extends patientInformationSystem {
                                     // screen
                                     frame.dispose();
                                     loadingFrame.dispose();
+                                    patientFrame.setVisible(true);
                                 }
                             };
 

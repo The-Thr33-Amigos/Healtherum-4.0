@@ -22,10 +22,15 @@ public class patientInformationSystem {
         tabs.addTab("Patient Information", PatientInformation.createPatientInformationTab(id));
         progressBar.setValue(progressBar.getValue() + 5);
 
-        // Create a new instance of the MedicalHistoryTab class
+
+        // Create a new instance of the InsuranceTab class
+        System.out.println("Creating InsuranceTab...");
         InsuranceTab InsuranceTab = new InsuranceTab();
+        System.out.println("Adding InsuranceTab to JTabbedPane...");
         tabs.addTab("Insurance", InsuranceTab.createInsuranceTab(id));
+        System.out.println("InsuranceTab added.");
         progressBar.setValue(progressBar.getValue() + 5);
+
 
         // Create a new instance of the MedicalHistoryTab class
         MedicalHistoryTab medicalHistoryTab = new MedicalHistoryTab();
