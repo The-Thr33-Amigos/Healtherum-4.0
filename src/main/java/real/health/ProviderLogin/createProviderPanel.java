@@ -3,6 +3,8 @@ package real.health.ProviderLogin;
 
 import real.health.PatientLogin.validatePassword;
 import real.health.SQL.*;
+import real.health.Blockchain.*;
+import real.health.Patient.UserPass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,13 +91,17 @@ public class createProviderPanel {
                 if (validPassword) {
                     // Use SQL to insert new provider information
                     try {
+                        Blockchain providerBlockchain = new Blockchain();
+
                         HealthConn newConnection = new HealthConn();
                         Connection con = newConnection.connect();
+                        
+                        String id = UserPass.generateUniqueId();
+                        // Add the patient's ID to the blockchain
+                        providerBlockchain.addBlock(id);
 
-                        Scanner scan = new Scanner(System.in);
-                        System.out.print("Enter id: ");
-
-                        String id = scan.nextLine();
+                        // Print the contents of the blockchain
+                        providerBlockchain.printChain();
 
                         // Check if email and license are unique
                         String sql = "SELECT * FROM provider WHERE email = ? OR license = ?";
@@ -133,7 +139,6 @@ public class createProviderPanel {
                             // Close the connection and dispose of the dialog
                             statement.close();
                             con.close();
-                            scan.close();
                             JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
                             dialog.dispose();
                             providerHomeScreen.homeScreen();

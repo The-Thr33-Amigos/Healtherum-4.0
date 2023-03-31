@@ -1,8 +1,7 @@
 package real.health.PatientLogin;
 
 
-import real.health.Blockchain.Block;
-import real.health.Blockchain.Blockchain;
+import real.health.Blockchain.*;
 import real.health.Patient.UserPass;
 import real.health.*;
 import javax.swing.*;
@@ -98,11 +97,6 @@ public class createAccountPanel {
 
                         String id = UserPass.generateUniqueId();
 
-                        //Scanner scan = new Scanner(System.in);
-                        //System.out.print("Enter id: ");
-
-                        //String id = scan.nextLine();
-
                         // Add the patient's ID to the blockchain
                         patientBlockchain.addBlock(id);
 
@@ -132,7 +126,6 @@ public class createAccountPanel {
                         // Close the connection and dispose of the dialog
                         statement.close();
                         con.close();
-                        scan.close();
                         JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
                         dialog.dispose();
                         patientHomeScreen.homeScreen();
