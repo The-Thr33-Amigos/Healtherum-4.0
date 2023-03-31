@@ -163,7 +163,7 @@ public class showLoginScreen extends patientInformationSystem {
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                App.homeScreen();
+                patientHomeScreen.homeScreen();
                 frame.dispose();
             }
         });

@@ -1,18 +1,22 @@
-package real.health.PatientLogin;
 
-import real.health.*;
-import javax.swing.*;
-import java.sql.*;
+package real.health.ProviderLogin;
+
+import real.health.PatientLogin.validatePassword;
 import real.health.SQL.*;
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
 
-public class createAccountPanel {
-    public static JPanel createAccountPanel(String name, String bdate, String email, String phone, String bio,
-            String mailing, String race) {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.util.Scanner;
+
+public class createProviderPanel {
+    public static JPanel createProviderAccountPanel(String name, String email, String phone, String practiceName,
+            String address, String license, String specialties, String insurance) {
+
         JPanel panel2 = new JPanel(new GridLayout(3, 2));
         panel2.setPreferredSize(new Dimension(300, 100));
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
 
@@ -72,7 +76,7 @@ public class createAccountPanel {
         panel2.add(confirmPasswordField);
         panel2.add(loginButton);
         panel2.add(cancelButton);
-        // TODO: One Call per file for sql
+
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String user = usernameField.getText();
@@ -83,48 +87,57 @@ public class createAccountPanel {
                 boolean validPassword = validatePassword.validatePassword(password, confirmPassword);
 
                 if (validPassword) {
-                    // Use SQL
+                    // Use SQL to insert new provider information
                     try {
-                        // Load the MySQL JDBC driver
                         HealthConn newConnection = new HealthConn();
                         Connection con = newConnection.connect();
-
-                        // UserPass newUser = new UserPass(user, password);
-                        // String hash = newUser.hashGen();
 
                         Scanner scan = new Scanner(System.in);
                         System.out.print("Enter id: ");
 
                         String id = scan.nextLine();
 
-                        // Create a SQL statement to insert the user's information
-                        String sql = "INSERT INTO basic (id, name, email, phone, bdate, bio, race, mailing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                        PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id);
-                        statement.setString(2, name);
-                        statement.setString(3, email);
-                        statement.setString(4, phone);
-                        statement.setString(5, bdate);
-                        statement.setString(6, bio);
-                        statement.setString(7, race);
-                        statement.setString(8, mailing);
-                        statement.executeUpdate();
+                        // Check if email and license are unique
+                        String sql = "SELECT * FROM provider WHERE email = ? OR license = ?";
+                        PreparedStatement checkStatement = con.prepareStatement(sql);
+                        checkStatement.setString(1, email);
+                        checkStatement.setString(2, license);
+                        ResultSet resultSet = checkStatement.executeQuery();
 
-                        // Insert the user's login information into the database
-                        sql = "INSERT INTO userpass (id, user, password) VALUES (?, ?, ?)";
-                        statement = con.prepareStatement(sql);
-                        statement.setString(1, id);
-                        statement.setString(2, user);
-                        statement.setString(3, password);
-                        statement.executeUpdate();
-                        System.out.println("Sentttttt");
-                        // Close the connection and dispose of the dialog
-                        statement.close();
-                        con.close();
-                        scan.close();
-                        JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
-                        dialog.dispose();
-                        patientHomeScreen.homeScreen();
+                        if (resultSet.next()) {
+                            JOptionPane.showMessageDialog(panel2,
+                                    "Email or medical license number is already registered.");
+                        } else {
+                            // Insert provider information into database
+                            String providerSql = "INSERT INTO provider (id, name, email, phone, practiceName, address, license, specialties, insurance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            PreparedStatement statement = con.prepareStatement(providerSql);
+                            statement.setString(1, id);
+                            statement.setString(2, name);
+                            statement.setString(3, email);
+                            statement.setString(4, phone);
+                            statement.setString(5, practiceName);
+                            statement.setString(6, address);
+                            statement.setString(7, license);
+                            statement.setString(8, specialties);
+                            statement.setString(9, insurance);
+                            statement.executeUpdate();
+
+                            // Insert the provider's login information into the database
+                            sql = "INSERT INTO provideruserpass (id, user, password) VALUES (?, ?, ?)";
+                            statement = con.prepareStatement(sql);
+                            statement.setString(1, id);
+                            statement.setString(2, user);
+                            statement.setString(3, password);
+                            statement.executeUpdate();
+
+                            // Close the connection and dispose of the dialog
+                            statement.close();
+                            con.close();
+                            scan.close();
+                            JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
+                            dialog.dispose();
+                            providerHomeScreen.homeScreen();
+                        }
                     } catch (ClassNotFoundException ex) {
                         System.out.println("Error: unable to load MySQL JDBC driver");
                         ex.printStackTrace();
@@ -141,7 +154,7 @@ public class createAccountPanel {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
-                createNewUser.createNewUser();
+                createNewProvider.newProviderRegistration();
                 dialog.dispose();
             }
         });

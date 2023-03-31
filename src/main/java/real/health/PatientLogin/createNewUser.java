@@ -1,9 +1,11 @@
 package real.health.PatientLogin;
 
+import real.health.PatientLogin.*;
 import real.health.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
 public class createNewUser {
     public static void createNewUser() {
         JDialog dialog = new JDialog();
@@ -23,14 +25,15 @@ public class createNewUser {
         JLabel phoneLabel = new JLabel("Phone Number:");
         JTextField phoneField = new JTextField();
 
-        String[] bioSexOptions = {"Male", "Female"};
+        String[] bioSexOptions = { "Male", "Female" };
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
         JLabel bioLabel = new JLabel("Biological Sex:");
 
         JLabel mailingLabel = new JLabel("Mailing Address:");
         JTextField mailingField = new JTextField();
 
-        String[] raceNames = {"Black", "White", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander"};
+        String[] raceNames = { "Black", "White", "American Indian or Alaska Native", "Asian",
+                "Native Hawaiian or Other Pacific Islander" };
         JComboBox<String> raceCombo = new JComboBox<>(raceNames);
         JLabel raceLabel = new JLabel("Race:");
 
@@ -55,7 +58,8 @@ public class createNewUser {
                 dialog.getContentPane().removeAll();
                 dialog.add(createAccountPanel.createAccountPanel(nameField.getText(), dobField.getText(),
                         emailField.getText(),
-                        phoneField.getText(), (String) bioCombo.getSelectedItem(), mailingField.getText(), (String) raceCombo.getSelectedItem()));
+                        phoneField.getText(), (String) bioCombo.getSelectedItem(), mailingField.getText(),
+                        (String) raceCombo.getSelectedItem()));
                 dialog.pack();
                 dialog.revalidate();
             }
@@ -65,8 +69,7 @@ public class createNewUser {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dialog.dispose();
-                App.homeScreen();
-
+                patientHomeScreen.homeScreen();
             }
         });
 
