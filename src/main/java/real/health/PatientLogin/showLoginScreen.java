@@ -2,6 +2,9 @@ package real.health.PatientLogin;
 
 import real.health.*;
 import javax.swing.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
@@ -10,6 +13,11 @@ import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
         JFrame frame = new JFrame("Login Screen");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(new GridBagLayout());
@@ -105,6 +113,7 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
+                                        progressBar.setValue(progressBar.getValue());
                                         // Increment the progress bar every 5ms
                                         Thread.sleep(5);
                                         progress++;
@@ -112,6 +121,8 @@ public class showLoginScreen extends patientInformationSystem {
                                         if (progress == 50) {
                                             patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar);
                                             patientFrame.setVisible(false);
+                                        } else {
+                                            progressBar.setValue(progressBar.getValue());
                                         }
                                     }
                                     // Call the patientInformationSystem method and store the returned JFrame object in a variable

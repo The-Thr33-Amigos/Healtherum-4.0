@@ -25,6 +25,9 @@ import java.util.UUID;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.util.Scanner;
 
 public class App extends JFrame {
@@ -34,6 +37,7 @@ public class App extends JFrame {
 
         // Make the welcome screen visible
         screen.setVisible(true);
+
     }
 
     // TODO: Fix window popping up in upper left corner, replace current window

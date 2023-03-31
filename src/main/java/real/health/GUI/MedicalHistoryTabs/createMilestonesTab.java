@@ -26,7 +26,12 @@ public class createMilestonesTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Milestone", "Date Achieved" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
             }

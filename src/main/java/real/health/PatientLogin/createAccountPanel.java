@@ -1,5 +1,9 @@
 package real.health.PatientLogin;
 
+
+import real.health.Blockchain.Block;
+import real.health.Blockchain.Blockchain;
+import real.health.Patient.UserPass;
 import real.health.*;
 import javax.swing.*;
 import java.sql.*;
@@ -85,18 +89,25 @@ public class createAccountPanel {
                 if (validPassword) {
                     // Use SQL
                     try {
-                        // Load the MySQL JDBC driver
+
+                        Blockchain patientBlockchain = new Blockchain();
+
                         HealthConn newConnection = new HealthConn();
                         Connection con = newConnection.connect();
 
-                        // UserPass newUser = new UserPass(user, password);
-                        // String hash = newUser.hashGen();
 
-                        Scanner scan = new Scanner(System.in);
-                        System.out.print("Enter id: ");
+                        String id = UserPass.generateUniqueId();
 
-                        String id = scan.nextLine();
+                        //Scanner scan = new Scanner(System.in);
+                        //System.out.print("Enter id: ");
 
+                        //String id = scan.nextLine();
+
+                        // Add the patient's ID to the blockchain
+                        patientBlockchain.addBlock(id);
+
+                        // Print the contents of the blockchain
+                        patientBlockchain.printChain();
                         // Create a SQL statement to insert the user's information
                         String sql = "INSERT INTO basic (id, name, email, phone, bdate, bio, race, mailing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement statement = con.prepareStatement(sql);

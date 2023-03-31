@@ -26,7 +26,12 @@ public class createVaccinationTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Vaccine", "Date Administered", "Location Administered", "Administering Provider" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
                         result.getString(4) });

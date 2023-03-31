@@ -22,7 +22,7 @@ public class BasicInfo {
         } else {
             this.email = "";
         }
-        // checks if phonenumber is made of numbers, and is 10 in length, (720529a356) not valid, (72051939101) not valid 
+        // checks if phonenumber is made of numbers, and is 10 in length, (720529a356) not valid, (72051939101) not valid
         if (isNumberString(pNum) && pNum.length() == 10) {
             pNum = formatNumber(pNum);
         }
