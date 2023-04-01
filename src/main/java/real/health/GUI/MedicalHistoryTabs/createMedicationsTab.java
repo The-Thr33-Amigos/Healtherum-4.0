@@ -23,9 +23,12 @@ import java.awt.event.*;
 import real.health.API.readCSV;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createMedicationsTab {
-    public JComponent createMedicationsTab(String id) {
+    private UserRole userRole;
+    public JComponent createMedicationsTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable medicationsTable = new JTable();
         // populate the table with the patient's current medications
         try {
@@ -211,7 +214,9 @@ public class createMedicationsTab {
         // panel
         JPanel medicationsTabPanel = new JPanel(new BorderLayout());
         medicationsTabPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
-        medicationsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            medicationsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        }
 
         return medicationsTabPanel;
     }

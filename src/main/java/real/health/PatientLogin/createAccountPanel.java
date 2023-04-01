@@ -2,6 +2,7 @@ package real.health.PatientLogin;
 
 
 import real.health.Blockchain.*;
+import real.health.GUI.UserRole;
 import real.health.Patient.UserPass;
 import real.health.*;
 import javax.swing.*;
@@ -128,7 +129,7 @@ public class createAccountPanel {
                         con.close();
                         JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
                         dialog.dispose();
-                        patientHomeScreen.homeScreen();
+                        patientHomeScreen.homeScreen(UserRole.PATIENT);
                     } catch (ClassNotFoundException ex) {
                         System.out.println("Error: unable to load MySQL JDBC driver");
                         ex.printStackTrace();

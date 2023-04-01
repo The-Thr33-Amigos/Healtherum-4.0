@@ -29,7 +29,8 @@ public class welcomeScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Launch patient screen
-                patientHomeScreen.homeScreen();
+                patientHomeScreen.homeScreen(UserRole.PATIENT);
+                // TODO: SET ROLE
                 // Close welcome screen
                 frame.dispose();
             }
@@ -39,7 +40,8 @@ public class welcomeScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Launch provider screen
-                providerHomeScreen.homeScreen();
+                providerHomeScreen.homeScreen(UserRole.PROVIDER);
+                // TODO: SET ROLE
                 // Close welcome screen
                 frame.dispose();
             }

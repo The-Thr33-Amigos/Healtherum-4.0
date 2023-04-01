@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createFamilyTab {
-    public JComponent createFamilyTab(String id) {
+    private UserRole userRole;
+    public JComponent createFamilyTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         // Create a JTable to display the patient's family history
         JTable familyTable = new JTable();
 
@@ -135,7 +139,10 @@ public class createFamilyTab {
         JPanel familyPanel = new JPanel();
         familyPanel.setLayout(new BorderLayout());
         familyPanel.add(new JScrollPane(familyTable), BorderLayout.CENTER);
-        familyPanel.add(addButton, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            familyPanel.add(addButton, BorderLayout.PAGE_END);
+        }
+
 
         return familyPanel;
 

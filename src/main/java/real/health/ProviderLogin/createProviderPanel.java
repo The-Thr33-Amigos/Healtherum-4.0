@@ -4,6 +4,7 @@ package real.health.ProviderLogin;
 import real.health.PatientLogin.validatePassword;
 import real.health.SQL.*;
 import real.health.Blockchain.*;
+import real.health.GUI.UserRole;
 import real.health.Patient.UserPass;
 
 import javax.swing.*;
@@ -141,7 +142,7 @@ public class createProviderPanel {
                             con.close();
                             JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(panel2);
                             dialog.dispose();
-                            providerHomeScreen.homeScreen();
+                            providerHomeScreen.homeScreen(UserRole.PROVIDER);
                         }
                     } catch (ClassNotFoundException ex) {
                         System.out.println("Error: unable to load MySQL JDBC driver");

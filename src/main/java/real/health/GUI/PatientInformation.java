@@ -9,7 +9,11 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 
 public class PatientInformation {
-    public JComponent createPatientInformationTab(String id) throws ClassNotFoundException {
+
+    private UserRole userRole;
+
+    public JComponent createPatientInformationTab(String id, UserRole userRole) throws ClassNotFoundException {
+        this.userRole = userRole;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);

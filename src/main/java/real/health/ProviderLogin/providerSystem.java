@@ -4,8 +4,11 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+import java.io.IOException;
 
+import real.health.GUI.UserRole;
 import real.health.Patient.Patient;
+import real.health.PatientLogin.patientInformationSystem;
 import real.health.SQL.*;
 import java.awt.*;
 
@@ -17,7 +20,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class providerSystem {
-    public static void main(String[] args) {
+
+    public static class User {
+        private int id;
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static void initialize() {
         // Initialize the home screen
         JFrame homeScreen = new JFrame("Provider Home");
         homeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,11 +91,11 @@ public class providerSystem {
                 if (!searchText.isEmpty()) {
                     try {
                         // Search for the patient in the database
-                        List<Patient> patients = searchPatients(searchText);
+                        List<User> users = searchPatients(searchText);
 
-                        if (!patients.isEmpty()) {
+                        if (!users.isEmpty()) {
                             // Display a window with the search results
-                            displaySearchResults(patients);
+                            displaySearchResults(users);
                         } else {
                             JOptionPane.showMessageDialog(panel, "No patients found with the given search criteria.",
                                     "Search Result", JOptionPane.INFORMATION_MESSAGE);
@@ -80,49 +105,162 @@ public class providerSystem {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(panel, "An error occurred while searching for patients.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
+                    } catch (ClassNotFoundException ex) {
+                        // Handle ClassNotFoundException
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(panel, "An error occurred while connecting to the database.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         });
+
     }
 
-    // ...
+    private static List<User> searchPatients(String searchText) throws SQLException, ClassNotFoundException {
+        List<User> users = new ArrayList<>();
 
-    private static List<Patient> searchPatients(String searchText) throws SQLException {
-        List<Patient> patients = new ArrayList<>();
+        // Use the HealthConn class to establish a connection
+        HealthConn newConnection = new HealthConn();
+        Connection connection = newConnection.connect();
 
-        // Replace these with your own database connection details
-        String url = "jdbc:mysql://localhost:3306/your_database";
-        String user = "your_username";
-        String password = "your_password";
+        // Prepare a patient search query
+        String query = "SELECT * FROM basic WHERE name LIKE ? OR bdate LIKE ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            String searchPattern = "%" + searchText + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
 
-        // Connect to the database
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            // Prepare a patient search query
-            String query = "SELECT * FROM patients WHERE name LIKE ? OR date_of_birth LIKE ? OR other_identifying_info LIKE ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                String searchPattern = "%" + searchText + "%";
-                statement.setString(1, searchPattern);
-                statement.setString(2, searchPattern);
-                statement.setString(3, searchPattern);
-
-                // Execute the query and process the results
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        Patient patient = new Patient();
-                        patients.add(patient);
-                    }
+            // Execute the query and process the results
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setName(resultSet.getString("name"));
+                    users.add(user);
                 }
             }
         }
 
-        return patients;
+        // Close the connection
+        connection.close();
+
+        return users;
     }
 
-    private static void displaySearchResults(List<Patient> patients) {
-        // Implement a window to display the search results and allow the user to select
-        // a patient
-        // Once a patient is selected, display the patient's information in a new window
+    private static void displaySearchResults(List<User> users) {
+        // Create a new JFrame for displaying the search results
+        JFrame searchResultsFrame = new JFrame("Search Results");
+        searchResultsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        searchResultsFrame.setSize(800, 600);
+
+        // Create a table model for the search results
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("Name");
+        tableModel.addColumn("Birthdate");
+        tableModel.addColumn("Phone Number");
+        tableModel.addColumn("Address");
+
+        for (User user : users) {
+            tableModel.addRow(new Object[] { user.getName() });
+        }
+
+        // Create a table for displaying the search results
+        JTable resultsTable = new JTable(tableModel);
+        resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Add the search results table to the search results JFrame
+        searchResultsFrame.add(new JScrollPane(resultsTable), BorderLayout.CENTER);
+
+        // Create a "View" button for viewing the selected patient's info
+        JButton viewButton = new JButton("View");
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = resultsTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    User selectedUser = users.get(selectedRow);
+                    viewPatientInfo(selectedUser, UserRole.PROVIDER);
+                }
+            }
+        });
+
+        // Add the "View" button to the search results JFrame
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(viewButton);
+        searchResultsFrame.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Display the search results JFrame
+        searchResultsFrame.setVisible(true);
+    }
+
+    private static void viewPatientInfo(User user, UserRole role) {
+        try {
+            // Show the loading screen here
+            JFrame loadingFrame = new JFrame("Loading...");
+            loadingFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            loadingFrame.setSize(400, 100);
+            JPanel panel = new JPanel(new BorderLayout());
+            JProgressBar progressBar = new JProgressBar(0, 100);
+            progressBar.setValue(0);
+            progressBar.setStringPainted(true);
+            panel.add(progressBar, BorderLayout.CENTER);
+            loadingFrame.add(panel);
+            loadingFrame.setLocationRelativeTo(null);
+            loadingFrame.setVisible(true);
+
+            // Create a SwingWorker object to execute patientInformationSystem on a separate
+            // thread
+            SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
+                JFrame patientInfoFrame;
+
+                @Override
+                protected Void doInBackground() throws Exception {
+                    int progress = 0;
+                    while (progress < 100) {
+                        progressBar.setValue(progressBar.getValue());
+                        // Increment the progress bar every 5ms
+                        Thread.sleep(5);
+                        progress++;
+                        progressBar.setValue(progress);
+                        if (progress == 50) {
+                            patientInfoFrame = (JFrame) patientInformationSystem
+                                    .patientInformationSystem(String.valueOf(user.getId()), progressBar, role);
+                            patientInfoFrame.setTitle("Patient Info - " + user.getName());
+                            patientInfoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            patientInfoFrame.setSize(1000, 600);
+                            patientInfoFrame.setVisible(false);
+                        } else {
+                            progressBar.setValue(progressBar.getValue());
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    // Once patientInformationSystem has finished loading, dispose of the loading
+                    // screen and show the patient's medical records JFrame
+                    loadingFrame.dispose();
+                    patientInfoFrame.setVisible(true);
+                }
+            };
+
+            // Schedule the SwingWorker to be executed on the Event Dispatch Thread
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    worker.execute();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while opening the Patient Information System.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private static void createNavigationButtons(JPanel panel) {

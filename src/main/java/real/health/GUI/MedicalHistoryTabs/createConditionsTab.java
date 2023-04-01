@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createConditionsTab {
-    public JComponent createConditionsTab(String id) {
+    private UserRole userRole;
+    public JComponent createConditionsTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable conditionsTable = new JTable();
         // populate the table with the patient's current medical conditions
         try {
@@ -133,7 +137,9 @@ public class createConditionsTab {
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+        }
 
         // Create the medical conditions tab panel and add the medical conditions table
         // and add button

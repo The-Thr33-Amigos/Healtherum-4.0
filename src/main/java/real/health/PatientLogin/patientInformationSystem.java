@@ -2,7 +2,10 @@ package real.health.PatientLogin;
 
 import real.health.GUI.*;
 import real.health.PatientLogin.*;
+import real.health.ProviderLogin.providerHomeScreen;
+
 import javax.swing.*;
+import real.health.GUI.UserRole;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -10,7 +13,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class patientInformationSystem {
-    static Component patientInformationSystem(String id, JProgressBar progressBar) throws ClassNotFoundException, IOException {
+    public static Component patientInformationSystem(String id, JProgressBar progressBar, UserRole role) throws ClassNotFoundException, IOException {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
@@ -27,7 +30,7 @@ public class patientInformationSystem {
 
         // Create a new instance of the PatientInformation class
         PatientInformation PatientInformation = new PatientInformation();
-        tabs.addTab("Patient Information", PatientInformation.createPatientInformationTab(id));
+        tabs.addTab("Patient Information", PatientInformation.createPatientInformationTab(id, role));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the MedicalHistoryTab class
@@ -37,18 +40,18 @@ public class patientInformationSystem {
 
         // Create a new instance of the MedicalHistoryTab class
         MedicalHistoryTab medicalHistoryTab = new MedicalHistoryTab();
-        tabs.addTab("Medical History", medicalHistoryTab.createMedicalHistoryTab(id));
+        tabs.addTab("Medical History", medicalHistoryTab.createMedicalHistoryTab(id, role));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the VitalsTab class
-        VitalsTab VitalsTab = new VitalsTab();
+        VitalsTab VitalsTab = new VitalsTab(role);
         tabs.addTab("Vital Signs", VitalsTab.createVitalSignsTab(id));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the LabResultsTab class
-        // LabResultsTab LabResultsTab = new LabResultsTab();
-        // tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
-        // progressBar.setValue(progressBar.getValue() + 5);
+        LabResultsTab LabResultsTab = new LabResultsTab(role);
+        tabs.addTab("Lab Results", LabResultsTab.createLabResultsTab(id));
+        progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();

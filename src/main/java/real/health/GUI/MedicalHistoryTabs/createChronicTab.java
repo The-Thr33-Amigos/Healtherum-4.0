@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createChronicTab {
-    public JComponent createChronicTab(String id) {
+    private UserRole userRole;
+    public JComponent createChronicTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable chronicTable = new JTable();
         // populate the table with the patient's chronic condition history
         try {
@@ -140,7 +144,11 @@ public class createChronicTab {
         JScrollPane scrollPane = new JScrollPane(chronicTable);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(addButton);
+        
+        if (userRole == UserRole.PROVIDER) {
+            buttonPanel.add(addButton);
+        }
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.PAGE_END);

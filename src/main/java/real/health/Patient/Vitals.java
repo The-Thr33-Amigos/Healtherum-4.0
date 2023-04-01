@@ -31,7 +31,7 @@ public class Vitals {
     public void newWeight(double setWeight) {
         this.weight = setWeight;
     }
-
+   
     public int getHeight() {
         return height;
     }

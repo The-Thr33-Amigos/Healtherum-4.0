@@ -1,6 +1,8 @@
 package real.health.PatientLogin;
 
 import real.health.*;
+import real.health.GUI.UserRole;
+
 import javax.swing.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -12,7 +14,7 @@ import java.awt.event.*;
 import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
-    public static void showLoginScreen() {
+    public static void showLoginScreen(UserRole role) {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
@@ -119,7 +121,7 @@ public class showLoginScreen extends patientInformationSystem {
                                         progress++;
                                         progressBar.setValue(progress);
                                         if (progress == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar);
+                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar, role);
                                             patientFrame.setVisible(false);
                                         } else {
                                             progressBar.setValue(progressBar.getValue());
@@ -174,7 +176,7 @@ public class showLoginScreen extends patientInformationSystem {
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                patientHomeScreen.homeScreen();
+                patientHomeScreen.homeScreen(UserRole.PATIENT);
                 frame.dispose();
             }
         });

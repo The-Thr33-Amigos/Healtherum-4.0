@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 
 
@@ -68,7 +69,7 @@ public class providerLoginScreen {
                     if (rs.next()) {
                         // Login successful
                         JOptionPane.showMessageDialog(frame, "Login successful.");
-                        providerSystem.main(new String[] {});
+                        providerSystem.initialize();
                         frame.dispose();
                     } else {
                         // Login failed
@@ -79,10 +80,21 @@ public class providerLoginScreen {
                 }
             }
         });
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        constraints.gridwidth = 1;
+        panel.add(loginButton, constraints);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                providerHomeScreen.homeScreen(UserRole.PROVIDER);
+            }
+        });
         constraints.gridx = 0;
         constraints.gridy = 3;
-        constraints.gridwidth = 2;
-        panel.add(loginButton, constraints);
+        panel.add(cancelButton, constraints);
 
         frame.add(panel);
         frame.pack();

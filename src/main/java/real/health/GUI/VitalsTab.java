@@ -8,6 +8,13 @@ import javax.swing.table.*;
 import real.health.SQL.HealthConn;
 
 public class VitalsTab {
+
+    private UserRole userRole;
+
+    public VitalsTab(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     public JComponent createVitalSignsTab(String id) {
         JTable vitalSigns = new JTable();
         // populate the table with the patient's current medications
@@ -216,7 +223,11 @@ public class VitalsTab {
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        addButtonPanel.add(addButton);
+        // Show the "Add" button only for the provider role
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+        }
+
 
         // Create the vital signs tab panel and add the vital signs table and add button
         // panel
