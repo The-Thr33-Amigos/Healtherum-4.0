@@ -97,9 +97,10 @@ public class heartDisease {
         int sex = heartData.get(0);
         int sys = heartData.get(1);
         int hr = heartData.get(2);
-        System.out.println(sex + " " + sys + " " + hr);
+        int test = 5;
+        System.out.println(test + " " + sex + " " + sys + " " + hr);
 
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "ML/main.py", String.valueOf(sex), String.valueOf(sys), String.valueOf(hr));
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "ML/main.py",String.valueOf(test), String.valueOf(sex), String.valueOf(sys), String.valueOf(hr));
         Process process = processBuilder.start();
 
 
