@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createFamilyTab {
-    public JComponent createFamilyTab(String id) {
+    private UserRole userRole;
+    public JComponent createFamilyTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         // Create a JTable to display the patient's family history
         JTable familyTable = new JTable();
 
@@ -26,7 +30,12 @@ public class createFamilyTab {
             ResultSet result = statement.executeQuery();
 
             // Create a table model and populate it with the retrieved data
-            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Relationship", "Condition" }, 0);
+            DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Relationship", "Condition" }, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
             }
@@ -87,7 +96,7 @@ public class createFamilyTab {
 
                             // Create a SQL statement to insert the new family member into the database
                             String sql = "INSERT INTO family_history (id, relationship, health_condition) VALUES (?, ?, ?)";
-                            
+
                             PreparedStatement statement = con.prepareStatement(sql);
                             statement.setString(1, id);
                             statement.setString(2, relationship);
@@ -130,7 +139,10 @@ public class createFamilyTab {
         JPanel familyPanel = new JPanel();
         familyPanel.setLayout(new BorderLayout());
         familyPanel.add(new JScrollPane(familyTable), BorderLayout.CENTER);
-        familyPanel.add(addButton, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            familyPanel.add(addButton, BorderLayout.PAGE_END);
+        }
+
 
         return familyPanel;
 

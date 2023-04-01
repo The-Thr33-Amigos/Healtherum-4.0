@@ -1,7 +1,12 @@
 package real.health.PatientLogin;
 
 import real.health.*;
+import real.health.GUI.UserRole;
+
 import javax.swing.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
@@ -9,7 +14,12 @@ import java.awt.event.*;
 import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
-    public static void showLoginScreen() {
+    public static void showLoginScreen(UserRole role) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
         JFrame frame = new JFrame("Login Screen");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(new GridBagLayout());
@@ -105,13 +115,13 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
-                                        progressBar.setValue(progressBar.getValue());
                                         // Increment the progress bar every 5ms
+                                        progress = progressBar.getValue();
                                         Thread.sleep(5);
                                         progress++;
                                         progressBar.setValue(progress);
-                                        if (progress == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar);
+                                        if (progressBar.getValue() == 50) {
+                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar, role);
                                             patientFrame.setVisible(false);
                                         } else {
                                             progressBar.setValue(progressBar.getValue());
@@ -166,7 +176,7 @@ public class showLoginScreen extends patientInformationSystem {
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                App.homeScreen();
+                patientHomeScreen.homeScreen(UserRole.PATIENT);
                 frame.dispose();
             }
         });

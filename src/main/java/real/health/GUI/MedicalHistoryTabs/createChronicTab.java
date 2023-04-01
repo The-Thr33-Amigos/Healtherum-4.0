@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createChronicTab {
-    public JComponent createChronicTab(String id) {
+    private UserRole userRole;
+    public JComponent createChronicTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable chronicTable = new JTable();
         // populate the table with the patient's chronic condition history
         try {
@@ -26,7 +30,12 @@ public class createChronicTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Condition", "Treatment", "Diagnosis Date" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
             }
@@ -45,7 +54,8 @@ public class createChronicTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new chronic condition
+        // Create the add button and add an ActionListener to upload the new chronic
+        // condition
         // to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
@@ -90,56 +100,60 @@ public class createChronicTab {
                             HealthConn newConnection = new HealthConn();
                             Connection con = newConnection.connect();
 
-                        // Create a SQL statement to insert the new chronic condition record into the database
-                        String sql = "INSERT INTO chronic_conditions (id, chronic_condition, diagnosisDate, treatment) VALUES (?, ?, ?, ?)";
-                        PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id);
-                        statement.setString(2, condition);
-                        statement.setString(3, diagnosisDate);
-                        statement.setString(4, treatment);
-                        statement.executeUpdate();
+                            // Create a SQL statement to insert the new chronic condition record into the
+                            // database
+                            String sql = "INSERT INTO chronic_conditions (id, chronic_condition, diagnosisDate, treatment) VALUES (?, ?, ?, ?)";
+                            PreparedStatement statement = con.prepareStatement(sql);
+                            statement.setString(1, id);
+                            statement.setString(2, condition);
+                            statement.setString(3, diagnosisDate);
+                            statement.setString(4, treatment);
+                            statement.executeUpdate();
 
-                        // Refresh the chronic condition table to show the newly added record
-                        DefaultTableModel tableModel = (DefaultTableModel) chronicTable.getModel();
-                        tableModel.addRow(new Object[] { condition, diagnosisDate, treatment });
+                            // Refresh the chronic condition table to show the newly added record
+                            DefaultTableModel tableModel = (DefaultTableModel) chronicTable.getModel();
+                            tableModel.addRow(new Object[] { condition, diagnosisDate, treatment });
 
-                        // Clean up resources
-                        statement.close();
-                        con.close();
-                        addChronicFrame.dispose();
-                    } catch (ClassNotFoundException ex) {
-                        System.out.println("Error: unable to load MySQL JDBC driver");
-                        ex.printStackTrace();
-                    } catch (SQLException ex) {
-                        System.out.println("Error: unable to connect to MySQL database");
-                        ex.printStackTrace();
+                            // Clean up resources
+                            statement.close();
+                            con.close();
+                            addChronicFrame.dispose();
+                        } catch (ClassNotFoundException ex) {
+                            System.out.println("Error: unable to load MySQL JDBC driver");
+                            ex.printStackTrace();
+                        } catch (SQLException ex) {
+                            System.out.println("Error: unable to connect to MySQL database");
+                            ex.printStackTrace();
+                        }
                     }
-                }
-            });
-            JButton cancelButton = new JButton("Cancel");
-            cancelButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    addChronicFrame.dispose();
-                }
-            });
-            addChronicFrame.add(cancelButton);
-            addChronicFrame.add(submitButton);
-            // Display the form for entering the new chronic condition details
-            addChronicFrame.setVisible(true);
+                });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addChronicFrame.dispose();
+                    }
+                });
+                addChronicFrame.add(cancelButton);
+                addChronicFrame.add(submitButton);
+                // Display the form for entering the new chronic condition details
+                addChronicFrame.setVisible(true);
+            }
+        });
+
+        // Create the scroll pane and add the chronic condition table and buttons to it
+        JScrollPane scrollPane = new JScrollPane(chronicTable);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
+        
+        if (userRole == UserRole.PROVIDER) {
+            buttonPanel.add(addButton);
         }
-    });
 
-    // Create the scroll pane and add the chronic condition table and buttons to it
-    JScrollPane scrollPane = new JScrollPane(chronicTable);
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new BorderLayout());
-    buttonPanel.add(addButton);
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(buttonPanel, BorderLayout.PAGE_END);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.PAGE_END);
 
-    return panel;
-}
-
+        return panel;
+    }
 
 }

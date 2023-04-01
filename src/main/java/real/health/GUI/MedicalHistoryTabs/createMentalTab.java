@@ -6,9 +6,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createMentalTab {
-    public JComponent createMentalTab(String id) {
+    private UserRole userRole;
+    public JComponent createMentalTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable mentalTable = new JTable();
         // populate the table with the patient's mental health history
         try {
@@ -26,7 +29,12 @@ public class createMentalTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Issue", "Status", "Date Diagnosed" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3) });
             }
@@ -45,8 +53,8 @@ public class createMentalTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new mental health issue
-        // to the SQL server
+        // Create the add button and add an ActionListener to upload the new mental
+        // health issue to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -136,11 +144,13 @@ public class createMentalTab {
         addButtonPanel.setLayout(new BorderLayout());
         addButtonPanel.add(addButton);
 
-        // Create the mental health tab panel and add the mental health table and add button
-        // panel
+        // Create the mental health tab panel and add the mental health table and add
+        // button panel
         JPanel mentalTabPanel = new JPanel(new BorderLayout());
         mentalTabPanel.add(new JScrollPane(mentalTable), BorderLayout.CENTER);
-        mentalTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            mentalTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        }
 
         return mentalTabPanel;
     }

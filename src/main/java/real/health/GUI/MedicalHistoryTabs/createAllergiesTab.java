@@ -4,16 +4,18 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class createAllergiesTab {
-
-    public JComponent createAllergiesTab(String id) {
+    private UserRole userRole;
+    public JComponent createAllergiesTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable allergiesTable = new JTable();
         // populate the table with the patient's current medications
         try {
-            // Load the MySQL JDBC driver
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
@@ -27,9 +29,15 @@ public class createAllergiesTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Name", "Type", "Reaction", "Severity" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
-                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3), result.getString(4) });
+                tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
+                        result.getString(4) });
             }
             allergiesTable.setModel(tableModel);
 
@@ -46,8 +54,6 @@ public class createAllergiesTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new medication
-        // to the SQL server
         // Create the add button and add an ActionListener to upload the new medication
         // to the SQL server
         JButton addButton = new JButton("Add");
@@ -143,7 +149,9 @@ public class createAllergiesTab {
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+        }
 
         // Create the medications tab panel and add the medications table and add button
         // panel

@@ -2,6 +2,10 @@ package real.health.Patient;
 
 import java.util.ArrayList;
 
+import javax.swing.JComponent;
+
+import real.health.GUI.UserRole;
+
 // The main patient class which takes in all of the smaller classes and uses them in coherent unit will probably need helper functions eventually but we will see
 public class Patient {
      private UserPass userPass;
@@ -60,6 +64,10 @@ public class Patient {
      public UserPass getUserPass() {
           return userPass;
      }
+
+    public static JComponent createMedicalRecordsView(int id, UserRole role) {
+        return null;
+    }
 
      
 

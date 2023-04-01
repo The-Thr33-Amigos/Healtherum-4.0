@@ -14,7 +14,7 @@ class heart_disease_ml:
 
         # Heart Disease Training Data
         data_set = pd.read_csv("ML/Heart_Disease_Prediction.csv")
-
+        data_set.columns = ['Age', 'Sex', 'Chest pain type', 'BP', 'Cholesterol', 'FBS over 120', 'EKG results', 'Max HR', 'Exercise angina', 'ST depression', 'Slope of ST', 'Number of vessels fluro', 'Thallium', 'Heart Disease']
         # Age,Sex,Chest pain type,BP,Cholesterol,FBS over 120,EKG results,Max HR,Exercise angina,ST depression,Slope of ST,Number of vessels fluro,Thallium,Heart Disease
         # Seperating test data
         x = data_set.iloc[:, :-1]
@@ -31,13 +31,10 @@ class heart_disease_ml:
         # Feature scaling
         # scaler = MinMaxScaler()
         # X_scaled = scaler.fit_transform(X)
-
+        # Iterating state until we reach target accuracy or the max iterations are hit
 
         # Splitting test data
-        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-
-        # X_train = pd.DataFrame(X_train, columns=x.columns)
-        # X_test = pd.DataFrame(X_test, columns=x.columns)
+        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.55, random_state=1384)
 
         # preprocessing
         scaler = StandardScaler()
@@ -60,6 +57,8 @@ class heart_disease_ml:
 
         report = classification_report(y_test, y_pred)
         # print("Classification Report:\n", report)
+        # Age,Sex,Chest pain type,BP,Cholesterol,FBS over 120,EKG results,Max HR,Exercise angina,ST depression,Slope of ST,Number of vessels fluro,Thallium,Heart Disease
+
 
         age = np.random.randint(29,79,1)
         sex = self.training[0]
@@ -79,6 +78,7 @@ class heart_disease_ml:
         synth_scale = scaler.transform(synth)
         synth_pred = model.predict(synth_scale)
         # print(synth_pred)
+
 
         return [acc,synth_pred[0]]
 

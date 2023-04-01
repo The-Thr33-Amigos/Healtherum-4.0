@@ -7,7 +7,10 @@ import real.health.GUI.MedicalHistoryTabs.*;
 
 
 public class MedicalHistoryTab {
-    public JComponent createMedicalHistoryTab(String id) {
+    private UserRole userRole;
+
+    public JComponent createMedicalHistoryTab(String id, UserRole role) {
+        this.userRole = userRole;
         UIManager.put("TabbedPane.tabInsets", new Insets(12, 10, 10, 10));
         JTabbedPane medicalHistoryTabs = new JTabbedPane(SwingConstants.LEFT);
         Font font = new Font("Arial", Font.PLAIN, 14); // change the font family and size as desired
@@ -19,47 +22,47 @@ public class MedicalHistoryTab {
 
         // Create a new instance of the Allergies class
         createAllergiesTab createAllergiesTab = new createAllergiesTab();
-        medicalHistoryTabs.addTab("Allergies", createAllergiesTab.createAllergiesTab(id));
+        medicalHistoryTabs.addTab("Allergies", createAllergiesTab.createAllergiesTab(id, role));
 
         // Create a new instance of the Medications class
         createMedicationsTab createMedicationsTab = new createMedicationsTab();
-        medicalHistoryTabs.addTab("Medications", createMedicationsTab.createMedicationsTab(id));
+        medicalHistoryTabs.addTab("Medications", createMedicationsTab.createMedicationsTab(id, role));
 
         // Create a new instance of the Conditions class
         createConditionsTab createConditionsTab = new createConditionsTab();
-        medicalHistoryTabs.addTab("Conditions", createConditionsTab.createConditionsTab(id));
+        medicalHistoryTabs.addTab("Conditions", createConditionsTab.createConditionsTab(id, role));
 
         // Create a new instance of the Surgeries class
         createSurgeriesTab createSurgeriesTab = new createSurgeriesTab();
-        medicalHistoryTabs.addTab("Surgeries", createSurgeriesTab.createSurgeriesTab(id));
+        medicalHistoryTabs.addTab("Surgeries", createSurgeriesTab.createSurgeriesTab(id, role));
 
         // Create a new instance of the createChronicTab class
         createChronicTab createChronicTab = new createChronicTab();
-        medicalHistoryTabs.addTab("Chronic Conditions", createChronicTab.createChronicTab(id));
+        medicalHistoryTabs.addTab("Chronic Conditions", createChronicTab.createChronicTab(id, role));
 
         // Create a new instance of the createFamilyTab class
         createFamilyTab createFamilyTab = new createFamilyTab();
-        medicalHistoryTabs.addTab("Family History", createFamilyTab.createFamilyTab(id));
+        medicalHistoryTabs.addTab("Family History", createFamilyTab.createFamilyTab(id, role));
 
         // Create a new instance of the createVaccinationTab class
         createVaccinationTab createVaccinationTab = new createVaccinationTab();
-        medicalHistoryTabs.addTab("Vaccination History", createVaccinationTab.createVaccinationTab(id));
+        medicalHistoryTabs.addTab("Vaccination History", createVaccinationTab.createVaccinationTab(id, role));
 
         // Create a new instance of the createLifestyleTab class
         createLifestyleTab createLifestyleTab = new createLifestyleTab();
-        medicalHistoryTabs.addTab("Lifestyle Factors", createLifestyleTab.createLifestyleTab(id));
+        medicalHistoryTabs.addTab("Lifestyle Factors", createLifestyleTab.createLifestyleTab(id, role));
 
         // Create a new instance of the createSexualTab class
         createSexualTab createSexualTab = new createSexualTab();
-        medicalHistoryTabs.addTab("Sexual History", createSexualTab.createSexualTab(id));
+        medicalHistoryTabs.addTab("Sexual History", createSexualTab.createSexualTab(id, role));
 
         // Create a new instance of the createMentalTab class
         createMentalTab createMentalTab = new createMentalTab();
-        medicalHistoryTabs.addTab("Mental Health History", createMentalTab.createMentalTab(id));
+        medicalHistoryTabs.addTab("Mental Health History", createMentalTab.createMentalTab(id, role));
 
         // Create a new instance of the createLifestyleTab class
         createMilestonesTab createMilestonesTab = new createMilestonesTab();
-        medicalHistoryTabs.addTab("Developmental Milestones", createMilestonesTab.createMilestonesTab(id));
+        medicalHistoryTabs.addTab("Developmental Milestones", createMilestonesTab.createMilestonesTab(id, role));
 
         medicalHistoryTabs.addChangeListener((ChangeEvent e) -> {
             int index = medicalHistoryTabs.getSelectedIndex();

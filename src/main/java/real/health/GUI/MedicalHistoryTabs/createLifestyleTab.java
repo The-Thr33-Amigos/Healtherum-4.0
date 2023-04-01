@@ -6,9 +6,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createLifestyleTab {
-    public JComponent createLifestyleTab(String id) {
+    private UserRole userRole;
+    public JComponent createLifestyleTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         // Create the lifestyle factors table
         JTable lifestyleTable = new JTable();
         try {
@@ -26,7 +29,12 @@ public class createLifestyleTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Factor", "Status" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2) });
             }
@@ -108,7 +116,6 @@ public class createLifestyleTab {
                             ex.printStackTrace();
                         }
 
-
                     }
                 });
                 JButton cancelButton = new JButton("Cancel");
@@ -131,11 +138,12 @@ public class createLifestyleTab {
         addButtonPanel.add(addButton);
 
         // Create the lifestyle factors tab panel and add the lifestyle factors table
-        // and add button
-        // panel
+        // and add button panel
         JPanel lifestyleTabPanel = new JPanel(new BorderLayout());
         lifestyleTabPanel.add(new JScrollPane(lifestyleTable), BorderLayout.CENTER);
-        lifestyleTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            lifestyleTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        }
 
         return lifestyleTabPanel;
     }

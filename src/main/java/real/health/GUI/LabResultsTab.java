@@ -6,6 +6,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.basic.DefaultMenuLayout;
 import javax.swing.table.*;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.mysql.cj.conf.ConnectionUrl.Type;
 
 import real.health.Patient.BloodTest;
@@ -24,6 +25,12 @@ import java.io.IOException;
 
 public class LabResultsTab {
 
+    private UserRole userRole;
+
+    public LabResultsTab(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     public HashMap<Integer, BloodTest> bloodTestMap = new HashMap<>();
 
     public ArrayList<Object> getColumnValues(JTable table, int columnIndex) {
@@ -33,8 +40,15 @@ public class LabResultsTab {
         }
         return columnValues;
     }
+
     // TODO add race as a parameter to be based on patient race
     public JComponent createLabResultsTab(String id) throws IOException {
+
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            System.err.println("Failed");
+        }
 
         JPanel labResultsPanel = new JPanel(new BorderLayout());
 
@@ -57,7 +71,12 @@ public class LabResultsTab {
                         BloodTest selectedBT = bloodTestMap.get(row);
                         JFrame bloodFrame = new JFrame(selectedBT.testName + " " + selectedBT.testDate);
                         bloodFrame.setSize(800, 600);
-                        DefaultTableModel bloodTestModel = new DefaultTableModel();
+                        DefaultTableModel bloodTestModel = new DefaultTableModel() {
+                            @Override
+                            public boolean isCellEditable(int row, int column) {
+                                return false;
+                            }
+                        };
 
                         bloodTestModel.addColumn("Name");
                         bloodTestModel.addColumn("Result");
@@ -235,7 +254,7 @@ public class LabResultsTab {
                             String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
 
                             PreparedStatement statement = conn.prepareStatement(sql);
-                            statement.setString(1,id);
+                            statement.setString(1, id);
                             statement.setString(2, json);
                             statement.executeUpdate();
 
@@ -288,8 +307,8 @@ public class LabResultsTab {
                 newBlood = newTest.jsonToBT(result2.getString(1));
                 newTest.addToList(newBlood);
                 model.addRow(new Object[] { newBlood.testName, newBlood.resultIndicator, newBlood.testDate,
-                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment});
-                        bloodTestMap.put(count, newBlood);
+                        newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment });
+                bloodTestMap.put(count, newBlood);
                 count++;
             }
 
@@ -348,6 +367,7 @@ public class LabResultsTab {
         JButton predBtn1 = new JButton("Predict");
         constraints.gridx = 0;
         constraints.gridy = 8;
+        
         testInformationPanel.add(predBtn1, constraints);
 
         JLabel orderingProviderLabel = new JLabel("Diabetes:");
@@ -369,12 +389,13 @@ public class LabResultsTab {
 
         predBtn.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)  {
+            public void actionPerformed(ActionEvent e) {
                 try {
 
                     heartDisease newHD = new heartDisease(id);
                     ArrayList<String> predic = newHD.predict();
                     String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
                     accuracyLabel.setText(acc);
 
                     String pred = predic.get(1);
@@ -408,9 +429,14 @@ public class LabResultsTab {
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");
         JButton printButton = new JButton("Print");
-        downloadPrintPanel.add(downloadButton);
+        if (userRole == UserRole.PATIENT) {
+            downloadPrintPanel.add(downloadButton);
+        }
+        
         downloadPrintPanel.add(printButton);
-        downloadPrintPanel.add(newButton2);
+        if (userRole == UserRole.PROVIDER) {
+            downloadPrintPanel.add(newButton2);
+        }
         labResultsPanel.add(downloadPrintPanel, BorderLayout.SOUTH);
 
         return labResultsPanel;
