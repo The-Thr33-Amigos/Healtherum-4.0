@@ -2,15 +2,9 @@ package real.health.GUI;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.plaf.basic.DefaultMenuLayout;
 import javax.swing.table.*;
-
 import com.formdev.flatlaf.FlatLightLaf;
-import com.mysql.cj.conf.ConnectionUrl.Type;
-
 import real.health.Patient.BloodTest;
-import real.health.Patient.Patient;
 import real.health.Patient.BloodItem;
 import real.health.SQL.*;
 import java.sql.*;
@@ -400,11 +394,11 @@ public class LabResultsTab {
 
                     String pred = predic.get(1);
 
-                    if ("Absence".equals(pred)) {
+                    if ("0".equals(pred)) {
                         statusLabel.setText("Absence");
                         statusPanel.setBackground(Color.GREEN);
                         statusPanel.add(statusLabel);
-                    } else if ("Presence".equals(pred)) {
+                    } else if ("1".equals(pred)) {
                         statusLabel.setText("Presence Detected");
                         statusPanel.setBackground(Color.RED);
                         statusPanel.add(statusLabel);

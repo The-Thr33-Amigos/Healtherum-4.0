@@ -1,31 +1,21 @@
 package real.health.GUI;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import real.health.SQL.*;
-import real.health.Patient.BloodTest;
-import real.health.Patient.Patient;
-import real.health.Patient.BloodItem;
-import real.health.SQL.*;
+import java.awt.image.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-
-import real.health.SQL.HealthConn;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class InsuranceTab {
+    private static Map<Integer, BufferedImage> insuranceCards = new HashMap<>();
+
     public static JComponent createInsuranceTab(String id) {
         // Create the main panel with BorderLayout
         JPanel panel = new JPanel(new BorderLayout());
@@ -33,6 +23,7 @@ public class InsuranceTab {
         // Create the insurance card upload panel on the right using BorderLayout
         JPanel uploadPanel = new JPanel(new BorderLayout());
         JButton uploadButton = new JButton("Upload Insurance Card");
+        uploadButton.setPreferredSize(new Dimension(200, 30));
         uploadPanel.add(uploadButton, BorderLayout.CENTER);
 
         // Create a separate panel for each insurance company using GridLayout
@@ -61,13 +52,19 @@ public class InsuranceTab {
 
         // Create the insurance table
         JTable table = new JTable(new Object[][] {
-                { "Provider 1", "Policy Number 1", "Group Number 1", "Policy Holder 1", "DOB 1", "SSN 1" },
-                { "Provider 2", "Policy Number 2", "Group Number 2", "Policy Holder 2", "DOB 2", "SSN 2" },
-                { "Provider 3", "Policy Number 3", "Group Number 3", "Policy Holder 3", "DOB 3", "SSN 3" }
+                { "Provider 1", "Policy Number 1", "Group Number 1", "Policy Holder 1", "DOB 1", "SSN 1", null },
+                { "Provider 2", "Policy Number 2", "Group Number 2", "Policy Holder 2", "DOB 2", "SSN 2", null },
+                { "Provider 3", "Policy Number 3", "Group Number 3", "Policy Holder 3", "DOB 3", "SSN 3", null }
         },
                 new Object[] { "Provider Name", "Policy Number", "Group Number", "Policy Holder Name",
-                        "Policy Holder DOB", "Policy Holder SSN" });
-
+                        "Policy Holder DOB", "Policy Holder SSN", "Insurance Card" }) {
+            // Override isCellEditable to always return false, preventing editing of the
+            // table
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         // Add the table to the panel
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -79,6 +76,26 @@ public class InsuranceTab {
         buttonPanel.add(submitButton);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
+        // Add a mouse listener to the table to handle clicks on table rows
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int selectedRow = table.getSelectedRow();
+                    if (insuranceCards.containsKey(selectedRow)) {
+                        JFrame imageFrame = new JFrame("Insurance Card");
+                        imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                        JLabel imageLabel = new JLabel(new ImageIcon(insuranceCards.get(selectedRow)));
+                        JScrollPane imageScrollPane = new JScrollPane(imageLabel);
+                        imageFrame.add(imageScrollPane);
+
+                        imageFrame.pack();
+                        imageFrame.setVisible(true);
+                    }
+                }
+            }
+        });
         // Action listener for "New" button
         newButton.addActionListener(e -> {
             JFrame frame = new JFrame("New Insurance Entry");
@@ -182,12 +199,36 @@ public class InsuranceTab {
         // Action listener for "Upload Insurance Card" button
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "gif", "bmp"));
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
                     BufferedImage insuranceCard = ImageIO.read(file);
-                    // Save the image to the database or file system here
+
+                    // Prompt the user to select the entry for the insurance card
+                    String[] options = new String[table.getModel().getRowCount()];
+                    for (int i = 0; i < table.getModel().getRowCount(); i++) {
+                        options[i] = table.getModel().getValueAt(i, 0).toString();
+                    }
+                    String selectedOption = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Select the insurance provider for the uploaded card:",
+                            "Select Insurance Provider",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
+
+                    if (selectedOption != null) {
+                        for (int i = 0; i < table.getModel().getRowCount(); i++) {
+                            if (table.getModel().getValueAt(i, 0).equals(selectedOption)) {
+                                insuranceCards.put(i, insuranceCard);
+                                table.getModel().setValueAt("View Card", i, table.getColumnCount() - 1);
+                                break;
+                            }
+                        }
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
