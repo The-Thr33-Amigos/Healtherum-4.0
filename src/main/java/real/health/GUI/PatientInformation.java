@@ -1,11 +1,16 @@
 package real.health.GUI;
 
 import java.awt.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import real.health.SQL.HealthConn;
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 
 public class PatientInformation {
@@ -115,6 +120,21 @@ public class PatientInformation {
             panel.add(driversLicenseButton, constraints);
         }
         
+        // Action listener for "Upload Driver's License" button
+        driversLicenseButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    BufferedImage driversLicense = ImageIO.read(file);
+                    // Save the image to the database or file system here
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 
         JButton editButton = new JButton("Edit");
         constraints.gridx = 2;

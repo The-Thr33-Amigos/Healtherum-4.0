@@ -47,6 +47,7 @@ public class providerSystem {
         JFrame homeScreen = new JFrame("Provider Home");
         homeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeScreen.setSize(800, 600);
+        homeScreen.setLocationRelativeTo(null);
 
         // Create a panel for the home screen
         JPanel panel = new JPanel();
@@ -153,7 +154,8 @@ public class providerSystem {
         // Create a new JFrame for displaying the search results
         JFrame searchResultsFrame = new JFrame("Search Results");
         searchResultsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        searchResultsFrame.setSize(800, 600);
+        searchResultsFrame.setSize(400, 300);
+        searchResultsFrame.setLocationRelativeTo(null);
 
         // Create a table model for the search results
         DefaultTableModel tableModel = new DefaultTableModel();

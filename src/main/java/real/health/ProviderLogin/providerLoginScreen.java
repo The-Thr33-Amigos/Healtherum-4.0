@@ -13,6 +13,7 @@ public class providerLoginScreen {
     public static void loginScreen() {
         JFrame frame = new JFrame("Provider Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
