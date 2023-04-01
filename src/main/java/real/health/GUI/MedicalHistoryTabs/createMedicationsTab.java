@@ -23,9 +23,12 @@ import java.awt.event.*;
 import real.health.API.readCSV;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createMedicationsTab {
-    public JComponent createMedicationsTab(String id) {
+    private UserRole userRole;
+    public JComponent createMedicationsTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable medicationsTable = new JTable();
         // populate the table with the patient's current medications
         try {
@@ -43,15 +46,19 @@ public class createMedicationsTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Medication", "Dosage", "Frequency", "Date Prescribed" },
-                    0);
-
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
 
             while (result.next()) {
                 java.sql.Date sqlDate = result.getDate(4);
                 java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
                 String formattedDate = normal.format(utilDate);
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
-                        formattedDate});
+                        formattedDate });
             }
 
             medicationsTable.setModel(tableModel);
@@ -98,14 +105,14 @@ public class createMedicationsTab {
                 addMedicationFrame.add(drugCombo);
 
                 JLabel doseLabel = new JLabel("Dose:");
-                String[] doses = {"5mg", "10mg", "15mg", "20mg", "30mg", "50mg", "60mg"};
+                String[] doses = { "5mg", "10mg", "15mg", "20mg", "30mg", "50mg", "60mg" };
                 JComboBox<String> doseCombo = new JComboBox<>(doses);
                 doseCombo.setSelectedItem(null);
                 addMedicationFrame.add(doseLabel);
                 addMedicationFrame.add(doseCombo);
 
                 JLabel frequencyLabel = new JLabel("Frequency:");
-                String[] freq = {"Daily", "Twice A Day", "Three Times a Day", "When Needed"};
+                String[] freq = { "Daily", "Twice A Day", "Three Times a Day", "When Needed" };
                 JComboBox<String> freqCombo = new JComboBox<>(freq);
                 freqCombo.setSelectedItem(null);
                 addMedicationFrame.add(frequencyLabel);
@@ -115,7 +122,6 @@ public class createMedicationsTab {
                 DateFormatter dateFormatter = new DateFormatter(dateFormat);
                 dateFormatter.setAllowsInvalid(false);
                 dateFormatter.setOverwriteMode(true);
-
 
                 JFormattedTextField dateField = new JFormattedTextField();
                 dateField.setFormatterFactory(new DefaultFormatterFactory(dateFormatter));
@@ -150,7 +156,6 @@ public class createMedicationsTab {
                             formDate = (String) datePrescribed;
                             e1.printStackTrace();
                         }
-
 
                         // Upload the new medication to the SQL server
                         try {
@@ -209,7 +214,9 @@ public class createMedicationsTab {
         // panel
         JPanel medicationsTabPanel = new JPanel(new BorderLayout());
         medicationsTabPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
-        medicationsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        if (userRole == UserRole.PROVIDER) {
+            medicationsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        }
 
         return medicationsTabPanel;
     }

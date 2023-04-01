@@ -6,9 +6,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createVaccinationTab {
-    public JComponent createVaccinationTab(String id) {
+    private UserRole userRole;
+    public JComponent createVaccinationTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable vaccinationTable = new JTable();
         // populate the table with the patient's vaccination history
         try {
@@ -26,7 +29,12 @@ public class createVaccinationTab {
             // Create a table model and populate it with the retrieved data
             DefaultTableModel tableModel = new DefaultTableModel(
                     new Object[] { "Vaccine", "Date Administered", "Location Administered", "Administering Provider" },
-                    0);
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             while (result.next()) {
                 tableModel.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
                         result.getString(4) });
@@ -146,7 +154,9 @@ public class createVaccinationTab {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(addButton);
+        if (userRole == UserRole.PROVIDER) {
+            buttonPanel.add(addButton);
+        }
 
         panel.add(buttonPanel, BorderLayout.PAGE_END);
 

@@ -1,15 +1,24 @@
 package real.health.GUI;
 
 import java.awt.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import real.health.SQL.HealthConn;
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 
 public class PatientInformation {
-    public JComponent createPatientInformationTab(String id) throws ClassNotFoundException {
+
+    private UserRole userRole;
+
+    public JComponent createPatientInformationTab(String id, UserRole userRole) throws ClassNotFoundException {
+        this.userRole = userRole;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -107,13 +116,33 @@ public class PatientInformation {
         JButton driversLicenseButton = new JButton("Upload Driver's License");
         constraints.gridx = 4;
         constraints.gridy = 1;
-        panel.add(driversLicenseButton, constraints);
+        if (userRole == UserRole.PATIENT) {
+            panel.add(driversLicenseButton, constraints);
+        }
+        
+        // Action listener for "Upload Driver's License" button
+        driversLicenseButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    BufferedImage driversLicense = ImageIO.read(file);
+                    // Save the image to the database or file system here
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 
         JButton editButton = new JButton("Edit");
         constraints.gridx = 2;
         constraints.gridy = 7;
-        panel.add(editButton, constraints);
-
+        if (userRole == UserRole.PATIENT) {
+            panel.add(editButton, constraints);
+        }
+        
         JButton submitButton = new JButton("Submit");
         constraints.gridx = 2;
         constraints.gridy = 7;
