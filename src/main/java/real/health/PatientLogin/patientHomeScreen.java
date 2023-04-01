@@ -15,6 +15,7 @@ public class patientHomeScreen {
     public static void homeScreen(UserRole patient) {
         JFrame frame = new JFrame("Healthereum");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
