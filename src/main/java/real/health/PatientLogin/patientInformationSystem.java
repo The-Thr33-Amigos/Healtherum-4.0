@@ -1,6 +1,7 @@
 package real.health.PatientLogin;
 
 import real.health.GUI.*;
+import real.health.Patient.Notes;
 import real.health.PatientLogin.*;
 import real.health.ProviderLogin.providerHomeScreen;
 
@@ -55,7 +56,7 @@ public class patientInformationSystem {
 
         // Create a new instance of the NotesTab class
         NotesTab NotesTab = new NotesTab();
-        tabs.addTab("Notes and Progress", NotesTab.createNotesAndProgressTab());
+        tabs.addTab("Notes and Progress", NotesTab.createNotesTab(id));
 
         patient.setVisible(false);
         return patient;
