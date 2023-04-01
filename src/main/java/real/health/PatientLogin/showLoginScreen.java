@@ -115,12 +115,12 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
-                                        progressBar.setValue(progressBar.getValue());
                                         // Increment the progress bar every 5ms
+                                        progress = progressBar.getValue();
                                         Thread.sleep(5);
                                         progress++;
                                         progressBar.setValue(progress);
-                                        if (progress == 50) {
+                                        if (progressBar.getValue() == 50) {
                                             patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar, role);
                                             patientFrame.setVisible(false);
                                         } else {
