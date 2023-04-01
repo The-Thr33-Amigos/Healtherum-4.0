@@ -1,5 +1,6 @@
 package real.health.Patient;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 public class Notes {
@@ -21,5 +22,9 @@ public class Notes {
 
     public void printAll() {
         System.out.println(this.notes);
+    }
+
+    public Component createNoteTab(String id) {
+        return null;
     }
 }
