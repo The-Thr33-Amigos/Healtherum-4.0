@@ -2,17 +2,13 @@ package real.health.GUI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.*;
 import java.util.*;
-import java.beans.*;
-import javax.imageio.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 import com.toedter.calendar.*;
 
