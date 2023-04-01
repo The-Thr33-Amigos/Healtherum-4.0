@@ -389,11 +389,11 @@ public class LabResultsTab {
 
                     String pred = predic.get(1);
 
-                    if ("Absence".equals(pred)) {
+                    if ("0".equals(pred)) {
                         statusLabel.setText("Absence");
                         statusPanel.setBackground(Color.GREEN);
                         statusPanel.add(statusLabel);
-                    } else if ("Presence".equals(pred)) {
+                    } else if ("1".equals(pred)) {
                         statusLabel.setText("Presence Detected");
                         statusPanel.setBackground(Color.RED);
                         statusPanel.add(statusLabel);
