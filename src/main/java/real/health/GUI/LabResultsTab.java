@@ -429,7 +429,10 @@ public class LabResultsTab {
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");
         JButton printButton = new JButton("Print");
-        downloadPrintPanel.add(downloadButton);
+        if (userRole == UserRole.PATIENT) {
+            downloadPrintPanel.add(downloadButton);
+        }
+        
         downloadPrintPanel.add(printButton);
         if (userRole == UserRole.PROVIDER) {
             downloadPrintPanel.add(newButton2);

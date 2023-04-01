@@ -14,11 +14,6 @@ import java.io.IOException;
 
 public class patientInformationSystem {
     public static Component patientInformationSystem(String id, JProgressBar progressBar, UserRole role) throws ClassNotFoundException, IOException {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception e) {
-            System.err.println("Failed");
-        }
         JTabbedPane tabs;
         JFrame patient = new JFrame("Patient Information System");
         patient.setSize(1000, 600);

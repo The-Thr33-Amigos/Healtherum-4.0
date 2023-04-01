@@ -111,13 +111,18 @@ public class PatientInformation {
         JButton driversLicenseButton = new JButton("Upload Driver's License");
         constraints.gridx = 4;
         constraints.gridy = 1;
-        panel.add(driversLicenseButton, constraints);
+        if (userRole == UserRole.PATIENT) {
+            panel.add(driversLicenseButton, constraints);
+        }
+        
 
         JButton editButton = new JButton("Edit");
         constraints.gridx = 2;
         constraints.gridy = 7;
-        panel.add(editButton, constraints);
-
+        if (userRole == UserRole.PATIENT) {
+            panel.add(editButton, constraints);
+        }
+        
         JButton submitButton = new JButton("Submit");
         constraints.gridx = 2;
         constraints.gridy = 7;

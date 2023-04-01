@@ -186,9 +186,17 @@ public class providerSystem {
             }
         });
 
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                searchResultsFrame.dispose();
+            }
+        });
+
         // Add the "View" button to the search results JFrame
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(viewButton);
+        buttonPanel.add(cancelButton);
         searchResultsFrame.add(buttonPanel, BorderLayout.SOUTH);
 
         // Display the search results JFrame
