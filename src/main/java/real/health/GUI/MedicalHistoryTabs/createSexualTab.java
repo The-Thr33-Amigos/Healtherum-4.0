@@ -6,9 +6,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createSexualTab {
-    public static JComponent createSexualTab(String id) {
+    private UserRole userRole;
+    public JComponent createSexualTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable sexualTable = new JTable();
         // populate the table with the patient's sexual history
         try {
@@ -52,8 +55,7 @@ public class createSexualTab {
         }
 
         // Create the add button and add an ActionListener to upload the new sexual
-        // history
-        // to the SQL server
+        // history to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -148,8 +150,10 @@ public class createSexualTab {
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
-
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+        }
+        
         // Create the sexual history tab panel and add the sexual history table and add
         // button panel
         JPanel sexualTabPanel = new JPanel();

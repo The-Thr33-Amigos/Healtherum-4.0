@@ -4,11 +4,15 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class patientHomeScreen {
-    public static void homeScreen() {
+
+    
+    public static void homeScreen(UserRole patient) {
         JFrame frame = new JFrame("Healthereum");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -31,7 +35,7 @@ public class patientHomeScreen {
         JButton existingUserButton = new JButton("Existing User");
         existingUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                showLoginScreen.showLoginScreen();
+                showLoginScreen.showLoginScreen(UserRole.PATIENT);
                 frame.dispose();
             }
         });

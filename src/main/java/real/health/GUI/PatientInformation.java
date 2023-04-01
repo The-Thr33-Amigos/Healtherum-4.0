@@ -9,7 +9,11 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 
 public class PatientInformation {
-    public JComponent createPatientInformationTab(String id) throws ClassNotFoundException {
+
+    private UserRole userRole;
+
+    public JComponent createPatientInformationTab(String id, UserRole userRole) throws ClassNotFoundException {
+        this.userRole = userRole;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -107,13 +111,18 @@ public class PatientInformation {
         JButton driversLicenseButton = new JButton("Upload Driver's License");
         constraints.gridx = 4;
         constraints.gridy = 1;
-        panel.add(driversLicenseButton, constraints);
+        if (userRole == UserRole.PATIENT) {
+            panel.add(driversLicenseButton, constraints);
+        }
+        
 
         JButton editButton = new JButton("Edit");
         constraints.gridx = 2;
         constraints.gridy = 7;
-        panel.add(editButton, constraints);
-
+        if (userRole == UserRole.PATIENT) {
+            panel.add(editButton, constraints);
+        }
+        
         JButton submitButton = new JButton("Submit");
         constraints.gridx = 2;
         constraints.gridy = 7;

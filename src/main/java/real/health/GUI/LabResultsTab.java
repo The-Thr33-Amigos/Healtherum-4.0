@@ -25,6 +25,12 @@ import java.io.IOException;
 
 public class LabResultsTab {
 
+    private UserRole userRole;
+
+    public LabResultsTab(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     public HashMap<Integer, BloodTest> bloodTestMap = new HashMap<>();
 
     public ArrayList<Object> getColumnValues(JTable table, int columnIndex) {
@@ -361,6 +367,7 @@ public class LabResultsTab {
         JButton predBtn1 = new JButton("Predict");
         constraints.gridx = 0;
         constraints.gridy = 8;
+        
         testInformationPanel.add(predBtn1, constraints);
 
         JLabel orderingProviderLabel = new JLabel("Diabetes:");
@@ -422,9 +429,14 @@ public class LabResultsTab {
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");
         JButton printButton = new JButton("Print");
-        downloadPrintPanel.add(downloadButton);
+        if (userRole == UserRole.PATIENT) {
+            downloadPrintPanel.add(downloadButton);
+        }
+        
         downloadPrintPanel.add(printButton);
-        downloadPrintPanel.add(newButton2);
+        if (userRole == UserRole.PROVIDER) {
+            downloadPrintPanel.add(newButton2);
+        }
         labResultsPanel.add(downloadPrintPanel, BorderLayout.SOUTH);
 
         return labResultsPanel;

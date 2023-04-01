@@ -6,9 +6,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import real.health.GUI.UserRole;
 
 public class createMilestonesTab {
-    public JComponent createMilestonesTab(String id) {
+    private UserRole userRole;
+    public JComponent createMilestonesTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         JTable milestonesTable = new JTable();
         // populate the table with the patient's developmental milestones
         try {
@@ -137,8 +140,10 @@ public class createMilestonesTab {
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
-
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+        }
+        
         milestonesTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return milestonesTabPanel;

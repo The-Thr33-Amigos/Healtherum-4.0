@@ -2,6 +2,8 @@ package real.health.PatientLogin;
 
 import real.health.PatientLogin.*;
 import real.health.*;
+import real.health.GUI.UserRole;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -71,7 +73,7 @@ public class createNewUser {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dialog.dispose();
-                patientHomeScreen.homeScreen();
+                patientHomeScreen.homeScreen(UserRole.PATIENT);
             }
         });
 

@@ -5,12 +5,13 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
 import real.health.ProviderLogin.*;
+import real.health.GUI.UserRole;
 import real.health.PatientLogin.*;
 import real.health.SQL.*;
 import java.awt.*;
 
 public class providerHomeScreen {
-    public static void homeScreen() {
+    public static void homeScreen(UserRole provider) {
         JFrame frame = new JFrame("Healthereum - Provider Home");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

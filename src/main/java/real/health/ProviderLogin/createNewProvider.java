@@ -1,5 +1,6 @@
 package real.health.ProviderLogin;
 
+import real.health.GUI.UserRole;
 import real.health.SQL.*;
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +81,7 @@ public class createNewProvider {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                providerHomeScreen.homeScreen();
+                providerHomeScreen.homeScreen(UserRole.PROVIDER);
                 dialog.dispose();
             }
         });
