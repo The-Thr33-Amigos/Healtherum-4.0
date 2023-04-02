@@ -58,13 +58,7 @@ public class InsuranceTab {
         editButton.setVisible(true);
 
         // Create the insurance table
-        JTable table = new JTable(new Object[][] {
-                { "Provider 1", "Policy Number 1", "Group Number 1", "Policy Holder 1", "DOB 1", "SSN 1", null },
-                { "Provider 2", "Policy Number 2", "Group Number 2", "Policy Holder 2", "DOB 2", "SSN 2", null },
-                { "Provider 3", "Policy Number 3", "Group Number 3", "Policy Holder 3", "DOB 3", "SSN 3", null }
-        },
-                new Object[] { "Provider Name", "Policy Number", "Group Number", "Policy Holder Name",
-                        "Policy Holder DOB", "Policy Holder SSN", "Insurance Card" }) {
+        JTable table = new JTable() {
             // Override isCellEditable to always return false, preventing editing of the
             // table
             @Override
@@ -79,13 +73,13 @@ public class InsuranceTab {
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-            String sql = "SELECT provider_name, policy_number, group_number, holder_name, holder_dob, holder_ssn, insurance_card FROM insurance WHERE id = ?";
+            String sql = "SELECT provider_name, policy_number, group_number, holder_name, holder_dob, insurance_card FROM insurance WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet rs = statement.executeQuery();
             DefaultTableModel tableModel = new DefaultTableModel(
-                    new Object[] { "providertr_name", "policy_number", "group_number", "holder_name", "holder_dob",
-                            "holder_ssn", "insurance_card" },
+                    new Object[] { "Provider Name", "Policy Number", "Group Number", "Policy Holder Name",
+                            "Policy Holder DOB", "Insurance Card" },
                     0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -120,7 +114,6 @@ public class InsuranceTab {
                                 rs.getString(3),
                                 rs.getString(4),
                                 rs.getString(5),
-                                rs.getString(6),
                                 icon
                         });
                     } catch (IOException ex) {
@@ -246,8 +239,7 @@ public class InsuranceTab {
                 }
                 // Add the new row to the table
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.addRow(new Object[] { provider, policyNumber, groupNumber, policyHolderName, policyHolderDOB,
-                        policyHolderSSN });
+                model.addRow(new Object[] { provider, policyNumber, groupNumber, policyHolderName, policyHolderDOB });
 
                 // Close the new entry window
                 frame.dispose();
@@ -274,11 +266,11 @@ public class InsuranceTab {
             // Assuming the first column of the table contains the primary key
             String primaryKey = table.getValueAt(selectedRow, 0).toString();
             int confirm = JOptionPane.showConfirmDialog(null,
-            "Are you sure you want to delete this Provider?", "Confirm Deletion",
-            JOptionPane.YES_NO_OPTION);
+                    "Are you sure you want to delete this Provider?", "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION);
             // Execute an SQL DELETE statement to delete the corresponding record from the
             // database
-            if (confirm == JOptionPane.YES_OPTION){
+            if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     HealthConn newConnection = new HealthConn();
                     Connection con = newConnection.connect();
@@ -320,7 +312,6 @@ public class InsuranceTab {
             String groupNumber = (String) table.getValueAt(selectedRow, 2);
             String holderName = (String) table.getValueAt(selectedRow, 3);
             String holderDOB = (String) table.getValueAt(selectedRow, 4);
-            String holderSSN = (String) table.getValueAt(selectedRow, 5);
             BufferedImage insuranceCard = insuranceCards.get(selectedRow);
 
             // Create a new JFrame for the edit window
@@ -353,10 +344,6 @@ public class InsuranceTab {
             JTextField holderDOBField = new JTextField(holderDOB);
             editPanel.add(holderDOBField);
 
-            editPanel.add(new JLabel("Policy Holder SSN:"));
-            JTextField holderSSNField = new JTextField(holderSSN);
-            editPanel.add(holderSSNField);
-
             // Add the edit panel to the edit frame
             editFrame.add(editPanel, BorderLayout.CENTER);
 
@@ -372,7 +359,6 @@ public class InsuranceTab {
                 String newGroupNumber = groupNumberField.getText();
                 String newHolderName = holderNameField.getText();
                 String newHolderDOB = holderDOBField.getText();
-                String newHolderSSN = holderSSNField.getText();
 
                 // Update the selected row in the table model
                 table.setValueAt(newProviderName, selectedRow, 0);
@@ -380,7 +366,6 @@ public class InsuranceTab {
                 table.setValueAt(newGroupNumber, selectedRow, 2);
                 table.setValueAt(newHolderName, selectedRow, 3);
                 table.setValueAt(newHolderDOB, selectedRow, 4);
-                table.setValueAt(newHolderSSN, selectedRow, 5);
 
                 // Update the insurance card in the insuranceCards map
                 insuranceCards.put(selectedRow, insuranceCard);
