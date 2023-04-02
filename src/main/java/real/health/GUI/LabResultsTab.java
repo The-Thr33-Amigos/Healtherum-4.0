@@ -327,7 +327,7 @@ public class LabResultsTab {
         JPanel statusPanel1 = new JPanel();
         JPanel statusPanel2 = new JPanel();
 
-        JLabel testDateLabel = new JLabel("Disease Indicator:");
+        JLabel testDateLabel = new JLabel("Heart Disease:");
         constraints.gridx = 0;
         constraints.gridy = 0;
         testInformationPanel.add(testDateLabel, constraints);
@@ -348,15 +348,22 @@ public class LabResultsTab {
         constraints.gridy = 3;
         testInformationPanel.add(predBtn, constraints);
 
-        JLabel testTypeLabel = new JLabel("Heart Disease:");
+        JLabel testTypeLabel = new JLabel("Kidney Disease:");
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        testInformationPanel.add(testTypeLabel, constraints);
+
+        JLabel accuracyLabel1 = new JLabel();
         constraints.gridx = 0;
         constraints.gridy = 6;
-        testInformationPanel.add(testTypeLabel, constraints);
+        testInformationPanel.add(accuracyLabel1, constraints);
+        
 
         JLabel statusLabel1 = new JLabel();
         constraints.gridx = 0;
         constraints.gridy = 7;
-        statusPanel1.add(statusLabel1, constraints);
+        testInformationPanel.add(statusPanel1, constraints);
+        statusPanel1.add(statusLabel1);
 
         JButton predBtn1 = new JButton("Predict");
         constraints.gridx = 0;
@@ -366,17 +373,23 @@ public class LabResultsTab {
 
         JLabel orderingProviderLabel = new JLabel("Diabetes:");
         constraints.gridx = 0;
-        constraints.gridy = 12;
+        constraints.gridy = 10;
         testInformationPanel.add(orderingProviderLabel, constraints);
+
+        JLabel accuracyLabel2 = new JLabel();
+        constraints.gridx = 0;
+        constraints.gridy = 11;
+        testInformationPanel.add(accuracyLabel2, constraints);
 
         JLabel statusLabel2 = new JLabel();
         constraints.gridx = 0;
-        constraints.gridy = 13;
+        constraints.gridy = 12;
         statusPanel2.add(statusLabel2, constraints);
+        testInformationPanel.add(statusPanel2, constraints);
 
         JButton predBtn2 = new JButton("Predict");
         constraints.gridx = 0;
-        constraints.gridy = 14;
+        constraints.gridy = 13;
         testInformationPanel.add(predBtn2, constraints);
 
         labResultsPanel.add(testInformationPanel, BorderLayout.WEST);
@@ -411,6 +424,81 @@ public class LabResultsTab {
 
                     predBtn.setVisible(false);
                     predBtn.setEnabled(false);
+
+                } catch (IOException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+        predBtn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+
+                    kidneyDisease newKD = new kidneyDisease();
+                    ArrayList<String> predic = newKD.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel1.setText(acc);
+
+                    String pred1 = predic.get(1);
+
+                    if ("0".equals(pred1)) {
+                        statusLabel1.setText("Absence");
+                        statusPanel1.setBackground(Color.GREEN);
+                        statusPanel1.add(statusLabel1);
+                    } else if ("1".equals(pred1)) {
+                        statusLabel1.setText("Presence Detected");
+                        statusPanel1.setBackground(Color.RED);
+                        statusPanel1.add(statusLabel1);
+                    } else {
+                        statusLabel1.setText(pred1);
+                        statusPanel1.setBackground(Color.GRAY);
+                        statusPanel1.add(statusLabel1);
+                    }
+                    System.out.println(pred1);
+
+                    predBtn1.setVisible(false);
+                    predBtn1.setEnabled(false);
+
+                } catch (IOException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+        predBtn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    diabetes newDB = new diabetes();
+                    ArrayList<String> predic = newDB.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel2.setText(acc);
+
+                    String pred2 = predic.get(1);
+
+                    if ("0".equals(pred2)) {
+                        statusLabel2.setText("Absence");
+                        statusPanel2.setBackground(Color.GREEN);
+                        statusPanel2.add(statusLabel2);
+                    } else if ("1".equals(pred2)) {
+                        statusLabel2.setText("Presence Detected");
+                        statusPanel2.setBackground(Color.RED);
+                        statusPanel2.add(statusLabel2);
+                    } else {
+                        statusLabel2.setText(pred2);
+                        statusPanel2.setBackground(Color.GRAY);
+                        statusPanel2.add(statusLabel2);
+                    }
+                    System.out.println(pred2);
+
+                    predBtn2.setVisible(false);
+                    predBtn2.setEnabled(false);
 
                 } catch (IOException ie) {
                     ie.printStackTrace();

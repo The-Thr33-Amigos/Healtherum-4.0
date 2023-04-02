@@ -1,16 +1,14 @@
+import pickle
 import numpy as np
 
 class kidney_disease_ml:
-    def __init__(self, training):
-        self.training = training
 
-    def train_model():
+    def train_model(self):
         with open("ML/best_kd_model.pkl", "rb") as model_file:
             loaded_kd_model = pickle.load(model_file)
 
         with open("ML/kd_scaler.pkl", "rb") as scaler_file:
             loaded_scaler = pickle.load(scaler_file)
-
 
         Bp = float(np.random.randint(50,180,1))
         Sg = np.random.uniform(low=1.005,high=1.025,size=1)[0]
@@ -26,9 +24,17 @@ class kidney_disease_ml:
         Rbcc = np.random.uniform(low=2.1, high=8.0, size=1)[0]
         Htn = float(np.random.randint(0, 1, 1))
 
-        synth = synth = np.column_stack((Bp, Sg, Al, Su, Rbc, Bu, Sc, Sod, Pot, Hemo, Wbcc, Rbcc, Htn))
-        synth_scale = loaded_scaler.transform(synth)
-        synth_pred = loaded_kd_model.predict(synth_scale)
+
+        
+        num_scale = [Bp, Sg, Al, Su, Bu, Sc, Sod, Pot, Hemo, Wbcc, Rbcc]
+        num_scale = np.array(num_scale).reshape(1, -1)
+        synth_num_scaled = loaded_scaler.transform(num_scale)
+    
+        
+        x_cat = np.array([Rbc, Htn]).reshape(1,-1)
+        synth_scaled = np.concatenate((synth_num_scaled, x_cat), axis=1)
+
+        synth_pred = loaded_kd_model.predict(synth_scaled)
 
         return ["0.99", synth_pred[0]]
 

@@ -1,7 +1,29 @@
 # Model examples
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
+# basic RF
+param_grid = {
+    'n_estimators': [100, 200, 300, 400, 500],
+    'max_depth': [None, 10, 20, 30, 40, 50],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
+}
 
+rf = RandomForestClassifier(random_state=42)
+
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=cv, n_jobs=-1, verbose=2)
+grid_search.fit(X_train, y_train)
+
+best_params = grid_search.best_params_
+print("Best hyperparameters:", best_params)
+
+best_rf = RandomForestClassifier(**best_params, random_state=42)
+best_rf.fit(X_train, y_train)
+
+y_pred = best_rf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy: ", accuracy)
 # basic svm params, and traing
 svm_model = SVC()
 svm_model.fit(X_train, y_train)
