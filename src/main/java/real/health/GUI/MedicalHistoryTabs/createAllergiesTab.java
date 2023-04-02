@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class createAllergiesTab {
     private UserRole userRole;
+
     public JComponent createAllergiesTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable allergiesTable = new JTable();
@@ -145,19 +146,69 @@ public class createAllergiesTab {
                 addAllergiesFrame.setVisible(true);
             }
         });
+        // Create the delete button and add an ActionListener to delete the selected
+        // allergy
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = allergiesTable.getSelectedRow();
 
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(allergiesTable, "Please select a row to delete.");
+                    return;
+                }
+
+                // Get the primary key or unique identifier of the record from the selected row
+                // Assuming the first column of the table contains the primary key
+                String primaryKey = allergiesTable.getValueAt(selectedRow, 0).toString();
+
+                // Execute an SQL DELETE statement to delete the corresponding record from the
+                // database
+                try {
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
+                    String sql = "DELETE FROM allergies WHERE id = ? AND name = ? AND type = ? AND reaction = ? AND severity = ?";
+                    PreparedStatement statement = con.prepareStatement(sql);
+                    statement.setString(1, id);
+                    statement.setString(2, allergiesTable.getValueAt(selectedRow, 0).toString());
+                    statement.setString(3, allergiesTable.getValueAt(selectedRow, 1).toString());
+                    statement.setString(4, allergiesTable.getValueAt(selectedRow, 2).toString());
+                    statement.setString(5, allergiesTable.getValueAt(selectedRow, 3).toString());
+                    statement.executeUpdate();
+
+                    // Close the statement and connection
+                    statement.close();
+                    con.close();
+
+                    // Remove the selected row from the table
+                    DefaultTableModel model = (DefaultTableModel) allergiesTable.getModel();
+                    model.removeRow(selectedRow);
+
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(allergiesTable, "An error occurred while deleting the record.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
         // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new BorderLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
         if (userRole == UserRole.PROVIDER) {
-            addButtonPanel.add(addButton);
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
         }
 
         // Create the medications tab panel and add the medications table and add button
         // panel
         JPanel allergyTabPanel = new JPanel(new BorderLayout());
         allergyTabPanel.add(new JScrollPane(allergiesTable), BorderLayout.CENTER);
-        allergyTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        allergyTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
         return allergyTabPanel;
     }

@@ -273,31 +273,33 @@ public class InsuranceTab {
             // Get the primary key or unique identifier of the record from the selected row
             // Assuming the first column of the table contains the primary key
             String primaryKey = table.getValueAt(selectedRow, 0).toString();
-
+            int confirm = JOptionPane.showConfirmDialog(null,
+            "Are you sure you want to delete this Provider?", "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION);
             // Execute an SQL DELETE statement to delete the corresponding record from the
             // database
-            try {
-                HealthConn newConnection = new HealthConn();
-                Connection con = newConnection.connect();
-                String sql = "DELETE FROM insurance WHERE provider_name = ?"; // Replace 'id' with the actual primary
-                                                                              // key column
-                // name
-                PreparedStatement statement = con.prepareStatement(sql);
-                statement.setString(1, primaryKey);
-                statement.executeUpdate();
+            if (confirm == JOptionPane.YES_OPTION){
+                try {
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
+                    String sql = "DELETE FROM insurance WHERE provider_name = ?";
+                    PreparedStatement statement = con.prepareStatement(sql);
+                    statement.setString(1, primaryKey);
+                    statement.executeUpdate();
 
-                // Close the statement and connection
-                statement.close();
-                con.close();
+                    // Close the statement and connection
+                    statement.close();
+                    con.close();
 
-                // Remove the selected row from the table
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.removeRow(selectedRow);
+                    // Remove the selected row from the table
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    model.removeRow(selectedRow);
 
-            } catch (ClassNotFoundException | SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(panel, "An error occurred while deleting the record.", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(panel, "An error occurred while deleting the record.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -326,7 +328,6 @@ public class InsuranceTab {
             editFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             editFrame.setPreferredSize(new Dimension(500, 300));
             editFrame.setLocationRelativeTo(null);
-
 
             // Create a JPanel for the edit window fields
             JPanel editPanel = new JPanel(new GridLayout(7, 2, 10, 10));
