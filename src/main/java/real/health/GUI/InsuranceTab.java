@@ -3,6 +3,9 @@ package real.health.GUI;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
+import java.sql.Connection;
+import java.time.Year;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,13 +13,17 @@ import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.*;
+import java.sql.Blob;
+
+import real.health.SQL.*;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class InsuranceTab {
     private static Map<Integer, BufferedImage> insuranceCards = new HashMap<>();
 
-    public static JComponent createInsuranceTab(String id) {
+    public JComponent createInsuranceTab(String id) {
         // Create the main panel with BorderLayout
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -67,6 +74,86 @@ public class InsuranceTab {
         };
         // Add the table to the panel
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        // Load the insurance information from the SQL database
+        // Load the insurance information from the SQL database
+        System.out.println("HERE - Before try block");
+
+        try {
+            System.out.println("HERE - Inside try block");
+            // Create a connection to the database
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+            String sql = "SELECT provider_name, policy_number, group_number, holder_name, holder_dob, holder_ssn, insurance_card FROM insurance WHERE id = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, id);
+            ResultSet rs = statement.executeQuery();
+            System.out.println("HERE - After executing query");
+
+            DefaultTableModel tableModel = new DefaultTableModel(
+                    new Object[] { "provider_name", "policy_number", "group_number", "holder_name", "holder_dob",
+                            "holder_ssn", "insurance_card" },
+                    0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    if (columnIndex == 6) {
+                        return Object.class;
+                    } else {
+                        return super.getColumnClass(columnIndex);
+                    }
+                }
+            };
+            tableModel.setRowCount(0);
+
+            while (rs.next()) {
+                // Get the Blob object from the ResultSet
+                Blob blob = rs.getBlob("insurance_card");
+
+                // If the Blob is not null, create an ImageIcon from its data
+                if (blob != null) {
+                    try (InputStream in = blob.getBinaryStream()) {
+                        ImageIcon icon = new ImageIcon(ImageIO.read(in), "View Image");
+                        
+                        // set the ImageIcon on a JLabel or other component in your GUI
+                        insuranceCards.put(tableModel.getRowCount(), (BufferedImage) icon.getImage());
+                        tableModel.addRow(new Object[] {
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getString(6),
+                                icon
+                        });
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    tableModel.addRow(new Object[] {
+                            rs.getString(1),
+                            rs.getString(2),
+                            rs.getString(3),
+                            rs.getString(4),
+                            rs.getString(5),
+                            rs.getString(6),
+                            "No Image Available"
+                    });
+                }
+            }
+
+            table.setModel(tableModel);
+            // Clean up resources
+            rs.close();
+            statement.close();
+            con.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("HERE1");
 
         // Add the button panel to the SOUTH position of the main panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -85,6 +172,7 @@ public class InsuranceTab {
                     if (insuranceCards.containsKey(selectedRow)) {
                         JFrame imageFrame = new JFrame("Insurance Card");
                         imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        imageFrame.setLocationRelativeTo(null);
 
                         JLabel imageLabel = new JLabel(new ImageIcon(insuranceCards.get(selectedRow)));
                         JScrollPane imageScrollPane = new JScrollPane(imageLabel);
@@ -96,9 +184,12 @@ public class InsuranceTab {
                 }
             }
         });
+
         // Action listener for "New" button
         newButton.addActionListener(e -> {
             JFrame frame = new JFrame("New Insurance Entry");
+            frame.setPreferredSize(new Dimension(500, 300));
+            frame.setLocationRelativeTo(null);
             JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
             JLabel providerLabel = new JLabel("Provider Name:");
             JTextField providerField = new JTextField();
@@ -139,7 +230,26 @@ public class InsuranceTab {
                 String policyHolderName = policyHolderNameField.getText();
                 String policyHolderDOB = policyHolderDOBField.getText();
                 String policyHolderSSN = policyHolderSSNField.getText();
+                // Save the new insurance information to the SQL database
+                try {
+                    HealthConn newConnection = new HealthConn();
+                    Connection con = newConnection.connect();
+                    String sql = "INSERT INTO insurance (id, provider_name, policy_number, group_number, holder_name, holder_dob, holder_ssn) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement statement = con.prepareStatement(sql);
+                    statement.setString(1, id);
+                    statement.setString(2, provider);
+                    statement.setString(3, policyNumber);
+                    statement.setString(4, groupNumber);
+                    statement.setString(5, policyHolderName);
+                    statement.setString(6, policyHolderDOB);
+                    statement.setString(7, policyHolderSSN);
+                    statement.executeUpdate();
 
+                    statement.close();
+                    con.close();
+                } catch (ClassNotFoundException | SQLException ez) {
+                    ez.printStackTrace();
+                }
                 // Add the new row to the table
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 model.addRow(new Object[] { provider, policyNumber, groupNumber, policyHolderName, policyHolderDOB,
@@ -166,9 +276,35 @@ public class InsuranceTab {
                 return;
             }
 
-            // Remove the selected row from the table
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.removeRow(selectedRow);
+            // Get the primary key or unique identifier of the record from the selected row
+            // Assuming the first column of the table contains the primary key
+            String primaryKey = table.getValueAt(selectedRow, 0).toString();
+
+            // Execute an SQL DELETE statement to delete the corresponding record from the
+            // database
+            try {
+                HealthConn newConnection = new HealthConn();
+                Connection con = newConnection.connect();
+                String sql = "DELETE FROM insurance WHERE provider_name = ?"; // Replace 'id' with the actual primary
+                                                                              // key column
+                // name
+                PreparedStatement statement = con.prepareStatement(sql);
+                statement.setString(1, primaryKey);
+                statement.executeUpdate();
+
+                // Close the statement and connection
+                statement.close();
+                con.close();
+
+                // Remove the selected row from the table
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.removeRow(selectedRow);
+
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(panel, "An error occurred while deleting the record.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         // Action listener for "Edit" button
@@ -224,7 +360,35 @@ public class InsuranceTab {
                         for (int i = 0; i < table.getModel().getRowCount(); i++) {
                             if (table.getModel().getValueAt(i, 0).equals(selectedOption)) {
                                 insuranceCards.put(i, insuranceCard);
-                                table.getModel().setValueAt("View Card", i, table.getColumnCount() - 1);
+                                table.getModel().setValueAt("View Image", i, table.getColumnCount() - 1);
+
+                                // Save the insurance card image to the SQL database
+                                try {
+                                    HealthConn newConnection = new HealthConn();
+                                    Connection con = newConnection.connect();
+                                    String sql = "UPDATE insurance SET insurance_card = ? WHERE id = ? AND provider_name = ?";
+                                    PreparedStatement statement = con.prepareStatement(sql);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    ImageIO.write(insuranceCard, "jpg", baos);
+                                    byte[] insuranceCardBytes = baos.toByteArray();
+
+                                    statement.setBytes(1, insuranceCardBytes);
+                                    statement.setString(2, id);
+                                    statement.setString(3, selectedOption);
+                                    statement.executeUpdate();
+
+                                    statement.close();
+                                    con.close();
+                                } catch (ClassNotFoundException ex) {
+                                    System.out.println("Error: unable to load MySQL JDBC driver");
+                                    ex.printStackTrace();
+                                } catch (SQLException ex) {
+                                    System.out.println("Error: unable to connect to MySQL database");
+                                    ex.printStackTrace();
+                                } catch (IOException ex) {
+                                    System.out.println("Error: unable to write insurance card image to byte array");
+                                    ex.printStackTrace();
+                                }
                                 break;
                             }
                         }
