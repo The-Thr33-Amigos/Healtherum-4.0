@@ -31,7 +31,7 @@ public class patientInformationSystem {
 
         // Create a new instance of the MedicalHistoryTab class
         InsuranceTab InsuranceTab = new InsuranceTab();
-        tabs.addTab("Insurance", InsuranceTab.createInsuranceTab(id));
+        tabs.addTab("Insurance", InsuranceTab.createInsuranceTab(id, role));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the MedicalHistoryTab class

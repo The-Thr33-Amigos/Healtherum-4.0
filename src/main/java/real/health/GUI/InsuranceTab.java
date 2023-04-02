@@ -8,7 +8,7 @@ import java.time.Year;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-
+import real.health.GUI.UserRole;
 import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -22,16 +22,20 @@ import java.awt.event.MouseEvent;
 
 public class InsuranceTab {
     private static Map<Integer, BufferedImage> insuranceCards = new HashMap<>();
+    private UserRole userRole;
 
-    public JComponent createInsuranceTab(String id) {
+    public JComponent createInsuranceTab(String id, UserRole userRole) {
+        this.userRole = userRole;
         // Create the main panel with BorderLayout
         JPanel panel = new JPanel(new BorderLayout());
 
         // Create the insurance card upload panel on the right using BorderLayout
         JPanel uploadPanel = new JPanel(new BorderLayout());
         JButton uploadButton = new JButton("Upload Insurance Card");
-        uploadButton.setPreferredSize(new Dimension(200, 30));
-        uploadPanel.add(uploadButton, BorderLayout.CENTER);
+        uploadButton.setPreferredSize(new Dimension(200, 50));
+        if (userRole == UserRole.PATIENT) {
+            uploadPanel.add(uploadButton, BorderLayout.NORTH);
+        }
 
         // Create a separate panel for each insurance company using GridLayout
         JPanel insurancePanel = new JPanel(new GridLayout(0, 1));
@@ -51,11 +55,7 @@ public class InsuranceTab {
 
         // Add the "Edit" button
         JButton editButton = new JButton("Edit");
-        editButton.setVisible(false);
-
-        // Add the "Submit" button
-        JButton submitButton = new JButton("Submit");
-        submitButton.setVisible(false);
+        editButton.setVisible(true);
 
         // Create the insurance table
         JTable table = new JTable(new Object[][] {
@@ -75,11 +75,7 @@ public class InsuranceTab {
         // Add the table to the panel
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         // Load the insurance information from the SQL database
-        // Load the insurance information from the SQL database
-        System.out.println("HERE - Before try block");
-
         try {
-            System.out.println("HERE - Inside try block");
             // Create a connection to the database
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
@@ -87,10 +83,8 @@ public class InsuranceTab {
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet rs = statement.executeQuery();
-            System.out.println("HERE - After executing query");
-
             DefaultTableModel tableModel = new DefaultTableModel(
-                    new Object[] { "provider_name", "policy_number", "group_number", "holder_name", "holder_dob",
+                    new Object[] { "providertr_name", "policy_number", "group_number", "holder_name", "holder_dob",
                             "holder_ssn", "insurance_card" },
                     0) {
                 @Override
@@ -117,7 +111,7 @@ public class InsuranceTab {
                 if (blob != null) {
                     try (InputStream in = blob.getBinaryStream()) {
                         ImageIcon icon = new ImageIcon(ImageIO.read(in), "View Image");
-                        
+
                         // set the ImageIcon on a JLabel or other component in your GUI
                         insuranceCards.put(tableModel.getRowCount(), (BufferedImage) icon.getImage());
                         tableModel.addRow(new Object[] {
@@ -153,15 +147,15 @@ public class InsuranceTab {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("HERE1");
 
         // Add the button panel to the SOUTH position of the main panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        buttonPanel.add(newButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(submitButton);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
+        if (userRole == UserRole.PATIENT) {
+            buttonPanel.add(newButton);
+            buttonPanel.add(deleteButton);
+            buttonPanel.add(editButton);
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+        }
 
         // Add a mouse listener to the table to handle clicks on table rows
         table.addMouseListener(new MouseAdapter() {
@@ -318,18 +312,101 @@ public class InsuranceTab {
                 return;
             }
 
-            // Enable editing of the selected row
-            table.setEnabled(true);
+            // Get the values of the selected row from the table model
+            String providerName = (String) table.getValueAt(selectedRow, 0);
+            String policyNumber = (String) table.getValueAt(selectedRow, 1);
+            String groupNumber = (String) table.getValueAt(selectedRow, 2);
+            String holderName = (String) table.getValueAt(selectedRow, 3);
+            String holderDOB = (String) table.getValueAt(selectedRow, 4);
+            String holderSSN = (String) table.getValueAt(selectedRow, 5);
+            BufferedImage insuranceCard = insuranceCards.get(selectedRow);
+
+            // Create a new JFrame for the edit window
+            JFrame editFrame = new JFrame("Edit Insurance Information");
+            editFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            editFrame.setPreferredSize(new Dimension(500, 300));
+            editFrame.setLocationRelativeTo(null);
+
+
+            // Create a JPanel for the edit window fields
+            JPanel editPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+
+            // Add the fields to the edit panel
+            editPanel.add(new JLabel("Provider Name:"));
+            JTextField providerNameField = new JTextField(providerName);
+            editPanel.add(providerNameField);
+
+            editPanel.add(new JLabel("Policy Number:"));
+            JTextField policyNumberField = new JTextField(policyNumber);
+            editPanel.add(policyNumberField);
+
+            editPanel.add(new JLabel("Group Number:"));
+            JTextField groupNumberField = new JTextField(groupNumber);
+            editPanel.add(groupNumberField);
+
+            editPanel.add(new JLabel("Policy Holder Name:"));
+            JTextField holderNameField = new JTextField(holderName);
+            editPanel.add(holderNameField);
+
+            editPanel.add(new JLabel("Policy Holder DOB:"));
+            JTextField holderDOBField = new JTextField(holderDOB);
+            editPanel.add(holderDOBField);
+
+            editPanel.add(new JLabel("Policy Holder SSN:"));
+            JTextField holderSSNField = new JTextField(holderSSN);
+            editPanel.add(holderSSNField);
+
+            // Add the edit panel to the edit frame
+            editFrame.add(editPanel, BorderLayout.CENTER);
+
+            // Create a JPanel for the submit button
+            JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+            // Add the submit button to the submit panel
+            JButton submitButton = new JButton("Submit");
+            submitButton.addActionListener(e1 -> {
+                // Get the new values from the edit window fields
+                String newProviderName = providerNameField.getText();
+                String newPolicyNumber = policyNumberField.getText();
+                String newGroupNumber = groupNumberField.getText();
+                String newHolderName = holderNameField.getText();
+                String newHolderDOB = holderDOBField.getText();
+                String newHolderSSN = holderSSNField.getText();
+
+                // Update the selected row in the table model
+                table.setValueAt(newProviderName, selectedRow, 0);
+                table.setValueAt(newPolicyNumber, selectedRow, 1);
+                table.setValueAt(newGroupNumber, selectedRow, 2);
+                table.setValueAt(newHolderName, selectedRow, 3);
+                table.setValueAt(newHolderDOB, selectedRow, 4);
+                table.setValueAt(newHolderSSN, selectedRow, 5);
+
+                // Update the insurance card in the insuranceCards map
+                insuranceCards.put(selectedRow, insuranceCard);
+
+                // Close the edit window
+                editFrame.dispose();
+
+                // Show the "Edit" and hide the "Submit" button
+                editButton.setVisible(true);
+                submitButton.setVisible(false);
+
+                // Disable editing of the table
+                table.setEnabled(false);
+            });
+            submitPanel.add(submitButton);
+            editFrame.add(submitPanel, BorderLayout.SOUTH);
+
+            // Show the edit frame
+            editFrame.pack();
+            editFrame.setVisible(true);
+
+            // Hide the "Edit" and show the "Submit" button
             editButton.setVisible(false);
             submitButton.setVisible(true);
-        });
 
-        // Action listener for "Submit" button
-        submitButton.addActionListener(e -> {
-            // Disable editing of the table
-            table.setEnabled(false);
-            editButton.setVisible(true);
-            submitButton.setVisible(false);
+            // Enable editing of the table
+            table.setEnabled(true);
         });
 
         // Action listener for "Upload Insurance Card" button
