@@ -24,6 +24,9 @@ public class providerSystem {
     public static class User {
         private int id;
         private String name;
+        private String bDate;
+        private String phone;
+        private String address;
 
         public int getId() {
             return id;
@@ -39,6 +42,27 @@ public class providerSystem {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getBdate() {
+            return bDate;
+        }
+        public void setBdate(String bDate) {
+            this.bDate = bDate;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+        public void setAddress(String address) {
+            this.address = address;
         }
     }
 
@@ -127,18 +151,20 @@ public class providerSystem {
         Connection connection = newConnection.connect();
 
         // Prepare a patient search query
-        String query = "SELECT * FROM basic WHERE name LIKE ? OR bdate LIKE ?";
+        String query = "SELECT id, name, bdate, phone, mailing FROM basic WHERE name LIKE ? OR bdate LIKE ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             String searchPattern = "%" + searchText + "%";
             statement.setString(1, searchPattern);
             statement.setString(2, searchPattern);
-
             // Execute the query and process the results
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
                     user.setId(resultSet.getInt("id"));
                     user.setName(resultSet.getString("name"));
+                    user.setBdate(resultSet.getString("bdate"));
+                    user.setPhone(resultSet.getString("phone"));
+                    user.setAddress(resultSet.getString("mailing"));
                     users.add(user);
                 }
             }
@@ -158,14 +184,20 @@ public class providerSystem {
         searchResultsFrame.setLocationRelativeTo(null);
 
         // Create a table model for the search results
-        DefaultTableModel tableModel = new DefaultTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         tableModel.addColumn("Name");
         tableModel.addColumn("Birthdate");
         tableModel.addColumn("Phone Number");
         tableModel.addColumn("Address");
 
         for (User user : users) {
-            tableModel.addRow(new Object[] { user.getName() });
+            tableModel.addRow(new Object[] { user.getName(), user.getBdate(), user.getPhone(), user.getAddress() });
         }
 
         // Create a table for displaying the search results

@@ -98,16 +98,6 @@ public class PatientInformation {
             ex.printStackTrace();
         }
 
-        JLabel pictureLabel = new JLabel("Insurance Card:");
-        constraints.gridx = 4;
-        constraints.gridy = 3;
-        panel.add(pictureLabel, constraints);
-
-        JButton pictureButton = new JButton("Upload Insurance Card");
-        constraints.gridx = 4;
-        constraints.gridy = 4;
-        panel.add(pictureButton, constraints);
-
         JLabel driversLicenseLabel = new JLabel("Driver's License:");
         constraints.gridx = 4;
         constraints.gridy = 0;
