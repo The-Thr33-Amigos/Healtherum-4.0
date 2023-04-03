@@ -4,6 +4,17 @@ import real.health.*;
 import real.health.GUI.UserRole;
 
 import javax.swing.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -12,6 +23,8 @@ import real.health.SQL.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen(UserRole role) {
@@ -66,113 +79,140 @@ public class showLoginScreen extends patientInformationSystem {
         panel.add(cancelButton, constraints);
 
         loginButton.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 char[] password = passwordField.getPassword();
-
+            
                 try {
-                    // Load the MySQL JDBC driver
-                    HealthConn newConnection = new HealthConn();
-                    Connection con = newConnection.connect();
+                    HttpClient httpClient = HttpClientBuilder.create().build();
+                    HttpPost httpPost = new HttpPost("http://your_server_address/api/auth/sign_in");
+            
+                    // Prepare the request parameters
+                    List<NameValuePair> params = new ArrayList<>();
+                    params.add(new BasicNameValuePair("username", username));
+                    params.add(new BasicNameValuePair("password", new String(password)));
+            
+                    httpPost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
+            
+                    HttpResponse response = httpClient.execute(httpPost);
+            
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    if (statusCode == 200) {
+                        // Authentication succeeded
+                        String responseJson = EntityUtils.toString(response.getEntity());
+                        JSONObject jsonResponse = new JSONObject(responseJson);
+                        String id = jsonResponse.getString("id");
+                        String userId = id; 
+                        // Load the MySQL JDBC driver
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+            
+                        // Create a prepared statement to query the database for the user's login
+                        // credentials
+                        String sql = "SELECT id, password FROM userpass WHERE user = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, username);
+                        ResultSet rs = statement.executeQuery();
+            
+                        if (rs.next()) {
+                            String userPassword = rs.getString("password");
+                            id = rs.getString("id");
+                            // Compare the password entered by the user with the password stored in the
+                            // database
+                            if (userPassword.equals(new String(password))) {
+                                // Authentication succeeded, locks text fields
+                                usernameField.setEditable(false);
+                                passwordField.setEditable(false);
+                                cancelButton.setEnabled(false);
+                                loginButton.setEnabled(false);
+                                // Show the loading screen here
+                                JFrame loadingFrame = new JFrame("Loading...");
+                                loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                                loadingFrame.setSize(400, 100);
+                                JPanel panel = new JPanel(new BorderLayout());
+                                JProgressBar progressBar = new JProgressBar(0, 100);
+                                progressBar.setValue(0);
+                                progressBar.setStringPainted(true);
+                                panel.add(progressBar, BorderLayout.CENTER);
+                                loadingFrame.add(panel);
+                                loadingFrame.setLocationRelativeTo(null);
+                                loadingFrame.setVisible(true);
+                                frame.setVisible(false);
+                                
 
-                    // Create a prepared statement to query the database for the user's login
-                    // credentials
-                    String sql = "SELECT id, password FROM userpass WHERE user = ?";
-                    PreparedStatement statement = con.prepareStatement(sql);
-                    statement.setString(1, username);
-                    ResultSet rs = statement.executeQuery();
-
-                    if (rs.next()) {
-                        String userPassword = rs.getString("password");
-                        String id = rs.getString("id");
-                        // Compare the password entered by the user with the password stored in the
-                        // database
-                        if (userPassword.equals(new String(password))) {
-                            // Authentication succeeded, locks text fields
-                            usernameField.setEditable(false);
-                            passwordField.setEditable(false);
-                            cancelButton.setEnabled(false);
-                            loginButton.setEnabled(false);
-                            // Show the loading screen here
-                            JFrame loadingFrame = new JFrame("Loading...");
-                            loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                            loadingFrame.setSize(400, 100);
-                            JPanel panel = new JPanel(new BorderLayout());
-                            JProgressBar progressBar = new JProgressBar(0, 100);
-                            progressBar.setValue(0);
-                            progressBar.setStringPainted(true);
-                            panel.add(progressBar, BorderLayout.CENTER);
-                            loadingFrame.add(panel);
-                            loadingFrame.setLocationRelativeTo(null);
-                            loadingFrame.setVisible(true);
-                            frame.setVisible(false);
-
-                            // Create a SwingWorker object to execute patientInformationSystem on a separate
-                            // thread
-                            SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
-                                JFrame patientFrame;
-                                @Override
-                                protected Void doInBackground() throws Exception {
-                                    int progress = 0;
-                                    while (progress < 100) {
-                                        // Increment the progress bar every 5ms
-                                        progress = progressBar.getValue();
-                                        Thread.sleep(5);
-                                        progress++;
-                                        progressBar.setValue(progress);
-                                        if (progressBar.getValue() == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar, role);
-                                            patientFrame.setVisible(false);
-                                        } else {
-                                            progressBar.setValue(progressBar.getValue());
+                                // Create a SwingWorker object to execute patientInformationSystem on a separate
+                                // thread
+                                SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
+                                    JFrame patientFrame;
+            
+                                    @Override
+                                    protected Void doInBackground() throws Exception {
+                                        int progress = 0;
+                                        while (progress < 100) {
+                                            // Increment the progress bar every 5ms
+                                            progress = progressBar.getValue();
+                                            Thread.sleep(5);
+                                            progress++;
+                                            progressBar.setValue(progress);
+                                            if (progressBar.getValue() == 50) {
+                                                patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(userId, progressBar, role);
+                                                patientFrame.setVisible(false);
+                                            } else {
+                                                progressBar.setValue(progressBar.getValue());
+                                            }
                                         }
+                                        // Call the patientInformationSystem method and store the returned JFrame object in a variable
+                                        patientFrame.setVisible(true);
+                                        return null;
                                     }
-                                    // Call the patientInformationSystem method and store the returned JFrame object in a variable
-                                    patientFrame.setVisible(true);
-                                    return null;
-                                }
-
-                                @Override
-                                protected void done() {
-                                    // Once patientInformationSystem has finished loading, dispose of the loading
-                                    // screen
-                                    frame.dispose();
-                                    loadingFrame.dispose();
-                                }
-                            };
-
-                            // Schedule the SwingWorker to be executed on the Event Dispatch Thread
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    worker.execute();
-                                }
-                            });
+            
+                                    @Override
+                                    protected void done() {
+                                        // Once patientInformationSystem has finished loading, dispose of the loading
+                                        // screen
+                                        frame.dispose();
+                                        loadingFrame.dispose();
+                                    }
+                                };
+            
+                                // Schedule the SwingWorker to be executed on the Event Dispatch Thread
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        worker.execute();
+                                    }
+                                });
+                            } else {
+                                // Authentication failed
+                                JOptionPane.showMessageDialog(panel, "Invalid username or password.", "Login Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
                         } else {
                             // Authentication failed
                             JOptionPane.showMessageDialog(panel, "Invalid username or password.", "Login Error",
                                     JOptionPane.ERROR_MESSAGE);
                         }
+            
+                        // Close the connection and release any resources used by the prepared statement
+                        // and result set
+                        rs.close();
+                        statement.close();
+                        con.close();
                     } else {
                         // Authentication failed
                         JOptionPane.showMessageDialog(panel, "Invalid username or password.", "Login Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-
-                    // Close the connection and release any resources used by the prepared statement
-                    // and result set
-                    rs.close();
-                    statement.close();
-                    con.close();
-                } catch (ClassNotFoundException ex) {
-                    System.out.println("Error: unable to load MySQL JDBC driver");
-                    ex.printStackTrace();
-                } catch (SQLException ex) {
-                    System.out.println("Error: unable to connect to MySQL database");
+                } catch (IOException | ClassNotFoundException | SQLException ex) {
+                    // Handle exceptions
                     ex.printStackTrace();
                 }
             }
-        });
+            
+                                           
+                
+            });
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
