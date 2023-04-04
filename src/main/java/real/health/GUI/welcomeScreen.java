@@ -20,8 +20,9 @@ public class welcomeScreen {
         }
         // Set frame properties
         frame = new JFrame("Healtherum");
-        frame.setSize(500, 300);
+        frame.setSize(500, 150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
         // Create and style welcome message
         JPanel welcomePanel = new JPanel();
@@ -31,16 +32,26 @@ public class welcomeScreen {
 
         // Create and style button panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2, 20, 20));
+        buttonPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(-50, 5, 5, 5);
+
         JButton patientButton = new JButton("Patient");
         JButton providerButton = new JButton("Provider");
         patientButton.setFont(new Font("Arial", Font.BOLD, 18));
         providerButton.setFont(new Font("Arial", Font.BOLD, 18));
-        buttonPanel.add(patientButton);
-        buttonPanel.add(providerButton);
+        patientButton.setPreferredSize(new Dimension(150, 50));
+        providerButton.setPreferredSize(new Dimension(150, 50));
+
+        // Add buttons to button panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        buttonPanel.add(patientButton, constraints);
+        constraints.gridx = 1;
+        buttonPanel.add(providerButton, constraints);
 
         // Add panels to frame
-        frame.setLayout(new BorderLayout(20, 20));
+        frame.setLayout(new BorderLayout(20, 10));
         frame.add(welcomePanel, BorderLayout.NORTH);
         frame.add(buttonPanel, BorderLayout.CENTER);
 

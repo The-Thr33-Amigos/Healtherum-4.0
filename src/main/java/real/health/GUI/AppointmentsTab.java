@@ -35,9 +35,14 @@ public class AppointmentsTab {
             statement.setString(1, id);
             ResultSet resultSet = statement.executeQuery();
 
-            DefaultTableModel model = new DefaultTableModel(
-                    new Object[][] {},
-                    new String[] { "Appointment Date", "Appointment Time", "Appointment Type", "Provider", "Status" });
+            String[] columnNames = { "Appointment Date", "Appointment Time", "Appointment Type", "Provider", "Status" };
+
+            DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
 
             while (resultSet.next()) {
                 model.addRow(new Object[] { resultSet.getString("appointment_date"),
@@ -105,7 +110,6 @@ public class AppointmentsTab {
             // Add appointment button for patients and doctors
             buttonPanel.add(addAppointmentButton, BorderLayout.WEST);
         }
-
 
         // Create a JCalendar for date selection
         JCalendar calendar = new JCalendar();
@@ -249,7 +253,6 @@ public class AppointmentsTab {
         constraints.gridwidth = 3;
         layout.setConstraints(providerComboBox, constraints);
         addAppointmentFrame.add(providerComboBox);
-
 
         JButton saveButton = new JButton("Save");
         constraints.gridx = 2;
