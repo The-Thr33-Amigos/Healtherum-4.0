@@ -68,9 +68,11 @@ public class createMentalTab {
 
                 // Add form components for entering the mental health issue details
                 JLabel issueLabel = new JLabel("Issue:");
-                JTextField issueField = new JTextField();
+                String[] issueList = {"Autism Spectrum Disorder", "ADHD",  "Scizophrenia", "Schizoaffective Disorder", "Bipolar Disorder I or II", "Major Depressive Disorder", "Anxiety Disorders", "Obsessive Compulsive Disorder", "PTSD", "Disociative Disorders"};
+                // JTextField issueField = new JTextField();
+                JComboBox<String> issueCombo = new JComboBox<>(issueList);
                 addMentalFrame.add(issueLabel);
-                addMentalFrame.add(issueField);
+                addMentalFrame.add(issueCombo);
 
                 JLabel statusLabel = new JLabel("Status:");
                 JTextField statusField = new JTextField();
@@ -88,7 +90,7 @@ public class createMentalTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
-                        String issue = issueField.getText();
+                        String issue = (String) issueCombo.getSelectedItem();
                         String status = statusField.getText();
                         String dateDiagnosed = dateDiagnosedField.getText();
 

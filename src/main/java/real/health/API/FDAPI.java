@@ -29,7 +29,7 @@ public class FDAPI {
     
     private static final String BASE_URL = "https://api.fda.gov/drug/label.json?search=openfda.brand_name:";
     private static final String API_KEY = "&api_key=oAXwjLBrf8zqmPXKh5LhSBBIsvqqzjfQ3NZDZS7Z";
-    String test = "http://api.fda.gov/drug/label.json?search=openfda.brand_name:XANAX&api_key=oAXwjLBrf8zqmPXKh5LhSBBIsvqqzjfQ3NZDZS7Z";
+    String test = "http://api.fda.gov/drug/label.json?search=openfda.brand_name:&api_key=oAXwjLBrf8zqmPXKh5LhSBBIsvqqzjfQ3NZDZS7Z";
     
     private ObjectMapper objectMapper;
     private dosageParse doseParse;

@@ -116,7 +116,7 @@ public class createMedicationsTab {
                         
                         String selectedDrug = (String) drugCombo.getSelectedItem();
                         List<String> newDoses;
-                        String text = drugCombo.getEditor().getItem().toString();
+                        
                         if (selectedDrug != null && !selectedDrug.isEmpty() && drugList.contains(selectedDrug)) {
                             FDAPI newFDA = new FDAPI();
                             try {

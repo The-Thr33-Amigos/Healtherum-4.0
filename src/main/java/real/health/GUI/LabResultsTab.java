@@ -335,12 +335,14 @@ public class LabResultsTab {
         JButton predBtn = new JButton();
         JLabel testTypeLabel = new JLabel();
         JLabel statusLabel1 = new JLabel();
+        JLabel accuracyLabel1 = new JLabel();
 
         JButton predBtn1 = new JButton();
 
         JButton predBtn2 = new JButton();
         JLabel orderingProviderLabel = new JLabel();
         JLabel statusLabel2 = new JLabel();
+        JLabel accuracyLabel2 = new JLabel();
 
         if (userRole == UserRole.PROVIDER) {
             int optInStatus;
@@ -351,24 +353,24 @@ public class LabResultsTab {
 
                     testDateLabel.setText("Heart Disease");
                     constraints.gridx = 0;
-                    constraints.gridy = 2;
+                    constraints.gridy = 1;
                     testInformationPanel.add(testDateLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 3;
+                    constraints.gridy = 2;
                     statusPanel.add(statusLabel);
                     testInformationPanel.add(statusPanel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 4;
+                    constraints.gridy = 3;
                     testInformationPanel.add(accuracyLabel, constraints);
 
                     predBtn.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 3;
+                    constraints.gridy = 4;
                     testInformationPanel.add(predBtn, constraints);
 
-                    testTypeLabel.setText("Something");
+                    testTypeLabel.setText("Kidney Disease");
                     constraints.gridx = 0;
                     constraints.gridy = 5;
                     testInformationPanel.add(testTypeLabel, constraints);
@@ -376,26 +378,36 @@ public class LabResultsTab {
                     constraints.gridx = 0;
                     constraints.gridy = 6;
                     statusPanel1.add(statusLabel1, constraints);
-                    testInformationPanel.add(statusLabel1, constraints);
+                    testInformationPanel.add(statusPanel1, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 7;
+                    testInformationPanel.add(accuracyLabel1, constraints);
+
 
                     predBtn1.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 6;
+                    constraints.gridy = 8;
                     testInformationPanel.add(predBtn1, constraints);
 
                     orderingProviderLabel.setText("Diabetes");
                     constraints.gridx = 0;
-                    constraints.gridy = 8;
+                    constraints.gridy = 9;
                     testInformationPanel.add(orderingProviderLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 9;
+                    constraints.gridy = 10;
                     statusPanel2.add(statusLabel2, constraints);
-                    testInformationPanel.add(statusLabel2, constraints);
+                    testInformationPanel.add(statusPanel2, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 11;
+                    testInformationPanel.add(accuracyLabel2, constraints);
+
 
                     predBtn2.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 9;
+                    constraints.gridy = 12;
                     testInformationPanel.add(predBtn2, constraints);
 
                     predBtn.setEnabled(true);
@@ -649,7 +661,7 @@ public class LabResultsTab {
                     ArrayList<String> predic = newKD.kPredict();
                     String acc = predic.get(0);
                     acc = acc.substring(2, 4) + "%";
-                    accuracyLabel1.setText(acc);
+                    accuracyLabel1.setText("Accuracy: " + acc);
 
                     String pred1 = predic.get(1);
 
@@ -686,9 +698,12 @@ public class LabResultsTab {
                     ArrayList<String> predic = newDB.kPredict();
                     String acc = predic.get(0);
                     acc = acc.substring(2, 4) + "%";
-                    accuracyLabel2.setText(acc);
+                    accuracyLabel2.setText("Accuracy: " + acc);
+                    
+                    
 
                     String pred2 = predic.get(1);
+                    
 
                     if ("0".equals(pred2)) {
                         statusLabel2.setText("Absence");
