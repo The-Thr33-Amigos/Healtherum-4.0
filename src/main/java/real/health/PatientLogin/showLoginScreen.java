@@ -1,3 +1,4 @@
+
 package real.health.PatientLogin;
 
 import real.health.*;
@@ -111,6 +112,7 @@ public class showLoginScreen extends patientInformationSystem {
                             // thread
                             SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
                                 JFrame patientFrame;
+
                                 @Override
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
@@ -121,13 +123,15 @@ public class showLoginScreen extends patientInformationSystem {
                                         progress++;
                                         progressBar.setValue(progress);
                                         if (progressBar.getValue() == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem.patientInformationSystem(id, progressBar, role);
+                                            patientFrame = (JFrame) patientInformationSystem
+                                                    .patientInformationSystem(id, progressBar, role);
                                             patientFrame.setVisible(false);
                                         } else {
                                             progressBar.setValue(progressBar.getValue());
                                         }
                                     }
-                                    // Call the patientInformationSystem method and store the returned JFrame object in a variable
+                                    // Call the patientInformationSystem method and store the returned JFrame object
+                                    // in a variable
                                     patientFrame.setVisible(true);
                                     return null;
                                 }

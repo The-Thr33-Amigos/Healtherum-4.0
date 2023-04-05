@@ -20,8 +20,10 @@ public class createNewUser {
 
         // Panel for basic user information
         JPanel panel1 = new JPanel(new GridLayout(0, 2));
-        JLabel nameLabel = new JLabel("Name:");
-        JTextField nameField = new JTextField();
+        JLabel firstNameLabel = new JLabel("First Name:");
+        JTextField firstNameField = new JTextField();
+        JLabel lastNameLabel = new JLabel("Last Name:");
+        JTextField lastNameField = new JTextField();
         JLabel dobLabel = new JLabel("Date of Birth (MM/DD/YYYY):");
         JTextField dobField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
@@ -29,7 +31,7 @@ public class createNewUser {
         JLabel phoneLabel = new JLabel("Phone Number:");
         JTextField phoneField = new JTextField();
 
-        String[] bioSexOptions = { "Male", "Female" };
+        String[] bioSexOptions = { "Male", "Female", "Intersex"};
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
         bioCombo.setSelectedItem(null);
         JLabel bioLabel = new JLabel("Biological Sex:");
@@ -41,14 +43,15 @@ public class createNewUser {
         String selectedAddress = mailingFill.getSelectedAddress();
         
 
-        String[] raceNames = { "Black", "White", "American Indian or Alaska Native", "Asian",
-                "Native Hawaiian or Other Pacific Islander" };
+        String[] raceNames = {"African American / Black", "Alaska Native", "Asian American / Asian", "Middle Eastern", "Native American / Indigenous", "Native Hawaiin / Other Pacific Islander", "Multiracial", "European American / White", "Other race or ethincity"};
         JComboBox<String> raceCombo = new JComboBox<>(raceNames);
         raceCombo.setSelectedItem(null);
-        JLabel raceLabel = new JLabel("Race:");
+        JLabel raceLabel = new JLabel("Race/Ethnicity:");
 
-        panel1.add(nameLabel);
-        panel1.add(nameField);
+        panel1.add(firstNameLabel);
+        panel1.add(firstNameField);
+        panel1.add(lastNameLabel);
+        panel1.add(lastNameField);
         panel1.add(dobLabel);
         panel1.add(dobField);
         panel1.add(emailLabel);
@@ -66,7 +69,7 @@ public class createNewUser {
         nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dialog.getContentPane().removeAll();
-                dialog.add(createAccountPanel.createAccountPanel(nameField.getText(), dobField.getText(),
+                dialog.add(createAccountPanel.createAccountPanel(firstNameField.getText(), lastNameField.getText(), dobField.getText(),
                         emailField.getText(),
                         phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress,
                         (String) raceCombo.getSelectedItem()));

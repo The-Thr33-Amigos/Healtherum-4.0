@@ -233,7 +233,7 @@ public class VitalsTab {
         // panel
         JPanel vitalSignsPanel = new JPanel(new BorderLayout());
         vitalSignsPanel.add(new JScrollPane(vitalSigns), BorderLayout.CENTER);
-        vitalSignsPanel.add(addButtonPanel, BorderLayout.SOUTH);
+        vitalSignsPanel.add(addButtonPanel, BorderLayout.PAGE_END);
 
         return vitalSignsPanel;
     }

@@ -35,7 +35,7 @@ public class heartDisease {
 
             // basic sql statment
 
-            String basicSQL = "SELECT bio FROM basic WHERE id = ?";
+            String basicSQL = "SELECT gender FROM basic WHERE id = ?";
             String vitalSQL = "SELECT sysbp, hr FROM vitals WHERE id = ?";
 
             PreparedStatement statement = conn.prepareStatement(basicSQL);
