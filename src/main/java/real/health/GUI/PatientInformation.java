@@ -77,7 +77,10 @@ public class PatientInformation {
 
             if (result.next()) {
                 // Populate the text fields with the patient information
-                nameField.setText(result.getString("name"));
+                String firstName = result.getString("firstName");
+                String lastName = result.getString("lastName");
+                String fullName = firstName + " " + lastName;
+                nameField.setText(fullName);
                 dobField.setText(result.getString("bdate"));
                 genderField.setText(result.getString("bio"));
                 ethnicityField.setText(result.getString("race"));
@@ -85,6 +88,7 @@ public class PatientInformation {
                 emailAddressField.setText(result.getString("email"));
                 mailingAddressField.setText(result.getString("mailing"));
             }
+
         // Clean up resources
         result.close();
         statement.close();

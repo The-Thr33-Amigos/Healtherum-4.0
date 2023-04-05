@@ -18,8 +18,10 @@ public class createNewUser {
 
         // Panel for basic user information
         JPanel panel1 = new JPanel(new GridLayout(0, 2));
-        JLabel nameLabel = new JLabel("Name:");
-        JTextField nameField = new JTextField();
+        JLabel firstNameLabel = new JLabel("First Name:");
+        JTextField firstNameField = new JTextField();
+        JLabel lastNameLabel = new JLabel("Last Name:");
+        JTextField lastNameField = new JTextField();
         JLabel dobLabel = new JLabel("Date of Birth (MM/DD/YYYY):");
         JTextField dobField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
@@ -41,8 +43,10 @@ public class createNewUser {
         raceCombo.setSelectedItem(null);
         JLabel raceLabel = new JLabel("Race:");
 
-        panel1.add(nameLabel);
-        panel1.add(nameField);
+        panel1.add(firstNameLabel);
+        panel1.add(firstNameField);
+        panel1.add(lastNameLabel);
+        panel1.add(lastNameField);
         panel1.add(dobLabel);
         panel1.add(dobField);
         panel1.add(emailLabel);
@@ -60,7 +64,7 @@ public class createNewUser {
         nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dialog.getContentPane().removeAll();
-                dialog.add(createAccountPanel.createAccountPanel(nameField.getText(), dobField.getText(),
+                dialog.add(createAccountPanel.createAccountPanel(firstNameField.getText(), lastNameField.getText(), dobField.getText(),
                         emailField.getText(),
                         phoneField.getText(), (String) bioCombo.getSelectedItem(), mailingField.getText(),
                         (String) raceCombo.getSelectedItem()));
