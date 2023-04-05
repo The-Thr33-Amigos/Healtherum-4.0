@@ -424,7 +424,7 @@ public class LabResultsTab {
             }
 
             if (optInStatus != 2 && optInStatus != 1) {
-                optInLabel.setText("Would you like to opt-in for Machine Learning?");
+                optInLabel.setText("Machine Learning?");
                 acceptButton.setText("Accept");
                 declineButton.setText("Decline");
 
@@ -616,7 +616,7 @@ public class LabResultsTab {
                     String pred = predic.get(1);
 
                     if ("0".equals(pred)) {
-                        statusLabel.setText("Absence");
+                        statusLabel.setText("Absent");
                         statusPanel.setBackground(Color.GREEN);
                         statusPanel.add(statusLabel);
                     } else if ("1".equals(pred)) {
