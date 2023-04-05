@@ -13,8 +13,8 @@ import java.util.*;
 import java.awt.event.*;
 
 public class createAccountPanel {
-    public static JPanel createAccountPanel(String name, String bdate, String email, String phone, String bio,
-            String mailing, String race) {
+    public static JPanel createAccountPanel(String name, String lname,  String bdate, String email, String phone, String bio,
+            String mailing, String race, String gender) {
         JPanel panel2 = new JPanel(new GridLayout(3, 2));
         panel2.setPreferredSize(new Dimension(300, 100));
         GridBagConstraints constraints = new GridBagConstraints();
@@ -104,16 +104,18 @@ public class createAccountPanel {
                         // Print the contents of the blockchain
                         patientBlockchain.printChain();
                         // Create a SQL statement to insert the user's information
-                        String sql = "INSERT INTO basic (id, name, email, phone, bdate, bio, race, mailing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        String sql = "INSERT INTO basic (id, firstName, lastName, email, phone, bdate, bio, race, mailing, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement statement = con.prepareStatement(sql);
                         statement.setString(1, id);
                         statement.setString(2, name);
-                        statement.setString(3, email);
-                        statement.setString(4, phone);
-                        statement.setString(5, bdate);
-                        statement.setString(6, bio);
-                        statement.setString(7, race);
-                        statement.setString(8, mailing);
+                        statement.setString(3, lname);
+                        statement.setString(4, email);
+                        statement.setString(5, phone);
+                        statement.setString(6, bdate);
+                        statement.setString(7, bio);
+                        statement.setString(8, race);
+                        statement.setString(9, mailing);
+                        statement.setString(10, gender);
                         statement.executeUpdate();
 
                         // Insert the user's login information into the database
