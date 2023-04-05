@@ -26,34 +26,58 @@ import com.fasterxml.jackson.core.*;
 
 public class FDAPI {
     
-    // public static void main(String[] args) throws IOException {
-    //     // Open the input and output files
-    //     BufferedReader input = new BufferedReader(new FileReader("src/main/java/real/health/API/drugs.txt"));
-    //     Writer output = new FileWriter("output.csv");
+    private static final String BASE_URL = "https://api.fda.gov/drug/label.json?search=openfda.brand_name:";
+    private static final String API_KEY = "&api_key=oAXwjLBrf8zqmPXKh5LhSBBIsvqqzjfQ3NZDZS7Z";
+    String test = "http://api.fda.gov/drug/label.json?search=openfda.brand_name:XANAX&api_key=oAXwjLBrf8zqmPXKh5LhSBBIsvqqzjfQ3NZDZS7Z";
+    
+    private ObjectMapper objectMapper;
+    private dosageParse doseParse;
+    public Boolean valid = false;
 
-    //     // Create a CSV printer with the desired format
-    //     CSVPrinter csvPrinter = new CSVPrinter(output, CSVFormat.DEFAULT);
+    public FDAPI() {
+        objectMapper = new ObjectMapper();
+        doseParse = new dosageParse();
+    }
 
-    //     // Read each line of the input file and extract the second column
-    //     String line;
-    //     ArrayList<String> inArr = new ArrayList<>();
-    //     while ((line = input.readLine()) != null) {
-    //         String[] fields = line.split("\t");
-    //         String column2 = fields[5];
-    //         if (inArr.contains(column2) == false && column2.length() < 30) {
-    //             inArr.add(column2);
-    //             csvPrinter.printRecord(column2);
-    //         }
+    public List<String> getDrugDosages(String drugName) throws IOException {
+        String encodedDrugName = URLEncoder.encode(drugName, StandardCharsets.UTF_8.toString());
+        System.out.println(drugName);
+        System.out.println(encodedDrugName);
+        String url = BASE_URL + encodedDrugName + API_KEY;
+        System.out.println(url);
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            JsonNode jsonResponse = objectMapper.readTree(reader);
+
+            JsonNode results = jsonResponse.get("results");
+            List<String> dosages = new ArrayList<>();
+            JsonNode test = results.get("dosage_and_administration");
+            System.out.println(test);
             
-
-
-    //         // Write the second column to the CSV file
+            for (JsonNode result : results) {
+                if (result.has("dosage_and_administration")) {
+                    JsonNode dosageArray = result.get("dosage_and_administration");
+                    for (JsonNode dosageNode : dosageArray) {
+                        String dosageText = dosageNode.asText();
+                        System.out.println("Dosage Text: " + dosageText);
             
-    //     }
+                        if (doseParse.isValidMG(dosageText)) {
+                            dosages.addAll(doseParse.drugDose);
+                            valid = true;
+                        }
+                    }
+                }
+            }
 
-    //     // Close the input and output files
-    //     input.close();
-    //     output.close();
-    // }
+            return dosages;
+        } else {
+            
+            throw new IOException("Failed to fetch data from FDA API");
+        }
+    }
 
 }

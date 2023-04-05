@@ -2,6 +2,8 @@ package real.health.PatientLogin;
 
 import real.health.PatientLogin.*;
 import real.health.*;
+import real.health.API.AddressFill;
+import real.health.API.AutoCompleteListener;
 import real.health.GUI.UserRole;
 
 import javax.swing.*;
@@ -31,9 +33,13 @@ public class createNewUser {
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
         bioCombo.setSelectedItem(null);
         JLabel bioLabel = new JLabel("Biological Sex:");
+        
 
         JLabel mailingLabel = new JLabel("Mailing Address:");
-        JTextField mailingField = new JTextField();
+        
+        AddressFill mailingFill = new AddressFill(20, null);
+        String selectedAddress = mailingFill.getSelectedAddress();
+        
 
         String[] raceNames = { "Black", "White", "American Indian or Alaska Native", "Asian",
                 "Native Hawaiian or Other Pacific Islander" };
@@ -52,7 +58,7 @@ public class createNewUser {
         panel1.add(bioLabel);
         panel1.add(bioCombo);
         panel1.add(mailingLabel);
-        panel1.add(mailingField);
+        panel1.add(mailingFill);
         panel1.add(raceLabel);
         panel1.add(raceCombo);
 
@@ -62,7 +68,7 @@ public class createNewUser {
                 dialog.getContentPane().removeAll();
                 dialog.add(createAccountPanel.createAccountPanel(nameField.getText(), dobField.getText(),
                         emailField.getText(),
-                        phoneField.getText(), (String) bioCombo.getSelectedItem(), mailingField.getText(),
+                        phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress,
                         (String) raceCombo.getSelectedItem()));
                 dialog.pack();
                 dialog.revalidate();
