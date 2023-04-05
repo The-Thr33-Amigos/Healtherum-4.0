@@ -23,10 +23,7 @@ public class providerSystem {
 
     public static class User {
         private int id;
-        private String firstName;
-        private String lastName;
-        private String bdate;
-        
+        private String name;
 
         public int getId() {
             return id;
@@ -36,28 +33,12 @@ public class providerSystem {
             this.id = id;
         }
 
-        public String getFirstName() {
-            return firstName;
+        public String getName() {
+            return name;
         }
 
         public void setName(String name) {
-            this.firstName = name;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String last) {
-            this.lastName = last;
-        }
-
-        public void setBdate(String bDate) {
-            this.bdate = bDate;
-        }
-
-        public String getBdate() {
-            return bdate;
+            this.name = name;
         }
     }
 
@@ -146,21 +127,18 @@ public class providerSystem {
         Connection connection = newConnection.connect();
 
         // Prepare a patient search query
-        String query = "SELECT * FROM basic WHERE firstName LIKE ? OR lastName Like ? OR bdate LIKE ?";
+        String query = "SELECT * FROM basic WHERE name LIKE ? OR bdate LIKE ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             String searchPattern = "%" + searchText + "%";
             statement.setString(1, searchPattern);
             statement.setString(2, searchPattern);
-            statement.setString(3, searchPattern);
 
             // Execute the query and process the results
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
                     user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("firstName"));
-                    user.setLastName(resultSet.getString("lastName"));
-                    user.setBdate(resultSet.getString("bdate"));
+                    user.setName(resultSet.getString("name"));
                     users.add(user);
                 }
             }
@@ -187,7 +165,7 @@ public class providerSystem {
         tableModel.addColumn("Address");
 
         for (User user : users) {
-            tableModel.addRow(new Object[] { user.getFirstName() + " " + user.getLastName(), user.getBdate()});
+            tableModel.addRow(new Object[] { user.getName() });
         }
 
         // Create a table for displaying the search results
@@ -259,7 +237,7 @@ public class providerSystem {
                         if (progress == 50) {
                             patientInfoFrame = (JFrame) patientInformationSystem
                                     .patientInformationSystem(String.valueOf(user.getId()), progressBar, role);
-                            patientInfoFrame.setTitle("Patient Info - " + user.getFirstName() + " " + user.getLastName());
+                            patientInfoFrame.setTitle("Patient Info - " + user.getName());
                             patientInfoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                             patientInfoFrame.setSize(1000, 600);
                             patientInfoFrame.setVisible(false);

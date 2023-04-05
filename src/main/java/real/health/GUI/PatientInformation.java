@@ -29,52 +29,40 @@ public class PatientInformation {
         constraints.gridy = 0;
         panel.add(nameField, constraints);
 
-        JTextField lastnameField = new JTextField();
-        nameField.setEditable(false);
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        panel.add(lastnameField, constraints);
-
         JTextField dobField = new JTextField();
         dobField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
         panel.add(dobField, constraints);
 
         JTextField genderField = new JTextField();
         genderField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         panel.add(genderField, constraints);
-
-        JTextField genderIdField = new JTextField();
-        genderIdField.setEditable(false);
-        constraints.gridx = 1;
-        constraints.gridy = 4;
-        panel.add(genderIdField, constraints);
 
         JTextField ethnicityField = new JTextField();
         ethnicityField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 5;
+        constraints.gridy = 3;
         panel.add(ethnicityField, constraints);
 
         JTextField phoneNumberField = new JTextField();
         phoneNumberField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 6;
+        constraints.gridy = 4;
         panel.add(phoneNumberField, constraints);
 
         JTextField emailAddressField = new JTextField();
         emailAddressField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 7;
+        constraints.gridy = 5;
         panel.add(emailAddressField, constraints);
 
         JTextField mailingAddressField = new JTextField();
         mailingAddressField.setEditable(false);
         constraints.gridx = 1;
-        constraints.gridy = 8;
+        constraints.gridy = 6;
         panel.add(mailingAddressField, constraints);
 
         // Fetch the patient information from the SQL database using the patient ID
@@ -89,15 +77,13 @@ public class PatientInformation {
 
             if (result.next()) {
                 // Populate the text fields with the patient information
-                nameField.setText(result.getString("firstName"));
-                lastnameField.setText(result.getString("lastName"));
+                nameField.setText(result.getString("name"));
                 dobField.setText(result.getString("bdate"));
                 genderField.setText(result.getString("bio"));
                 ethnicityField.setText(result.getString("race"));
                 phoneNumberField.setText(result.getString("phone"));
                 emailAddressField.setText(result.getString("email"));
                 mailingAddressField.setText(result.getString("mailing"));
-                genderIdField.setText(result.getString("gender"));
             }
         // Clean up resources
         result.close();
@@ -185,14 +171,13 @@ public class PatientInformation {
                     Connection con = newConnection.connect();
 
                     // Create a SQL statement to insert the user's information
-                    String sql = "UPDATE basic SET firstName=?, lastName=?, email=?, phone=?, mailing=? WHERE id=?";
+                    String sql = "UPDATE basic SET name=?, email=?, phone=?, mailing=? WHERE id=?";
                     PreparedStatement statement = con.prepareStatement(sql);
                     statement.setString(1, nameField.getText());
-                    statement.setString(2, lastnameField.getText());
-                    statement.setString(3, emailAddressField.getText());
-                    statement.setString(4, phoneNumberField.getText());
-                    statement.setString(5, mailingAddressField.getText());
-                    statement.setString(6, id); // id is the patient's unique identifier
+                    statement.setString(2, emailAddressField.getText());
+                    statement.setString(3, phoneNumberField.getText());
+                    statement.setString(4, mailingAddressField.getText());
+                    statement.setString(5, id); // id is the patient's unique identifier
                     statement.executeUpdate();
 
                     // Clean up resources
@@ -216,17 +201,13 @@ public class PatientInformation {
         });
 
         JPanel summaryPanel = new JPanel();
-        summaryPanel.setLayout(new GridLayout(9, 2));
-        summaryPanel.add(new JLabel("First Name:"));
+        summaryPanel.setLayout(new GridLayout(7, 2));
+        summaryPanel.add(new JLabel("Name:"));
         summaryPanel.add(nameField);
-        summaryPanel.add(new JLabel("Last Name:"));
-        summaryPanel.add(lastnameField);
         summaryPanel.add(new JLabel("Date of Birth:"));
         summaryPanel.add(dobField);
         summaryPanel.add(new JLabel("Biological Sex:"));
         summaryPanel.add(genderField);
-        summaryPanel.add(new JLabel("Gender Identity:"));
-        summaryPanel.add(genderIdField);
         summaryPanel.add(new JLabel("Race:"));
         summaryPanel.add(ethnicityField);
         summaryPanel.add(new JLabel("Phone Number:"));
