@@ -348,52 +348,55 @@ public class LabResultsTab {
                 optInStatus = checkOptInStatus(id);
                 if (optInStatus == 1) {
                     // Add prediction buttons only if the patient has opted in to use ML
-                    testInformationPanel.add(predBtn, constraints);
-                    testInformationPanel.add(predBtn1, constraints);
-                    testInformationPanel.add(predBtn2, constraints);
+
+                    testDateLabel.setText("Heart Disease");
                     constraints.gridx = 0;
-                    constraints.gridy = 0;
+                    constraints.gridy = 2;
                     testInformationPanel.add(testDateLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 1;
-                    testInformationPanel.add(accuracyLabel, constraints);
-
-                    constraints.gridx = 0;
-                    constraints.gridy = 2;
+                    constraints.gridy = 3;
                     statusPanel.add(statusLabel);
                     testInformationPanel.add(statusPanel, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 4;
+                    testInformationPanel.add(accuracyLabel, constraints);
 
                     predBtn.setText("Predict");
                     constraints.gridx = 0;
                     constraints.gridy = 3;
                     testInformationPanel.add(predBtn, constraints);
 
-                    testTypeLabel.setText("HEART DISEASE");
+                    testTypeLabel.setText("Something");
                     constraints.gridx = 0;
-                    constraints.gridy = 6;
+                    constraints.gridy = 5;
                     testInformationPanel.add(testTypeLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 7;
+                    constraints.gridy = 6;
                     statusPanel1.add(statusLabel1, constraints);
+                    testInformationPanel.add(statusLabel1, constraints);
 
                     predBtn1.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 8;
+                    constraints.gridy = 6;
+                    testInformationPanel.add(predBtn1, constraints);
 
-                    orderingProviderLabel.setText("Predict");
+                    orderingProviderLabel.setText("Diabetes");
                     constraints.gridx = 0;
-                    constraints.gridy = 12;
+                    constraints.gridy = 8;
                     testInformationPanel.add(orderingProviderLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 13;
+                    constraints.gridy = 9;
                     statusPanel2.add(statusLabel2, constraints);
+                    testInformationPanel.add(statusLabel2, constraints);
 
                     predBtn2.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 14;
+                    constraints.gridy = 9;
+                    testInformationPanel.add(predBtn2, constraints);
 
                     predBtn.setEnabled(true);
                     predBtn1.setEnabled(true);
@@ -403,7 +406,6 @@ public class LabResultsTab {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            testDateLabel.setText("DiseaseSSS");
 
         }
         JLabel optInLabel = new JLabel();
@@ -421,7 +423,7 @@ public class LabResultsTab {
                 e1.printStackTrace();
             }
 
-            if(optInStatus != 2 || optInStatus != 1){
+            if (optInStatus != 2 && optInStatus != 1) {
                 optInLabel.setText("Would you like to opt-in for Machine Learning?");
                 acceptButton.setText("Accept");
                 declineButton.setText("Decline");
@@ -466,7 +468,6 @@ public class LabResultsTab {
         }
         labResultsPanel.add(testInformationPanel, BorderLayout.WEST);
         // Initially disable predict buttons
-
 
         // Action listener for accept button
         acceptButton.addActionListener(new ActionListener() {
@@ -610,7 +611,7 @@ public class LabResultsTab {
                     ArrayList<String> predic = newHD.predict();
                     String acc = predic.get(0);
                     acc = acc.substring(2, 4) + "%";
-                    accuracyLabel.setText(acc);
+                    accuracyLabel.setText("Accuracy: " + acc);
 
                     String pred = predic.get(1);
 
