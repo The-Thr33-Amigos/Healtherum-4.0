@@ -29,7 +29,7 @@ public class createNewUser {
         JLabel phoneLabel = new JLabel("Phone Number:");
         JTextField phoneField = new JTextField();
 
-        String[] bioSexOptions = { "Male", "Female" };
+        String[] bioSexOptions = { "Male", "Female", "Intersex"};
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
         bioCombo.setSelectedItem(null);
         JLabel bioLabel = new JLabel("Biological Sex:");
@@ -37,11 +37,10 @@ public class createNewUser {
         JLabel mailingLabel = new JLabel("Mailing Address:");
         JTextField mailingField = new JTextField();
 
-        String[] raceNames = { "Black", "White", "American Indian or Alaska Native", "Asian",
-                "Native Hawaiian or Other Pacific Islander" };
+        String[] raceNames = {"African American / Black", "Alaska Native", "Asian American / Asian", "Middle Eastern", "Native American / Indigenous", "Native Hawaiin / Other Pacific Islander", "Multiracial", "European American / White", "Other race or ethincity"};
         JComboBox<String> raceCombo = new JComboBox<>(raceNames);
         raceCombo.setSelectedItem(null);
-        JLabel raceLabel = new JLabel("Race:");
+        JLabel raceLabel = new JLabel("Race/Ethnicity:");
 
         panel1.add(firstNameLabel);
         panel1.add(firstNameField);
