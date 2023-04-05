@@ -26,13 +26,14 @@ public class AddressFill extends JTextField {
     private final JPopupMenu suggestionsPop;
     private String selectedSuggestion;
     private Timer searchTimer;
+    private boolean suggestionSelected = false;
 
     public AddressFill(int columns, AutoCompleteListener listener) {
         super(columns);
         this.listener = listener;
         this.suggestionsPop = new JPopupMenu();
 
-        this.searchTimer = new Timer(250 ,new ActionListener() {
+        this.searchTimer = new Timer(500 ,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateSuggestions();
@@ -63,9 +64,13 @@ public class AddressFill extends JTextField {
     }
 
     private void updateSuggestions() {
+        if (suggestionSelected) {
+            suggestionSelected = false;
+            return;
+        }
         String query = this.getText();
 
-        if (query.length() > 4) {
+        if (query.length() > 2) {
             String jsonResponse = searchGoog(query);
 
             JSONObject json = new JSONObject(jsonResponse);
@@ -132,7 +137,9 @@ public class AddressFill extends JTextField {
             JMenuItem menuItem = new JMenuItem(sug);
             menuItem.addActionListener(e -> {
                 setText(sug);
+                selectedSuggestion = sug;
                 suggestionsPop.setVisible(false);
+                suggestionSelected = true;
             });
             suggestionsPop.add(menuItem);
         }

@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -40,11 +41,16 @@ public class FDAPI {
     }
 
     public List<String> getDrugDosages(String drugName) throws IOException {
+        
+        if (drugName == null || drugName.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (drugName.trim().length() < 5) {
+            return Collections.emptyList();
+        }
         String encodedDrugName = URLEncoder.encode(drugName, StandardCharsets.UTF_8.toString());
-        System.out.println(drugName);
-        System.out.println(encodedDrugName);
         String url = BASE_URL + encodedDrugName + API_KEY;
-        System.out.println(url);
+        
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
@@ -55,8 +61,8 @@ public class FDAPI {
 
             JsonNode results = jsonResponse.get("results");
             List<String> dosages = new ArrayList<>();
-            JsonNode test = results.get("dosage_and_administration");
-            System.out.println(test);
+            
+            
             
             for (JsonNode result : results) {
                 if (result.has("dosage_and_administration")) {
@@ -75,7 +81,6 @@ public class FDAPI {
 
             return dosages;
         } else {
-            
             throw new IOException("Failed to fetch data from FDA API");
         }
     }

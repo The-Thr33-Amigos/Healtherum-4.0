@@ -100,10 +100,10 @@ public class createMedicationsTab {
                 
                 JLabel nameLabel = new JLabel("Name:");
                 JComboBox<String> drugCombo = new JComboBox<>(drugList.toArray(new String[0]));
-                drugCombo.setEditable(false);
+                drugCombo.setEditable(true);
                 drugCombo.setSelectedItem(null);
                 AutoCompleteDecorator.decorate(drugCombo);
-                
+
 
                 addMedicationFrame.add(nameLabel);
                 addMedicationFrame.add(drugCombo);
@@ -116,7 +116,8 @@ public class createMedicationsTab {
                         
                         String selectedDrug = (String) drugCombo.getSelectedItem();
                         List<String> newDoses;
-                        if (selectedDrug != null) {
+                        String text = drugCombo.getEditor().getItem().toString();
+                        if (selectedDrug != null && !selectedDrug.isEmpty() && drugList.contains(selectedDrug)) {
                             FDAPI newFDA = new FDAPI();
                             try {
                                 newDoses = newFDA.getDrugDosages(selectedDrug.toString());
