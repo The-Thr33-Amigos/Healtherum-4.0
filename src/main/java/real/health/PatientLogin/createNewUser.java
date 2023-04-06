@@ -40,7 +40,7 @@ public class createNewUser {
         JLabel mailingLabel = new JLabel("Mailing Address:");
         
         AddressFill mailingFill = new AddressFill(20, null);
-        String selectedAddress = mailingFill.getSelectedAddress();
+        final String[] selectedAddress = new String[1];
         
 
         String[] raceNames = {"African American / Black", "Alaska Native", "Asian American / Asian", "Middle Eastern", "Native American / Indigenous", "Native Hawaiin / Other Pacific Islander", "Multiracial", "European American / White", "Other race or ethincity"};
@@ -65,13 +65,15 @@ public class createNewUser {
         panel1.add(raceLabel);
         panel1.add(raceCombo);
 
+
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                selectedAddress[0] = mailingFill.getSelectedAddress(); // Add this line to get the selected address when the Next button is clicked
                 dialog.getContentPane().removeAll();
                 dialog.add(createAccountPanel.createAccountPanel(firstNameField.getText(), lastNameField.getText(), dobField.getText(),
                         emailField.getText(),
-                        phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress,
+                        phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress[0],
                         (String) raceCombo.getSelectedItem()));
                 dialog.pack();
                 dialog.revalidate();
