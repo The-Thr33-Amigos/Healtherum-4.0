@@ -233,7 +233,7 @@ public class LabResultsTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
-                        // TODO: Save the test information to the database
+                        
 
                         // Add the new test to the table on the first screen
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -257,8 +257,12 @@ public class LabResultsTab {
                             conn.close();
 
                         } catch (ClassNotFoundException c) {
+                            // TODO: Error handling
+                            System.err.println("ClassNotFoundException");
                             c.printStackTrace();
                         } catch (SQLException ex) {
+                            // TODO: Error handling
+                            System.err.println("SQLException");
                             ex.printStackTrace();
                         }
 
@@ -315,8 +319,10 @@ public class LabResultsTab {
             conn.close();
 
         } catch (ClassNotFoundException c) {
+            // TODO: Error handling
             c.printStackTrace();
         } catch (SQLException e) {
+            // TODO: Error handling
             e.printStackTrace();
         }
 
@@ -684,6 +690,7 @@ public class LabResultsTab {
                     predBtn1.setEnabled(false);
 
                 } catch (IOException ie) {
+                    // TODO: Error handling
                     ie.printStackTrace();
                 }
 
@@ -724,6 +731,7 @@ public class LabResultsTab {
                     predBtn2.setEnabled(false);
 
                 } catch (IOException ie) {
+                    // TODO: Error handling
                     ie.printStackTrace();
                 }
 
