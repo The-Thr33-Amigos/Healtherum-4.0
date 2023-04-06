@@ -22,31 +22,41 @@ import java.util.List;
 public class providerSystem {
 
     public static class User {
-        private int id;
-        private String name;
+        private String id;
+        private String firstName;
+        private String lastName;
         private String bDate;
         private String phone;
         private String address;
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setId(String string) {
+            this.id = string;
         }
 
-        public String getName() {
-            return name;
+        public String getFirstName() {
+            return firstName;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
 
         public String getBdate() {
             return bDate;
         }
+
         public void setBdate(String bDate) {
             this.bDate = bDate;
         }
@@ -54,6 +64,7 @@ public class providerSystem {
         public String getPhone() {
             return phone;
         }
+
         public void setPhone(String phone) {
             this.phone = phone;
         }
@@ -61,6 +72,7 @@ public class providerSystem {
         public String getAddress() {
             return address;
         }
+
         public void setAddress(String address) {
             this.address = address;
         }
@@ -143,6 +155,7 @@ public class providerSystem {
 
     }
 
+    // Prepare a patient search query
     private static List<User> searchPatients(String searchText) throws SQLException, ClassNotFoundException {
         List<User> users = new ArrayList<>();
 
@@ -151,17 +164,20 @@ public class providerSystem {
         Connection connection = newConnection.connect();
 
         // Prepare a patient search query
-        String query = "SELECT id, name, bdate, phone, mailing FROM basic WHERE name LIKE ? OR bdate LIKE ?";
+        String query = "SELECT id, firstName, lastName, bdate, phone, mailing FROM basic WHERE firstName LIKE ? OR lastName LIKE ? OR bdate LIKE ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             String searchPattern = "%" + searchText + "%";
             statement.setString(1, searchPattern);
             statement.setString(2, searchPattern);
+            statement.setString(3, searchPattern); // Set the third parameter
+
             // Execute the query and process the results
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("name"));
+                    user.setId(resultSet.getString("id"));
+                    user.setFirstName(resultSet.getString("firstName"));
+                    user.setLastName(resultSet.getString("lastName"));
                     user.setBdate(resultSet.getString("bdate"));
                     user.setPhone(resultSet.getString("phone"));
                     user.setAddress(resultSet.getString("mailing"));
@@ -184,20 +200,23 @@ public class providerSystem {
         searchResultsFrame.setLocationRelativeTo(null);
 
         // Create a table model for the search results
-        DefaultTableModel tableModel = new DefaultTableModel(){
+        // Create a table model for the search results
+        DefaultTableModel tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tableModel.addColumn("Name");
+        tableModel.addColumn("First Name");
+        tableModel.addColumn("Last Name");
         tableModel.addColumn("Birthdate");
         tableModel.addColumn("Phone Number");
         tableModel.addColumn("Address");
 
         for (User user : users) {
-            tableModel.addRow(new Object[] { user.getName(), user.getBdate(), user.getPhone(), user.getAddress() });
+            tableModel.addRow(new Object[] { user.getFirstName(), user.getLastName(), user.getBdate(), user.getPhone(),
+                    user.getAddress() });
         }
 
         // Create a table for displaying the search results
@@ -269,7 +288,8 @@ public class providerSystem {
                         if (progress == 50) {
                             patientInfoFrame = (JFrame) patientInformationSystem
                                     .patientInformationSystem(String.valueOf(user.getId()), progressBar, role);
-                            patientInfoFrame.setTitle("Patient Info - " + user.getName());
+                            patientInfoFrame
+                                    .setTitle("Patient Info - " + user.getFirstName() + " " + user.getLastName());
                             patientInfoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                             patientInfoFrame.setSize(1000, 600);
                             patientInfoFrame.setVisible(false);

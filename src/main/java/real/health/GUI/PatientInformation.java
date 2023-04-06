@@ -70,21 +70,26 @@ public class PatientInformation {
             // Load the MySQL JDBC driver
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-            String sql = "SELECT * FROM basic WHERE id = ?";
+            String sql = "SELECT firstName, lastName, email, phone, bdate, gender, race, mailing FROM basic WHERE id = ?";
+            System.out.println(id);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
                 // Populate the text fields with the patient information
-                nameField.setText(result.getString("name"));
+                String firstName = result.getString("firstName");
+                String lastName = result.getString("lastName");
+                String fullName = firstName + " " + lastName;
+                nameField.setText(fullName);
                 dobField.setText(result.getString("bdate"));
-                genderField.setText(result.getString("bio"));
+                genderField.setText(result.getString("gender"));
                 ethnicityField.setText(result.getString("race"));
                 phoneNumberField.setText(result.getString("phone"));
                 emailAddressField.setText(result.getString("email"));
                 mailingAddressField.setText(result.getString("mailing"));
             }
+
         // Clean up resources
         result.close();
         statement.close();
@@ -120,6 +125,7 @@ public class PatientInformation {
                     BufferedImage driversLicense = ImageIO.read(file);
                     // Save the image to the database or file system here
                 } catch (IOException ex) {
+                    // TODO: Error handling
                     ex.printStackTrace();
                 }
             }
@@ -176,7 +182,7 @@ public class PatientInformation {
                 } catch (SQLException ex) {
                     System.out.println("SQL Exception: " + ex.getMessage());
                 } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
+                    // TODO: Error handling
                     e1.printStackTrace();
                 }
 

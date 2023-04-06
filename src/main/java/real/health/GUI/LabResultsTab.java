@@ -98,6 +98,7 @@ public class LabResultsTab {
                 }
             }
         });
+
         table.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(table);
         labResultsPanel.add(scrollPane, BorderLayout.CENTER);
@@ -232,7 +233,7 @@ public class LabResultsTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
-                        // TODO: Save the test information to the database
+                        
 
                         // Add the new test to the table on the first screen
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -256,8 +257,12 @@ public class LabResultsTab {
                             conn.close();
 
                         } catch (ClassNotFoundException c) {
+                            // TODO: Error handling
+                            System.err.println("ClassNotFoundException");
                             c.printStackTrace();
                         } catch (SQLException ex) {
+                            // TODO: Error handling
+                            System.err.println("SQLException");
                             ex.printStackTrace();
                         }
 
@@ -314,8 +319,10 @@ public class LabResultsTab {
             conn.close();
 
         } catch (ClassNotFoundException c) {
+            // TODO: Error handling
             c.printStackTrace();
         } catch (SQLException e) {
+            // TODO: Error handling
             e.printStackTrace();
         }
 
@@ -327,59 +334,291 @@ public class LabResultsTab {
         JPanel statusPanel1 = new JPanel();
         JPanel statusPanel2 = new JPanel();
 
-        JLabel testDateLabel = new JLabel("Disease Indicator:");
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        testInformationPanel.add(testDateLabel, constraints);
-
+        JLabel testDateLabel = new JLabel();
         JLabel accuracyLabel = new JLabel();
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        testInformationPanel.add(accuracyLabel, constraints);
-
         JLabel statusLabel = new JLabel();
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        statusPanel.add(statusLabel);
-        testInformationPanel.add(statusPanel, constraints);
 
-        JButton predBtn = new JButton("Predict");
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        testInformationPanel.add(predBtn, constraints);
-
-        JLabel testTypeLabel = new JLabel("Heart Disease:");
-        constraints.gridx = 0;
-        constraints.gridy = 6;
-        testInformationPanel.add(testTypeLabel, constraints);
-
+        JButton predBtn = new JButton();
+        JLabel testTypeLabel = new JLabel();
         JLabel statusLabel1 = new JLabel();
-        constraints.gridx = 0;
-        constraints.gridy = 7;
-        statusPanel1.add(statusLabel1, constraints);
+        JLabel accuracyLabel1 = new JLabel();
 
-        JButton predBtn1 = new JButton("Predict");
-        constraints.gridx = 0;
-        constraints.gridy = 8;
-        
-        testInformationPanel.add(predBtn1, constraints);
+        JButton predBtn1 = new JButton();
 
-        JLabel orderingProviderLabel = new JLabel("Diabetes:");
-        constraints.gridx = 0;
-        constraints.gridy = 12;
-        testInformationPanel.add(orderingProviderLabel, constraints);
-
+        JButton predBtn2 = new JButton();
+        JLabel orderingProviderLabel = new JLabel();
         JLabel statusLabel2 = new JLabel();
-        constraints.gridx = 0;
-        constraints.gridy = 13;
-        statusPanel2.add(statusLabel2, constraints);
+        JLabel accuracyLabel2 = new JLabel();
 
-        JButton predBtn2 = new JButton("Predict");
-        constraints.gridx = 0;
-        constraints.gridy = 14;
-        testInformationPanel.add(predBtn2, constraints);
+        if (userRole == UserRole.PROVIDER) {
+            int optInStatus;
+            try {
+                optInStatus = checkOptInStatus(id);
+                if (optInStatus == 1) {
+                    // Add prediction buttons only if the patient has opted in to use ML
 
+                    testDateLabel.setText("Heart Disease");
+                    constraints.gridx = 0;
+                    constraints.gridy = 1;
+                    testInformationPanel.add(testDateLabel, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 2;
+                    statusPanel.add(statusLabel);
+                    testInformationPanel.add(statusPanel, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 3;
+                    testInformationPanel.add(accuracyLabel, constraints);
+
+                    predBtn.setText("Predict");
+                    constraints.gridx = 0;
+                    constraints.gridy = 4;
+                    testInformationPanel.add(predBtn, constraints);
+
+                    testTypeLabel.setText("Kidney Disease");
+                    constraints.gridx = 0;
+                    constraints.gridy = 5;
+                    testInformationPanel.add(testTypeLabel, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 6;
+                    statusPanel1.add(statusLabel1, constraints);
+                    testInformationPanel.add(statusPanel1, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 7;
+                    testInformationPanel.add(accuracyLabel1, constraints);
+
+
+                    predBtn1.setText("Predict");
+                    constraints.gridx = 0;
+                    constraints.gridy = 8;
+                    testInformationPanel.add(predBtn1, constraints);
+
+                    orderingProviderLabel.setText("Diabetes");
+                    constraints.gridx = 0;
+                    constraints.gridy = 9;
+                    testInformationPanel.add(orderingProviderLabel, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 10;
+                    statusPanel2.add(statusLabel2, constraints);
+                    testInformationPanel.add(statusPanel2, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 11;
+                    testInformationPanel.add(accuracyLabel2, constraints);
+
+
+                    predBtn2.setText("Predict");
+                    constraints.gridx = 0;
+                    constraints.gridy = 12;
+                    testInformationPanel.add(predBtn2, constraints);
+
+                    predBtn.setEnabled(true);
+                    predBtn1.setEnabled(true);
+                    predBtn2.setEnabled(true);
+                }
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+        }
+        JLabel optInLabel = new JLabel();
+
+        JButton acceptButton = new JButton();
+        JButton declineButton = new JButton();
+
+        if (userRole == UserRole.PATIENT) {
+            int optInStatus = 0;
+
+            try {
+                optInStatus = checkOptInStatus(id);
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+            if (optInStatus != 2 && optInStatus != 1) {
+                optInLabel.setText("Machine Learning?");
+                acceptButton.setText("Accept");
+                declineButton.setText("Decline");
+
+                constraints.gridx = 0;
+                constraints.gridy = 14;
+                testInformationPanel.add(optInLabel, constraints);
+            }
+        }
+
+        if (userRole == UserRole.PATIENT) {
+            int optInStatus = 0;
+            try {
+                optInStatus = checkOptInStatus(id);
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+            try {
+                optInStatus = checkOptInStatus(id);
+                System.out.println(optInStatus);
+                System.out.println(optInStatus);
+
+                if (optInStatus == 0) {
+                    System.out.println(optInStatus);
+                    constraints.gridx = 0;
+                    constraints.gridy = 15;
+                    testInformationPanel.add(acceptButton, constraints);
+
+                    constraints.gridx = 1;
+                    constraints.gridy = 15;
+                    testInformationPanel.add(declineButton, constraints);
+                    predBtn.setEnabled(false);
+                    predBtn1.setEnabled(false);
+                    predBtn2.setEnabled(false);
+                }
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
         labResultsPanel.add(testInformationPanel, BorderLayout.WEST);
+        // Initially disable predict buttons
+
+        // Action listener for accept button
+        acceptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open a new window with a JTextField for initials and a "Confirm" button
+                JFrame initialsFrame = new JFrame("Enter Initials");
+                initialsFrame.setSize(300, 150);
+                initialsFrame.setLocationRelativeTo(null);
+                initialsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                initialsFrame.setLayout(new FlowLayout());
+
+                JLabel initialsLabel = new JLabel("Enter your initials:");
+                JTextField initialsField = new JTextField(5);
+                JButton confirmButton = new JButton("Confirm");
+
+                initialsFrame.add(initialsLabel);
+                initialsFrame.add(initialsField);
+                initialsFrame.add(confirmButton);
+                initialsFrame.setVisible(true);
+
+                // Add action listener for "Confirm" button
+                confirmButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Check if the entered initials match the user's name
+                        String enteredInitials = initialsField.getText().toUpperCase();
+                        // Fetch the user's first and last name from the SQL database using the user ID
+                        try {
+                            // Load the MySQL JDBC driver
+                            HealthConn newConnection = new HealthConn();
+                            Connection con = newConnection.connect();
+                            String sql = "SELECT firstName, lastName FROM basic WHERE id = ?";
+                            PreparedStatement statement = con.prepareStatement(sql);
+                            statement.setString(1, id);
+                            ResultSet result = statement.executeQuery();
+
+                            if (result.next()) {
+                                // Get the user's first and last name
+                                String firstName = result.getString("firstName");
+                                String lastName = result.getString("lastName");
+                                System.out.println(firstName.substring(0, 1));
+                                System.out.println(lastName.substring(0, 1));
+                                // Get the first letters of the user's first and last name
+                                String userNameInitials = (firstName.substring(0, 1) + lastName.substring(0, 1))
+                                        .toUpperCase();
+
+                                System.out.println(userNameInitials);
+
+                                // Check if the entered initials match the user's name initials
+                                if (enteredInitials.equals(userNameInitials)) {
+                                    // Enable the "Predict" buttons
+                                    predBtn.setEnabled(true);
+                                    predBtn1.setEnabled(true);
+                                    predBtn2.setEnabled(true);
+
+                                    // Update the machine learning opt-in status in the SQL database
+                                    sql = "INSERT INTO machinelearning (id, status) VALUES (?, ?) ON DUPLICATE KEY UPDATE status=?";
+                                    statement = con.prepareStatement(sql);
+                                    statement.setString(1, id);
+                                    statement.setInt(2, 1);
+                                    statement.setInt(3, 1);
+                                    statement.executeUpdate();
+
+                                    // Close the initials window
+                                    initialsFrame.dispose();
+                                } else {
+                                    // Show a message if the entered initials don't match
+                                    JOptionPane.showMessageDialog(initialsFrame,
+                                            "Entered initials do not match the user's name.", "Error",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                            // Clean up resources
+                            result.close();
+                            statement.close();
+                            con.close();
+                        } catch (ClassNotFoundException ex) {
+                            System.out.println("Error: unable to load MySQL JDBC driver");
+                            ex.printStackTrace();
+                        } catch (SQLException ex) {
+                            System.out.println("Error: unable to connect to MySQL database");
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+        });
+
+        // Action listener for decline button
+        declineButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Your opt-out logic goes here
+                // Show a confirmation dialog when the user declines
+                int confirmDecline = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to decline Machine Learning?",
+                        "Confirm Decline",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+                if (confirmDecline == JOptionPane.YES_OPTION) {
+                    // Disable the "Predict" buttons
+                    predBtn.setEnabled(false);
+                    predBtn1.setEnabled(false);
+                    predBtn2.setEnabled(false);
+
+                    // Update the machine learning opt-in status in the SQL database
+                    try {
+                        // Load the MySQL JDBC driver
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "INSERT INTO machinelearning (id, status) VALUES (?, ?) ON DUPLICATE KEY UPDATE status=?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id);
+                        statement.setInt(2, 2); // Set status to 2 when declined
+                        statement.setInt(3, 2); // Set status to 2 when declined
+                        statement.executeUpdate();
+
+                        // Clean up resources
+                        statement.close();
+                        con.close();
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println("Error: unable to load MySQL JDBC driver");
+                        ex.printStackTrace();
+                    } catch (SQLException ex) {
+                        System.out.println("Error: unable to connect to MySQL database");
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
         predBtn.addActionListener(new ActionListener() {
             @Override
@@ -390,12 +629,12 @@ public class LabResultsTab {
                     ArrayList<String> predic = newHD.predict();
                     String acc = predic.get(0);
                     acc = acc.substring(2, 4) + "%";
-                    accuracyLabel.setText(acc);
+                    accuracyLabel.setText("Accuracy: " + acc);
 
                     String pred = predic.get(1);
 
                     if ("0".equals(pred)) {
-                        statusLabel.setText("Absence");
+                        statusLabel.setText("Absent");
                         statusPanel.setBackground(Color.GREEN);
                         statusPanel.add(statusLabel);
                     } else if ("1".equals(pred)) {
@@ -419,6 +658,86 @@ public class LabResultsTab {
             }
         });
 
+        predBtn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+
+                    kidneyDisease newKD = new kidneyDisease();
+                    ArrayList<String> predic = newKD.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel1.setText("Accuracy: " + acc);
+
+                    String pred1 = predic.get(1);
+
+                    if ("0".equals(pred1)) {
+                        statusLabel1.setText("Absence");
+                        statusPanel1.setBackground(Color.GREEN);
+                        statusPanel1.add(statusLabel1);
+                    } else if ("1".equals(pred1)) {
+                        statusLabel1.setText("Presence Detected");
+                        statusPanel1.setBackground(Color.RED);
+                        statusPanel1.add(statusLabel1);
+                    } else {
+                        statusLabel1.setText(pred1);
+                        statusPanel1.setBackground(Color.GRAY);
+                        statusPanel1.add(statusLabel1);
+                    }
+                    System.out.println(pred1);
+
+                    predBtn1.setVisible(false);
+                    predBtn1.setEnabled(false);
+
+                } catch (IOException ie) {
+                    // TODO: Error handling
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+        predBtn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    diabetes newDB = new diabetes();
+                    ArrayList<String> predic = newDB.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel2.setText("Accuracy: " + acc);
+                    
+                    
+
+                    String pred2 = predic.get(1);
+                    
+
+                    if ("0".equals(pred2)) {
+                        statusLabel2.setText("Absence");
+                        statusPanel2.setBackground(Color.GREEN);
+                        statusPanel2.add(statusLabel2);
+                    } else if ("1".equals(pred2)) {
+                        statusLabel2.setText("Presence Detected");
+                        statusPanel2.setBackground(Color.RED);
+                        statusPanel2.add(statusLabel2);
+                    } else {
+                        statusLabel2.setText(pred2);
+                        statusPanel2.setBackground(Color.GRAY);
+                        statusPanel2.add(statusLabel2);
+                    }
+                    System.out.println(pred2);
+
+                    predBtn2.setVisible(false);
+                    predBtn2.setEnabled(false);
+
+                } catch (IOException ie) {
+                    // TODO: Error handling
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
         // Download/Print Options
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");
@@ -426,7 +745,7 @@ public class LabResultsTab {
         if (userRole == UserRole.PATIENT) {
             downloadPrintPanel.add(downloadButton);
         }
-        
+
         downloadPrintPanel.add(printButton);
         if (userRole == UserRole.PROVIDER) {
             downloadPrintPanel.add(newButton2);
@@ -435,4 +754,34 @@ public class LabResultsTab {
 
         return labResultsPanel;
     }
+
+    private int checkOptInStatus(String userId) throws SQLException {
+        int optInStatus = 0;
+
+        try {
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+            String sql = "SELECT status FROM machinelearning WHERE id = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                optInStatus = rs.getInt("status");
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: unable to load MySQL JDBC driver");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error: unable to connect to MySQL database");
+            e.printStackTrace();
+        }
+
+        return optInStatus;
+    }
+
 }

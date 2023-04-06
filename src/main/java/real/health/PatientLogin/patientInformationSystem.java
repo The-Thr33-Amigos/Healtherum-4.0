@@ -51,7 +51,7 @@ public class patientInformationSystem {
 
         // Create a new instance of the AppointmentsTab class
         AppointmentsTab AppointmentsTab = new AppointmentsTab();
-        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab(id));
+        tabs.addTab("Appointments", AppointmentsTab.createAppointmentsTab(id, role));
         progressBar.setValue(progressBar.getValue() + 5);
 
         // Create a new instance of the NotesTab class

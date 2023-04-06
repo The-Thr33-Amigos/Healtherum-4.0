@@ -6,6 +6,7 @@ from sklearn.exceptions import DataConversionWarning
 
 from heart_disease_ml import heart_disease_ml
 from kidney_disease_ml import kidney_disease_ml
+from diabetes import diabetes_ml
 
 warnings.filterwarnings("ignore")
 
@@ -33,8 +34,13 @@ if __name__ == "__main__":
             res = str(result[1])
             print(acc)
             print(res)
-        elif args_list[0] == 2:
-            print("N/A")
+        elif args_list[0] == 9:
+            db = diabetes_ml()
+            result = db.train_model()
+            acc = str(result[0])
+            res = str(result[1])
+            print(acc)
+            print(res)
         else:
             print("N/A")
     except Exception as e:

@@ -117,6 +117,7 @@ public class InsuranceTab {
                                 icon
                         });
                     } catch (IOException ex) {
+                        // TODO: Error handling
                         ex.printStackTrace();
                     }
                 } else {
@@ -137,6 +138,8 @@ public class InsuranceTab {
             statement.close();
             con.close();
         } catch (ClassNotFoundException | SQLException e) {
+            // TODO: Error handling
+            System.err.println("ClassNotFoundException / SQLException");
             e.printStackTrace();
         }
 
@@ -234,6 +237,7 @@ public class InsuranceTab {
                     statement.close();
                     con.close();
                 } catch (ClassNotFoundException | SQLException ez) {
+                    // TODO: Error handling
                     ez.printStackTrace();
                 }
                 // Add the new row to the table
@@ -456,6 +460,7 @@ public class InsuranceTab {
                         }
                     }
                 } catch (IOException ex) {
+                    // TODO: Error handling
                     ex.printStackTrace();
                 }
             }
