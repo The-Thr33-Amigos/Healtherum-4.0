@@ -233,7 +233,7 @@ public class LabResultsTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
-                        // TODO: Save the test information to the database
+                        
 
                         // Add the new test to the table on the first screen
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -257,8 +257,12 @@ public class LabResultsTab {
                             conn.close();
 
                         } catch (ClassNotFoundException c) {
+                            // TODO: Error handling
+                            System.err.println("ClassNotFoundException");
                             c.printStackTrace();
                         } catch (SQLException ex) {
+                            // TODO: Error handling
+                            System.err.println("SQLException");
                             ex.printStackTrace();
                         }
 
@@ -315,8 +319,10 @@ public class LabResultsTab {
             conn.close();
 
         } catch (ClassNotFoundException c) {
+            // TODO: Error handling
             c.printStackTrace();
         } catch (SQLException e) {
+            // TODO: Error handling
             e.printStackTrace();
         }
 
@@ -546,6 +552,13 @@ public class LabResultsTab {
 
                                     // Close the initials window
                                     initialsFrame.dispose();
+
+                                    // Remove the accept and decline buttons and update the panel
+                                    acceptButton.setVisible(false);
+                                    declineButton.setVisible(false);
+                                    optInLabel.setVisible(false);
+                                    testInformationPanel.revalidate();
+                                    testInformationPanel.repaint();
                                 } else {
                                     // Show a message if the entered initials don't match
                                     JOptionPane.showMessageDialog(initialsFrame,
@@ -610,6 +623,13 @@ public class LabResultsTab {
                         System.out.println("Error: unable to connect to MySQL database");
                         ex.printStackTrace();
                     }
+                    // Remove the accept and decline buttons and update the panel
+                    acceptButton.setVisible(false);
+                    declineButton.setVisible(false);
+                    optInLabel.setVisible(false);
+                    testInformationPanel.revalidate();
+                    testInformationPanel.repaint();
+
                 }
             }
         });
@@ -684,6 +704,7 @@ public class LabResultsTab {
                     predBtn1.setEnabled(false);
 
                 } catch (IOException ie) {
+                    // TODO: Error handling
                     ie.printStackTrace();
                 }
 
@@ -724,6 +745,7 @@ public class LabResultsTab {
                     predBtn2.setEnabled(false);
 
                 } catch (IOException ie) {
+                    // TODO: Error handling
                     ie.printStackTrace();
                 }
 
