@@ -125,6 +125,7 @@ public class PatientInformation {
                     BufferedImage driversLicense = ImageIO.read(file);
                     // Save the image to the database or file system here
                 } catch (IOException ex) {
+                    // TODO: Error handling
                     ex.printStackTrace();
                 }
             }
@@ -181,7 +182,7 @@ public class PatientInformation {
                 } catch (SQLException ex) {
                     System.out.println("SQL Exception: " + ex.getMessage());
                 } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
+                    // TODO: Error handling
                     e1.printStackTrace();
                 }
 

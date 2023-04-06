@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,7 +20,9 @@ import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import java.awt.event.*;
+import java.io.IOException;
 
+import real.health.API.FDAPI;
 import real.health.API.readCSV;
 import real.health.SQL.*;
 import java.awt.*;
@@ -94,22 +97,49 @@ public class createMedicationsTab {
                 readCSV rc = new readCSV();
                 List<String> drugList = rc.readDrugNames("output.csv");
                 Collections.sort(drugList);
-
+                
                 JLabel nameLabel = new JLabel("Name:");
                 JComboBox<String> drugCombo = new JComboBox<>(drugList.toArray(new String[0]));
                 drugCombo.setEditable(true);
                 drugCombo.setSelectedItem(null);
                 AutoCompleteDecorator.decorate(drugCombo);
 
+
                 addMedicationFrame.add(nameLabel);
                 addMedicationFrame.add(drugCombo);
 
+                JComboBox<String> doseCombo = new JComboBox<>();
                 JLabel doseLabel = new JLabel("Dose:");
-                String[] doses = { "5mg", "10mg", "15mg", "20mg", "30mg", "50mg", "60mg" };
-                JComboBox<String> doseCombo = new JComboBox<>(doses);
-                doseCombo.setSelectedItem(null);
+                drugCombo.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        
+                        String selectedDrug = (String) drugCombo.getSelectedItem();
+                        List<String> newDoses;
+                        
+                        if (selectedDrug != null && !selectedDrug.isEmpty() && drugList.contains(selectedDrug)) {
+                            FDAPI newFDA = new FDAPI();
+                            try {
+                                newDoses = newFDA.getDrugDosages(selectedDrug.toString());
+
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                                newDoses = Arrays.asList("0.5 mg", "1 mg", "5 mg", "10 mg");
+                            }
+                        } else {
+                            newDoses = Arrays.asList("0.5 mg", "1 mg", "5 mg", "10 mg");
+                        }
+                        doseCombo.setModel(new DefaultComboBoxModel<>(newDoses.toArray(new String[0])));
+                        doseCombo.setSelectedItem(null);
+                        doseCombo.repaint();
+                    }
+                });
+                
+                
+                
                 addMedicationFrame.add(doseLabel);
                 addMedicationFrame.add(doseCombo);
+
 
                 JLabel frequencyLabel = new JLabel("Frequency:");
                 String[] freq = { "Daily", "Twice A Day", "Three Times a Day", "When Needed" };

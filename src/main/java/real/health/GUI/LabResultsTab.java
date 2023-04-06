@@ -233,7 +233,7 @@ public class LabResultsTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
-                        // TODO: Save the test information to the database
+                        
 
                         // Add the new test to the table on the first screen
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -257,8 +257,12 @@ public class LabResultsTab {
                             conn.close();
 
                         } catch (ClassNotFoundException c) {
+                            // TODO: Error handling
+                            System.err.println("ClassNotFoundException");
                             c.printStackTrace();
                         } catch (SQLException ex) {
+                            // TODO: Error handling
+                            System.err.println("SQLException");
                             ex.printStackTrace();
                         }
 
@@ -315,8 +319,10 @@ public class LabResultsTab {
             conn.close();
 
         } catch (ClassNotFoundException c) {
+            // TODO: Error handling
             c.printStackTrace();
         } catch (SQLException e) {
+            // TODO: Error handling
             e.printStackTrace();
         }
 
@@ -335,12 +341,14 @@ public class LabResultsTab {
         JButton predBtn = new JButton();
         JLabel testTypeLabel = new JLabel();
         JLabel statusLabel1 = new JLabel();
+        JLabel accuracyLabel1 = new JLabel();
 
         JButton predBtn1 = new JButton();
 
         JButton predBtn2 = new JButton();
         JLabel orderingProviderLabel = new JLabel();
         JLabel statusLabel2 = new JLabel();
+        JLabel accuracyLabel2 = new JLabel();
 
         if (userRole == UserRole.PROVIDER) {
             int optInStatus;
@@ -351,24 +359,24 @@ public class LabResultsTab {
 
                     testDateLabel.setText("Heart Disease");
                     constraints.gridx = 0;
-                    constraints.gridy = 2;
+                    constraints.gridy = 1;
                     testInformationPanel.add(testDateLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 3;
+                    constraints.gridy = 2;
                     statusPanel.add(statusLabel);
                     testInformationPanel.add(statusPanel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 4;
+                    constraints.gridy = 3;
                     testInformationPanel.add(accuracyLabel, constraints);
 
                     predBtn.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 3;
+                    constraints.gridy = 4;
                     testInformationPanel.add(predBtn, constraints);
 
-                    testTypeLabel.setText("Something");
+                    testTypeLabel.setText("Kidney Disease");
                     constraints.gridx = 0;
                     constraints.gridy = 5;
                     testInformationPanel.add(testTypeLabel, constraints);
@@ -376,26 +384,36 @@ public class LabResultsTab {
                     constraints.gridx = 0;
                     constraints.gridy = 6;
                     statusPanel1.add(statusLabel1, constraints);
-                    testInformationPanel.add(statusLabel1, constraints);
+                    testInformationPanel.add(statusPanel1, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 7;
+                    testInformationPanel.add(accuracyLabel1, constraints);
+
 
                     predBtn1.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 6;
+                    constraints.gridy = 8;
                     testInformationPanel.add(predBtn1, constraints);
 
                     orderingProviderLabel.setText("Diabetes");
                     constraints.gridx = 0;
-                    constraints.gridy = 8;
+                    constraints.gridy = 9;
                     testInformationPanel.add(orderingProviderLabel, constraints);
 
                     constraints.gridx = 0;
-                    constraints.gridy = 9;
+                    constraints.gridy = 10;
                     statusPanel2.add(statusLabel2, constraints);
-                    testInformationPanel.add(statusLabel2, constraints);
+                    testInformationPanel.add(statusPanel2, constraints);
+
+                    constraints.gridx = 0;
+                    constraints.gridy = 11;
+                    testInformationPanel.add(accuracyLabel2, constraints);
+
 
                     predBtn2.setText("Predict");
                     constraints.gridx = 0;
-                    constraints.gridy = 9;
+                    constraints.gridy = 12;
                     testInformationPanel.add(predBtn2, constraints);
 
                     predBtn.setEnabled(true);
@@ -634,6 +652,86 @@ public class LabResultsTab {
                     predBtn.setEnabled(false);
 
                 } catch (IOException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+        predBtn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+
+                    kidneyDisease newKD = new kidneyDisease();
+                    ArrayList<String> predic = newKD.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel1.setText("Accuracy: " + acc);
+
+                    String pred1 = predic.get(1);
+
+                    if ("0".equals(pred1)) {
+                        statusLabel1.setText("Absence");
+                        statusPanel1.setBackground(Color.GREEN);
+                        statusPanel1.add(statusLabel1);
+                    } else if ("1".equals(pred1)) {
+                        statusLabel1.setText("Presence Detected");
+                        statusPanel1.setBackground(Color.RED);
+                        statusPanel1.add(statusLabel1);
+                    } else {
+                        statusLabel1.setText(pred1);
+                        statusPanel1.setBackground(Color.GRAY);
+                        statusPanel1.add(statusLabel1);
+                    }
+                    System.out.println(pred1);
+
+                    predBtn1.setVisible(false);
+                    predBtn1.setEnabled(false);
+
+                } catch (IOException ie) {
+                    // TODO: Error handling
+                    ie.printStackTrace();
+                }
+
+            }
+        });
+
+        predBtn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    diabetes newDB = new diabetes();
+                    ArrayList<String> predic = newDB.kPredict();
+                    String acc = predic.get(0);
+                    acc = acc.substring(2, 4) + "%";
+                    accuracyLabel2.setText("Accuracy: " + acc);
+                    
+                    
+
+                    String pred2 = predic.get(1);
+                    
+
+                    if ("0".equals(pred2)) {
+                        statusLabel2.setText("Absence");
+                        statusPanel2.setBackground(Color.GREEN);
+                        statusPanel2.add(statusLabel2);
+                    } else if ("1".equals(pred2)) {
+                        statusLabel2.setText("Presence Detected");
+                        statusPanel2.setBackground(Color.RED);
+                        statusPanel2.add(statusLabel2);
+                    } else {
+                        statusLabel2.setText(pred2);
+                        statusPanel2.setBackground(Color.GRAY);
+                        statusPanel2.add(statusLabel2);
+                    }
+                    System.out.println(pred2);
+
+                    predBtn2.setVisible(false);
+                    predBtn2.setEnabled(false);
+
+                } catch (IOException ie) {
+                    // TODO: Error handling
                     ie.printStackTrace();
                 }
 
