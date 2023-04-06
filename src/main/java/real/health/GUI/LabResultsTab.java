@@ -552,6 +552,13 @@ public class LabResultsTab {
 
                                     // Close the initials window
                                     initialsFrame.dispose();
+
+                                    // Remove the accept and decline buttons and update the panel
+                                    acceptButton.setVisible(false);
+                                    declineButton.setVisible(false);
+                                    optInLabel.setVisible(false);
+                                    testInformationPanel.revalidate();
+                                    testInformationPanel.repaint();
                                 } else {
                                     // Show a message if the entered initials don't match
                                     JOptionPane.showMessageDialog(initialsFrame,
@@ -616,6 +623,13 @@ public class LabResultsTab {
                         System.out.println("Error: unable to connect to MySQL database");
                         ex.printStackTrace();
                     }
+                    // Remove the accept and decline buttons and update the panel
+                    acceptButton.setVisible(false);
+                    declineButton.setVisible(false);
+                    optInLabel.setVisible(false);
+                    testInformationPanel.revalidate();
+                    testInformationPanel.repaint();
+
                 }
             }
         });
