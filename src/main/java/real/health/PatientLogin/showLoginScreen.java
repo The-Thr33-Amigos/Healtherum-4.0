@@ -117,29 +117,30 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
-                                        // Increment the progress bar every 5ms
                                         progress = progressBar.getValue();
                                         Thread.sleep(5);
                                         progress++;
                                         progressBar.setValue(progress);
                                         if (progressBar.getValue() == 50) {
-                                            patientFrame = (JFrame) patientInformationSystem
-                                                    .patientInformationSystem(id, progressBar, role);
-                                            patientFrame.setVisible(false);
+                                            try {
+                                                patientFrame = (JFrame) patientInformationSystem
+                                                        .patientInformationSystem(id, progressBar, role);
+                                                patientFrame.setVisible(false);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
                                         } else {
                                             progressBar.setValue(progressBar.getValue());
                                         }
                                     }
-                                    // Call the patientInformationSystem method and store the returned JFrame object
-                                    // in a variable
-                                    patientFrame.setVisible(true);
+                                    if (patientFrame != null) {
+                                        patientFrame.setVisible(true);
+                                    }
                                     return null;
                                 }
 
                                 @Override
                                 protected void done() {
-                                    // Once patientInformationSystem has finished loading, dispose of the loading
-                                    // screen
                                     frame.dispose();
                                     loadingFrame.dispose();
                                 }

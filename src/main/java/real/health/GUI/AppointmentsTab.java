@@ -254,12 +254,15 @@ public class AppointmentsTab {
         layout.setConstraints(providerComboBox, constraints);
         addAppointmentFrame.add(providerComboBox);
 
+        // TODO:q
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
         JButton saveButton = new JButton("Save");
         constraints.gridx = 2;
         constraints.gridy = 4;
         constraints.gridwidth = 1;
         layout.setConstraints(saveButton, constraints);
-        addAppointmentFrame.add(saveButton);
+        buttonPanel.add(saveButton);
 
         if (user == UserRole.PATIENT) {
             saveButton.setText("Submit");
@@ -330,13 +333,15 @@ public class AppointmentsTab {
         constraints.gridy = 3;
         constraints.gridwidth = 1;
         layout.setConstraints(cancelButton, constraints);
-        addAppointmentFrame.add(cancelButton);
+        buttonPanel.add(cancelButton);
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addAppointmentFrame.dispose();
             }
         });
+
+        addAppointmentFrame.add(buttonPanel);
 
         addAppointmentFrame.setVisible(true);
 

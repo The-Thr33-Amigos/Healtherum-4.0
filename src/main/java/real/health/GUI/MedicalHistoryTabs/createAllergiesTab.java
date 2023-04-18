@@ -195,6 +195,12 @@ public class createAllergiesTab {
                 }
             }
         });
+
+        // Create the medications tab panel and add the medications table and add button
+        // panel
+        JPanel allergyTabPanel = new JPanel(new BorderLayout());
+        allergyTabPanel.add(new JScrollPane(allergiesTable), BorderLayout.CENTER);
+
         // Create a panel for the add button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
@@ -202,13 +208,8 @@ public class createAllergiesTab {
             addDeletePanel.add(addButton);
             addDeletePanel.add(deleteButton);
             buttonPanel.add(addDeletePanel);
+            allergyTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
-
-        // Create the medications tab panel and add the medications table and add button
-        // panel
-        JPanel allergyTabPanel = new JPanel(new BorderLayout());
-        allergyTabPanel.add(new JScrollPane(allergiesTable), BorderLayout.CENTER);
-        allergyTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
         return allergyTabPanel;
     }
