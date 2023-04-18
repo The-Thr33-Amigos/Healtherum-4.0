@@ -1,7 +1,11 @@
 package real.health.ProviderLogin;
 
+import real.health.API.AddressFill;
 import real.health.GUI.UserRole;
 import real.health.SQL.*;
+import real.health.UTIL.FieldFormat;
+import real.health.UTIL.ValidFields;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,14 +26,22 @@ public class createNewProvider {
 
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField();
+        
+        
+
         JLabel emailLabel = new JLabel("Email:");
         JTextField emailField = new JTextField();
+
+
         JLabel phoneLabel = new JLabel("Phone Number:");
-        JTextField phoneField = new JTextField();
+        JFormattedTextField phoneField = FieldFormat.createPhoneNumber(true);
+
         JLabel practiceNameLabel = new JLabel("Practice Name:");
         JTextField practiceNameField = new JTextField();
         JLabel addressLabel = new JLabel("Address:");
-        JTextField addressField = new JTextField();
+        AddressFill mailingFill = new AddressFill(20, null);
+        final String[] selectedAddress = new String[1];
+
         JLabel licenseLabel = new JLabel("Medical License Number:");
         JTextField licenseField = new JTextField();
         JLabel specialtiesLabel = new JLabel("Specialties:");
@@ -46,7 +58,7 @@ public class createNewProvider {
         panel1.add(practiceNameLabel);
         panel1.add(practiceNameField);
         panel1.add(addressLabel);
-        panel1.add(addressField);
+        panel1.add(mailingFill);
         panel1.add(licenseLabel);
         panel1.add(licenseField);
         panel1.add(specialtiesLabel);
@@ -57,24 +69,37 @@ public class createNewProvider {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String email = emailField.getText();
-                String phone = phoneField.getText();
-                String practiceName = practiceNameField.getText();
-                String address = addressField.getText();
-                String license = licenseField.getText();
-                String specialties = specialtiesField.getText();
-                String insurance = insuranceField.getText();
+                String fullname = nameField.getText();
+                String[] firstLast = ValidFields.formatName(fullname);
+                String first = firstLast[0];
+                String last = firstLast[1];
+                if (!ValidFields.isValidName(first)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid First Name. Please enter a valid first name.", "Name Validation Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else if (!ValidFields.isValidName(last)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid Last Name. Please enter a valid last name.", "Name Validation Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    String name = nameField.getText();
+                    String email = emailField.getText();
+                    String phone = phoneField.getText();
+                    String practiceName = practiceNameField.getText();
+                    selectedAddress[0] = mailingFill.getSelectedAddress();
+                    String license = licenseField.getText();
+                    String specialties = specialtiesField.getText();
+                    String insurance = insuranceField.getText();
 
-                // Create the provider account panel
-                JPanel providerAccountPanel = createProviderPanel.createProviderAccountPanel(name, email, phone,
-                        practiceName,
-                        address, license, specialties, insurance);
+                    // Create the provider account panel
+                    JPanel providerAccountPanel = createProviderPanel.createProviderAccountPanel(name, email, phone,
+                            practiceName,
+                            selectedAddress[0], license, specialties, insurance);
 
-                // Display the provider account panel
-                dialog.getContentPane().removeAll();
-                dialog.add(providerAccountPanel, BorderLayout.CENTER);
-                dialog.revalidate();
+                    // Display the provider account panel
+                    dialog.getContentPane().removeAll();
+                    dialog.add(providerAccountPanel, BorderLayout.CENTER);
+                    dialog.revalidate();
+                }
+                
             }
         });
 

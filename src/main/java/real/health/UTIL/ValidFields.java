@@ -27,4 +27,17 @@ public class ValidFields {
         Matcher matcher = DATE.matcher(date);
         return matcher.matches();
     }
+
+    public static String[] formatName(String name) {
+        String first;
+        String last;
+
+        String[] nameParts = name.split(" ");
+        first = nameParts[0];
+        last = nameParts[1];
+
+        String[] fullNameList = {first, last};
+
+        return fullNameList;
+    }
 }
