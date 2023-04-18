@@ -1,18 +1,13 @@
 
 package real.health.PatientLogin;
 
-import real.health.*;
 import real.health.GUI.UserRole;
-
 import javax.swing.*;
-
 import com.formdev.flatlaf.FlatLightLaf;
-
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen(UserRole role) {

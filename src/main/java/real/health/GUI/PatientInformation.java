@@ -148,7 +148,6 @@ public class PatientInformation {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                nameField.setEditable(true);
                 mailingAddressField.setEditable(true);
                 emailAddressField.setEditable(true);
                 phoneNumberField.setEditable(true);
@@ -167,9 +166,8 @@ public class PatientInformation {
                     Connection con = newConnection.connect();
 
                     // Create a SQL statement to insert the user's information
-                    String sql = "UPDATE basic SET name=?, email=?, phone=?, mailing=? WHERE id=?";
+                    String sql = "UPDATE basic SET email=?, phone=?, mailing=? WHERE id=?";
                     PreparedStatement statement = con.prepareStatement(sql);
-                    statement.setString(1, nameField.getText());
                     statement.setString(2, emailAddressField.getText());
                     statement.setString(3, phoneNumberField.getText());
                     statement.setString(4, mailingAddressField.getText());

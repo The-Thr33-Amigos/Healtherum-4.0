@@ -271,8 +271,8 @@ public class InsuranceTab {
             int confirm = JOptionPane.showConfirmDialog(null,
                     "Are you sure you want to delete this Provider?", "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION);
-            // Execute an SQL DELETE statement to delete the corresponding record from the
-            // database
+            // Execute an SQL DELETE statement to delete 
+            // the corresponding record from the database
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     HealthConn newConnection = new HealthConn();
@@ -384,6 +384,15 @@ public class InsuranceTab {
                 table.setEnabled(false);
             });
             submitPanel.add(submitButton);
+
+            // Add the cancel button to the submit panel
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e1 -> {
+                // dispose frame
+                editFrame.dispose();
+            });
+            submitPanel.add(cancelButton);
+
             editFrame.add(submitPanel, BorderLayout.SOUTH);
 
             // Show the edit frame

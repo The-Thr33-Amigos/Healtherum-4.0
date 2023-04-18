@@ -1,15 +1,8 @@
 package real.health.PatientLogin;
 
 import real.health.GUI.*;
-import real.health.Patient.Notes;
-import real.health.PatientLogin.*;
-import real.health.ProviderLogin.providerHomeScreen;
-
 import javax.swing.*;
 import real.health.GUI.UserRole;
-
-import com.formdev.flatlaf.FlatLightLaf;
-
 import java.awt.*;
 import java.io.IOException;
 
