@@ -55,8 +55,8 @@ public class createAllergiesTab {
             ex.printStackTrace();
         }
 
-        // Create the add button and add an ActionListener to upload the new medication
-        // to the SQL server
+        // Create the add button and add an ActionListener
+        // to upload the new medication to the SQL server
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -134,20 +134,24 @@ public class createAllergiesTab {
                         }
                     }
                 });
+
                 JButton cancelButton = new JButton("Cancel");
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         addAllergiesFrame.dispose();
                     }
                 });
+
                 addAllergiesFrame.add(cancelButton);
                 addAllergiesFrame.add(submitButton);
                 // Display the add medication frame
                 addAllergiesFrame.setVisible(true);
             }
         });
-        // Create the delete button and add an ActionListener to delete the selected
-        // allergy
+
+        // Create the delete button and add an ActionListener
+        // to delete the selected allergy
+
         JButton deleteButton = new JButton("Delete");
         deleteButton.addActionListener(new ActionListener() {
             @Override
@@ -165,8 +169,9 @@ public class createAllergiesTab {
                 // Assuming the first column of the table contains the primary key
                 String primaryKey = allergiesTable.getValueAt(selectedRow, 0).toString();
 
-                // Execute an SQL DELETE statement to delete the corresponding record from the
-                // database
+                // Execute an SQL DELETE statement to delete
+                // the corresponding record from the database
+
                 try {
                     HealthConn newConnection = new HealthConn();
                     Connection con = newConnection.connect();
@@ -196,14 +201,16 @@ public class createAllergiesTab {
             }
         });
 
-        // Create the medications tab panel and add the medications table and add button
-        // panel
+        // Create the medications tab panel and add the
+        // medications table and add button
         JPanel allergyTabPanel = new JPanel(new BorderLayout());
         allergyTabPanel.add(new JScrollPane(allergiesTable), BorderLayout.CENTER);
 
         // Create a panel for the add button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        
+        // TODO: ADD COMMENT
         if (userRole == UserRole.PROVIDER) {
             addDeletePanel.add(addButton);
             addDeletePanel.add(deleteButton);

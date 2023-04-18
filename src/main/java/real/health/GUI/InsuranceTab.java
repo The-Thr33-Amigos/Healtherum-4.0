@@ -283,8 +283,8 @@ public class InsuranceTab {
             int confirm = JOptionPane.showConfirmDialog(null,
                     "Are you sure you want to delete this Provider?", "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION);
-            // Execute an SQL DELETE statement to delete the corresponding record from the
-            // database
+            // Execute an SQL DELETE statement to delete 
+            // the corresponding record from the database
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     HealthConn newConnection = new HealthConn();
