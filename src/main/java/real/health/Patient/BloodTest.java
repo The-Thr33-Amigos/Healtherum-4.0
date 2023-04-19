@@ -25,10 +25,18 @@ public class BloodTest {
     public String race;
 
     // blood test is the first iteration of a generic blood panel
-    public BloodTest(String newRace) {
+    public BloodTest(String newRace, String testName) {
         this.race = newRace;
-        this.createBloodTestGen();
-        this.initResults();
+
+        if (testName.equals("Generic Blood Panel")) {
+            this.createBloodTestGen();
+            this.initResults();
+        }
+        else if (testName.equals("Liver Panel")) {
+            this.createLiverPanel();
+            this.initResults();
+        }
+        
     }
 
 
@@ -115,6 +123,9 @@ public class BloodTest {
     public BloodItem Alkaline = new BloodItem("Alkaline Phosphatase", 0, 39, 117, IUL, false);
     public BloodItem AST = new BloodItem("AST (SGOT)", 0, 0, 40, IUL, false);
     public BloodItem ALT = new BloodItem("ALT (SGPT)", 0, 0, 44, IUL, false);
+    public BloodItem Chol = new BloodItem("Cholesterol", 0, 110, 220, mgDL, false);
+    public BloodItem ALP = new BloodItem("ALP", 0, 24, 147, IUL, false);
+    public BloodItem GGP = new BloodItem("GGP", 0, 0, 25, IUL, false);
 
     public void add_Item(String newName, BloodItem new_BI) {
         bloodTest.put(newName, new_BI);
@@ -123,6 +134,20 @@ public class BloodTest {
     public BloodItem getItem(String itemName) {
         return bloodTest.get(itemName);
     }
+
+    public void createLiverPanel() {
+        this.add_Item(BUN.getTestName(), BUN);
+        this.add_Item(Protein.getTestName(), Protein);
+        this.add_Item(Albumin.getTestName(), Albumin);
+        this.add_Item(Chol.getTestName(), Chol);
+        this.add_Item(glucose.getTestName(), glucose);
+        this.add_Item(ALT.getTestName(), ALT);
+        this.add_Item(AST.getTestName(), AST);
+        this.add_Item(ALP.getTestName(), ALP);
+        this.add_Item(GGP.getTestName(), GGP);
+        this.add_Item(Bilirubin.getTestName(), Bilirubin);
+    }
+
     // this creates the test and puts it into the hash-map/dictionary to be used
     // once again will be dynamic eventually
     public void createBloodTestGen() {

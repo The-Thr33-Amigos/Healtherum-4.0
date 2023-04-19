@@ -33,7 +33,7 @@ public class Patient {
      }
 
      public void setBloodTest(String race) {
-          this.bloodTest = new BloodTest(race);
+          this.bloodTest = new BloodTest(race, "Liver Panel");
      }
 
      public BloodTest getBloodTest() {
