@@ -112,7 +112,7 @@ public class LabResultsTab {
         nextButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         nextButtonPanel.add(nextButton2);
 
-        String[] testName = { "Generic Blood Panel", "Liver Panel"};
+        String[] testName = { "Generic Blood Panel", "Liver Panel", "Kidney Panel"};
         JComboBox<String> nameCombo = new JComboBox<String>(testName);
         JLabel tNameLabel = new JLabel("Test Name:");
 
@@ -161,7 +161,7 @@ public class LabResultsTab {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String testName = (String) nameCombo.getSelectedItem();
-                BloodTest newBloodTest = new BloodTest("White", testName);
+                BloodTest newBloodTest = new BloodTest("Female", "White", testName);
                 LocalDate currentDate = LocalDate.now();
                 LocalDate oldDate = currentDate.minusDays(4);
 
