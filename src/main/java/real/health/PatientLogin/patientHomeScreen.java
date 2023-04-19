@@ -13,7 +13,7 @@ public class patientHomeScreen {
 
     
     public static void homeScreen(UserRole patient) {
-        JFrame frame = new JFrame("Healthereum");
+        JFrame frame = new JFrame("Healthereum - Patient Home");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 

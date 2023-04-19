@@ -20,19 +20,19 @@ public class providerHomeScreen {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        JLabel welcomeLabel = new JLabel("Welcome, Provider");
+        JLabel welcomeLabel = new JLabel("Welcome to Provider Portal");
         welcomeLabel.setFont(new Font("Serif", Font.BOLD, 24));
         constraints.gridx = 0;
         constraints.gridy = 0;
         panel.add(welcomeLabel, constraints);
 
         JLabel infoLabel = new JLabel(
-                "<html><center>We're a healthcare technology company dedicated to<br>providing secure, user-friendly solutions for patients and providers.</center></html>");
+                "<html><center>Welcome to your professional health portal.<br>We're dedicated to providing secure, user-friendly tools for efficient patient care.</center></html>");
         constraints.gridx = 0;
         constraints.gridy = 1;
         panel.add(infoLabel, constraints);
 
-        JButton existingUserButton = new JButton("Existing User");
+        JButton existingUserButton = new JButton("Existing");
         existingUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 providerLoginScreen.loginScreen();
@@ -44,7 +44,7 @@ public class providerHomeScreen {
         constraints.gridy = 2;
         panel.add(existingUserButton, constraints);
 
-        JButton newUserButton = new JButton("New User");
+        JButton newUserButton = new JButton("New");
         newUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createNewProvider.newProviderRegistration();
@@ -60,5 +60,3 @@ public class providerHomeScreen {
         frame.setVisible(true);
     }
 }
-
-
