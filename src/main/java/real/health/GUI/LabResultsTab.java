@@ -7,6 +7,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 import real.health.Patient.BloodTest;
 import real.health.Patient.BloodItem;
 import real.health.SQL.*;
+import real.health.UTIL.CustomBooleanRenderer;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -88,6 +90,9 @@ public class LabResultsTab {
                         }
 
                         JTable bloodTable = new JTable(bloodTestModel);
+                        int lastColumnIndex = bloodTable.getColumnCount() - 1;
+                        bloodTable.getColumnModel().getColumn(lastColumnIndex).setCellRenderer(new CustomBooleanRenderer());
+                        
                         JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                         bloodFrame.add(scrollPane, BorderLayout.CENTER);
@@ -227,6 +232,9 @@ public class LabResultsTab {
                 }
 
                 JTable bloodTable = new JTable(model);
+
+                int lastColumnIndex = bloodTable.getColumnCount() - 1;
+                bloodTable.getColumnModel().getColumn(lastColumnIndex).setCellRenderer(new CustomBooleanRenderer());
                 JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                 JButton saveButton = new JButton("Save");
