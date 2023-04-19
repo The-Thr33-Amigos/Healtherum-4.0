@@ -26,20 +26,20 @@ public class welcomeScreen {
 
         // Create and style welcome message
         JPanel welcomePanel = new JPanel();
-        JLabel welcomeLabel = new JLabel("Welcome to Healtherum");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel welcomeLabel = new JLabel("Healtherum");
+        welcomeLabel.setFont(new Font("Serif", Font.BOLD, 32));
         welcomePanel.add(welcomeLabel);
 
         // Create and style button panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(-50, 5, 5, 5);
+        constraints.insets = new Insets(-40, 5, 5, 5);
 
         JButton patientButton = new JButton("Patient");
         JButton providerButton = new JButton("Provider");
-        patientButton.setFont(new Font("Arial", Font.BOLD, 18));
-        providerButton.setFont(new Font("Arial", Font.BOLD, 18));
+        welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 24));
+        welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 24));
         patientButton.setPreferredSize(new Dimension(150, 50));
         providerButton.setPreferredSize(new Dimension(150, 50));
 

@@ -1,13 +1,18 @@
 
 package real.health.PatientLogin;
 
+import real.health.*;
 import real.health.GUI.UserRole;
+
 import javax.swing.*;
+
 import com.formdev.flatlaf.FlatLightLaf;
+
 import java.sql.*;
 import real.health.SQL.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 
 public class showLoginScreen extends patientInformationSystem {
     public static void showLoginScreen(UserRole role) {
@@ -71,8 +76,8 @@ public class showLoginScreen extends patientInformationSystem {
                     HealthConn newConnection = new HealthConn();
                     Connection con = newConnection.connect();
 
-                    // Create a prepared statement to query the database for the user's login
-                    // credentials
+                    // Create a prepared statement to query 
+                    // the database for the user's login credentials
                     String sql = "SELECT id, password FROM userpass WHERE user = ?";
                     PreparedStatement statement = con.prepareStatement(sql);
                     statement.setString(1, username);
@@ -103,8 +108,8 @@ public class showLoginScreen extends patientInformationSystem {
                             loadingFrame.setVisible(true);
                             frame.setVisible(false);
 
-                            // Create a SwingWorker object to execute patientInformationSystem on a separate
-                            // thread
+                            // Create a SwingWorker object to execute
+                            // patientInformationSystem on a separate thread
                             SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
                                 JFrame patientFrame;
 
@@ -112,30 +117,29 @@ public class showLoginScreen extends patientInformationSystem {
                                 protected Void doInBackground() throws Exception {
                                     int progress = 0;
                                     while (progress < 100) {
+                                        // Increment the progress bar every 5ms
                                         progress = progressBar.getValue();
                                         Thread.sleep(5);
                                         progress++;
                                         progressBar.setValue(progress);
                                         if (progressBar.getValue() == 50) {
-                                            try {
-                                                patientFrame = (JFrame) patientInformationSystem
-                                                        .patientInformationSystem(id, progressBar, role);
-                                                patientFrame.setVisible(false);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+                                            patientFrame = (JFrame) patientInformationSystem
+                                                    .patientInformationSystem(id, progressBar, role);
+                                            patientFrame.setVisible(false);
                                         } else {
                                             progressBar.setValue(progressBar.getValue());
                                         }
                                     }
-                                    if (patientFrame != null) {
-                                        patientFrame.setVisible(true);
-                                    }
+                                    // Call the patientInformationSystem method and store the returned JFrame object
+                                    // in a variable
+                                    patientFrame.setVisible(true);
                                     return null;
                                 }
 
                                 @Override
                                 protected void done() {
+                                    // Once patientInformationSystem has finished loading, dispose of the loading
+                                    // screen
                                     frame.dispose();
                                     loadingFrame.dispose();
                                 }
