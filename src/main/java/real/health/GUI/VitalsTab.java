@@ -213,27 +213,33 @@ public class VitalsTab {
                         addVitalFrame.dispose();
                     }
                 });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addVitalFrame.dispose();
+                    }
+                });
+                addVitalFrame.add(cancelButton);
                 addVitalFrame.add(submitButton);
 
                 // Display the add vital frame
                 addVitalFrame.setVisible(true);
             }
         });
-
-        // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        // Show the "Add" button only for the provider role
-        if (userRole == UserRole.PROVIDER) {
-            addButtonPanel.add(addButton);
-        }
-
-
         // Create the vital signs tab panel and add the vital signs table and add button
         // panel
         JPanel vitalSignsPanel = new JPanel(new BorderLayout());
         vitalSignsPanel.add(new JScrollPane(vitalSigns), BorderLayout.CENTER);
-        vitalSignsPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+
+        // Create a panel for the add button
+        JPanel addButtonPanel = new JPanel();
+        addButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+        // Show the "Add" button only for the provider role
+        if (userRole == UserRole.PROVIDER) {
+            addButtonPanel.add(addButton);
+            vitalSignsPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+        }
 
         return vitalSignsPanel;
     }

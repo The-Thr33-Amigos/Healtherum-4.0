@@ -55,7 +55,6 @@ public class InsuranceTab {
 
         // Add the "Edit" button
         JButton editButton = new JButton("Edit");
-        editButton.setVisible(true);
 
         // Create the insurance table
         JTable table = new JTable() {
@@ -178,6 +177,7 @@ public class InsuranceTab {
         newButton.addActionListener(e -> {
             JFrame frame = new JFrame("New Insurance Entry");
             frame.setPreferredSize(new Dimension(500, 300));
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
             JLabel providerLabel = new JLabel("Provider Name:");
@@ -206,9 +206,10 @@ public class InsuranceTab {
             formPanel.add(policyHolderSSNLabel);
             formPanel.add(policyHolderSSNField);
 
+            JPanel newPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
             // Add the "Save" button
             JButton saveButton = new JButton("Save");
-            formPanel.add(saveButton);
 
             // Action listener for "Save" button in the new entry window
             saveButton.addActionListener(saveEvent -> {
@@ -248,8 +249,19 @@ public class InsuranceTab {
                 frame.dispose();
             });
 
+            newPanel.add(saveButton);
+
+            // Add the cancel button to the submit panel
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e1 -> {
+                frame.dispose();
+            });
+
+            newPanel.add(cancelButton);
+
             // Show the new entry window
-            frame.add(formPanel);
+            frame.add(formPanel, BorderLayout.CENTER);
+            frame.add(newPanel, BorderLayout.SOUTH);
             frame.pack();
             frame.setVisible(true);
         });
@@ -271,8 +283,8 @@ public class InsuranceTab {
             int confirm = JOptionPane.showConfirmDialog(null,
                     "Are you sure you want to delete this Provider?", "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION);
-            // Execute an SQL DELETE statement to delete the corresponding record from the
-            // database
+            // Execute an SQL DELETE statement to delete 
+            // the corresponding record from the database
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     HealthConn newConnection = new HealthConn();
@@ -376,26 +388,24 @@ public class InsuranceTab {
                 // Close the edit window
                 editFrame.dispose();
 
-                // Show the "Edit" and hide the "Submit" button
-                editButton.setVisible(true);
-                submitButton.setVisible(false);
-
                 // Disable editing of the table
                 table.setEnabled(false);
             });
-            submitPanel.add(submitButton);
-            editFrame.add(submitPanel, BorderLayout.SOUTH);
 
+            submitPanel.add(submitButton);
+
+            // Add the cancel button to the submit panel
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e1 -> {
+                editFrame.dispose();
+            });
+
+            submitPanel.add(cancelButton);
+
+            editFrame.add(submitPanel, BorderLayout.SOUTH);
             // Show the edit frame
             editFrame.pack();
             editFrame.setVisible(true);
-
-            // Hide the "Edit" and show the "Submit" button
-            editButton.setVisible(false);
-            submitButton.setVisible(true);
-
-            // Enable editing of the table
-            table.setEnabled(true);
         });
 
         // Action listener for "Upload Insurance Card" button

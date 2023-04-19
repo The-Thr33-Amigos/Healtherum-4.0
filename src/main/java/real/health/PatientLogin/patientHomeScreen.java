@@ -13,7 +13,7 @@ public class patientHomeScreen {
 
     
     public static void homeScreen(UserRole patient) {
-        JFrame frame = new JFrame("Healthereum");
+        JFrame frame = new JFrame("Healthereum - Patient Home");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
@@ -21,14 +21,14 @@ public class patientHomeScreen {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        JLabel welcomeLabel = new JLabel("Welcome to Healthereum");
+        JLabel welcomeLabel = new JLabel("Welcome to Patient Portal");
         welcomeLabel.setFont(new Font("Serif", Font.BOLD, 24));
         constraints.gridx = 0;
         constraints.gridy = 0;
         panel.add(welcomeLabel, constraints);
 
         JLabel infoLabel = new JLabel(
-                "<html><center>We're a healthcare technology company dedicated to<br>providing secure, user-friendly solutions for patients and providers.</center></html>");
+                "<html><center>Welcome to your personal health portal.<br>We're committed to providing secure, user-friendly access to your medical information.</center></html>");
         constraints.gridx = 0;
         constraints.gridy = 1;
         panel.add(infoLabel, constraints);

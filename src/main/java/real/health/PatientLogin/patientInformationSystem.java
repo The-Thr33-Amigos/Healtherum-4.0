@@ -14,7 +14,8 @@ import java.awt.*;
 import java.io.IOException;
 
 public class patientInformationSystem {
-    public static Component patientInformationSystem(String id, JProgressBar progressBar, UserRole role) throws ClassNotFoundException, IOException {
+    public static Component patientInformationSystem(String id, JProgressBar progressBar, UserRole role)
+            throws ClassNotFoundException, IOException {
         JTabbedPane tabs;
         JFrame patient = new JFrame("Patient Information System");
         patient.setSize(1000, 600);

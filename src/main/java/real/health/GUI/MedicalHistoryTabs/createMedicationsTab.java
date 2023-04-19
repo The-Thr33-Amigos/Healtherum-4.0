@@ -4,24 +4,16 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.Date;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.JTextComponent;
-
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import java.awt.event.*;
 import java.io.IOException;
-
 import real.health.API.FDAPI;
 import real.health.API.readCSV;
 import real.health.SQL.*;

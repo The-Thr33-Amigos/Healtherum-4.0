@@ -280,8 +280,7 @@ public class providerSystem {
                 protected Void doInBackground() throws Exception {
                     int progress = 0;
                     while (progress < 100) {
-                        progressBar.setValue(progressBar.getValue());
-                        // Increment the progress bar every 5ms
+                        progress = progressBar.getValue();
                         Thread.sleep(5);
                         progress++;
                         progressBar.setValue(progress);

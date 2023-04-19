@@ -120,6 +120,7 @@ public class createConditionsTab {
                         }
                     }
                 });
+                
                 JButton cancelButton = new JButton("Cancel");
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -142,8 +143,7 @@ public class createConditionsTab {
         }
 
         // Create the medical conditions tab panel and add the medical conditions table
-        // and add button
-        // panel
+        // and add button panel
         JPanel conditionsTabPanel = new JPanel(new BorderLayout());
         conditionsTabPanel.add(new JScrollPane(conditionsTable), BorderLayout.CENTER);
         conditionsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);

@@ -76,8 +76,8 @@ public class showLoginScreen extends patientInformationSystem {
                     HealthConn newConnection = new HealthConn();
                     Connection con = newConnection.connect();
 
-                    // Create a prepared statement to query the database for the user's login
-                    // credentials
+                    // Create a prepared statement to query 
+                    // the database for the user's login credentials
                     String sql = "SELECT id, password FROM userpass WHERE user = ?";
                     PreparedStatement statement = con.prepareStatement(sql);
                     statement.setString(1, username);
@@ -108,8 +108,8 @@ public class showLoginScreen extends patientInformationSystem {
                             loadingFrame.setVisible(true);
                             frame.setVisible(false);
 
-                            // Create a SwingWorker object to execute patientInformationSystem on a separate
-                            // thread
+                            // Create a SwingWorker object to execute
+                            // patientInformationSystem on a separate thread
                             SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
                                 JFrame patientFrame;
 
