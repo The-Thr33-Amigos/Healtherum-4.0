@@ -213,6 +213,13 @@ public class VitalsTab {
                         addVitalFrame.dispose();
                     }
                 });
+                JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addVitalFrame.dispose();
+                    }
+                });
+                addVitalFrame.add(cancelButton);
                 addVitalFrame.add(submitButton);
 
                 // Display the add vital frame

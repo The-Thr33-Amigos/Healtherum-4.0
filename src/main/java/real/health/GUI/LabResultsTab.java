@@ -105,11 +105,15 @@ public class LabResultsTab {
 
         JButton newButton2 = new JButton("New Test");
         JButton nextButton2 = new JButton("Next");
-        nextButton2.setPreferredSize(new Dimension(100, nextButton2.getPreferredSize().height));
+        JButton cancelButton = new JButton("Cancel");
+        nextButton2.setPreferredSize(new Dimension(200, nextButton2.getPreferredSize().height));
+        cancelButton.setPreferredSize(new Dimension(200, cancelButton.getPreferredSize().height));
 
         JFrame newFrame = new JFrame("Test Information");
         JPanel nextButtonPanel = new JPanel();
         nextButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+        nextButtonPanel.add(cancelButton);
         nextButtonPanel.add(nextButton2);
 
         String[] testName = { "Generic Blood Panel" };
@@ -154,6 +158,12 @@ public class LabResultsTab {
                 // newFrame.pack();
                 newFrame.setVisible(true);
 
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                newFrame.dispose();
             }
         });
 
@@ -219,8 +229,12 @@ public class LabResultsTab {
                 JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                 JButton saveButton = new JButton("Save");
+                JButton cancelButton = new JButton("Save");
+
                 JPanel saveButtonPanel = new JPanel();
                 saveButtonPanel.setLayout(new BorderLayout());
+
+                saveButtonPanel.add(cancelButton);
                 saveButtonPanel.add(saveButton);
 
                 bloodFrame.add(scrollPane, BorderLayout.CENTER);
@@ -233,8 +247,6 @@ public class LabResultsTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
-                        
-
                         // Add the new test to the table on the first screen
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
                         int rowIndex = table.getRowCount();
@@ -390,7 +402,6 @@ public class LabResultsTab {
                     constraints.gridy = 7;
                     testInformationPanel.add(accuracyLabel1, constraints);
 
-
                     predBtn1.setText("Predict");
                     constraints.gridx = 0;
                     constraints.gridy = 8;
@@ -409,7 +420,6 @@ public class LabResultsTab {
                     constraints.gridx = 0;
                     constraints.gridy = 11;
                     testInformationPanel.add(accuracyLabel2, constraints);
-
 
                     predBtn2.setText("Predict");
                     constraints.gridx = 0;
@@ -720,11 +730,8 @@ public class LabResultsTab {
                     String acc = predic.get(0);
                     acc = acc.substring(2, 4) + "%";
                     accuracyLabel2.setText("Accuracy: " + acc);
-                    
-                    
 
                     String pred2 = predic.get(1);
-                    
 
                     if ("0".equals(pred2)) {
                         statusLabel2.setText("Absence");
