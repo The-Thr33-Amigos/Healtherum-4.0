@@ -213,12 +213,14 @@ public class createMedicationsTab {
                         }
                     }
                 });
+
                 JButton cancelButton = new JButton("Cancel");
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         addMedicationFrame.dispose();
                     }
                 });
+
                 addMedicationFrame.add(cancelButton);
                 addMedicationFrame.add(submitButton);
 
@@ -227,17 +229,78 @@ public class createMedicationsTab {
             }
         });
 
-        // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
+        // Create the delete button and add an ActionListener
+        // to delete the selected medications
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = medicationsTable.getSelectedRow();
 
-        // Create the medications tab panel and add the medications table and add button
-        // panel
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(medicationsTable, "Please select a row to delete.");
+                    return;
+                }
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(medicationsTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                // If the user confirms the deletion, proceed
+                if (confirmation == JOptionPane.YES_OPTION) {
+
+                    // Get the primary key or unique identifier of the record from the selected row
+                    // Assuming the first column of the table contains the primary key
+                    String primaryKey = medicationsTable.getValueAt(selectedRow, 0).toString();
+
+                    // Execute an SQL DELETE statement to delete
+                    // the corresponding record from the database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "DELETE FROM medications WHERE id = ? AND medication = ? AND dose = ? AND frequency = ? AND datePrescribed = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id); 
+                        statement.setString(2, medicationsTable.getValueAt(selectedRow, 0).toString());
+                        statement.setString(3, medicationsTable.getValueAt(selectedRow, 1).toString());
+                        statement.setString(4, medicationsTable.getValueAt(selectedRow, 2).toString());
+                        statement.setString(5, medicationsTable.getValueAt(selectedRow, 3).toString());
+
+                        statement.executeUpdate();
+
+                        // Close the statement and connection
+                        statement.close();
+                        con.close();
+
+                        // Remove the selected row from the table
+                        DefaultTableModel model = (DefaultTableModel) medicationsTable.getModel();
+                        model.removeRow(selectedRow);
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(medicationsTable, "An error occurred while deleting the record.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        // Create the medications tab panel and add 
+        // the medications table and add button panel
         JPanel medicationsTabPanel = new JPanel(new BorderLayout());
         medicationsTabPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
+
+        // Create a panel for the add button
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+
         if (userRole == UserRole.PROVIDER) {
-            medicationsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
+            medicationsTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
 
         return medicationsTabPanel;

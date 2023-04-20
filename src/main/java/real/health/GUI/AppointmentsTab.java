@@ -155,6 +155,7 @@ public class AppointmentsTab {
         JFrame addAppointmentFrame = new JFrame("Add Appointment");
         addAppointmentFrame.setSize(400, 200);
         addAppointmentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addAppointmentFrame.setLayout(new GridLayout(4, 4));
         addAppointmentFrame.setLocationRelativeTo(null);
 
         GridBagLayout layout = new GridBagLayout();
@@ -173,12 +174,12 @@ public class AppointmentsTab {
         JTextField dateField = new JTextField();
         constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.gridwidth = 2;
+        constraints.gridwidth = 3;
         layout.setConstraints(dateField, constraints);
         addAppointmentFrame.add(dateField);
 
         JButton datePickerButton = new JButton("Select Date");
-        constraints.gridx = 3;
+        constraints.gridx = 4;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
         layout.setConstraints(datePickerButton, constraints);
@@ -254,19 +255,20 @@ public class AppointmentsTab {
         layout.setConstraints(providerComboBox, constraints);
         addAppointmentFrame.add(providerComboBox);
 
-        // TODO:q
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
         JButton saveButton = new JButton("Save");
-        constraints.gridx = 2;
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        constraints.gridwidth = 3;
+        layout.setConstraints(saveButton, constraints);
+        addAppointmentFrame.add(saveButton);
+
+        JButton cancelButton = new JButton("Cancel");
+        constraints.gridx = 0;
         constraints.gridy = 4;
         constraints.gridwidth = 1;
-        layout.setConstraints(saveButton, constraints);
-        buttonPanel.add(saveButton);
+        layout.setConstraints(cancelButton, constraints);
+        addAppointmentFrame.add(cancelButton);
 
-        if (user == UserRole.PATIENT) {
-            saveButton.setText("Submit");
-        }
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String[] newAppointment = { dateField.getText(), (String) timeComboBox.getSelectedItem(),
@@ -328,20 +330,11 @@ public class AppointmentsTab {
             }
         });
 
-        JButton cancelButton = new JButton("Cancel");
-        constraints.gridx = 3;
-        constraints.gridy = 3;
-        constraints.gridwidth = 1;
-        layout.setConstraints(cancelButton, constraints);
-        buttonPanel.add(cancelButton);
-
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addAppointmentFrame.dispose();
             }
         });
-
-        addAppointmentFrame.add(buttonPanel);
 
         addAppointmentFrame.setVisible(true);
 
@@ -431,6 +424,13 @@ public class AppointmentsTab {
             layout.setConstraints(saveButton, constraints);
             rescheduleFrame.add(saveButton);
 
+            JButton cancelButton = new JButton("Cancel");
+            constraints.gridx = 1;
+            constraints.gridy = 2;
+            constraints.gridwidth = 1;
+            layout.setConstraints(cancelButton, constraints);
+            rescheduleFrame.add(cancelButton);
+
             saveButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     // Update the appointment date and time in the database
@@ -459,6 +459,12 @@ public class AppointmentsTab {
                         System.out.println("Error: unable to connect to MySQL database");
                         ex.printStackTrace();
                     }
+                    rescheduleFrame.dispose();
+                }
+            });
+
+            cancelButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                     rescheduleFrame.dispose();
                 }
             });

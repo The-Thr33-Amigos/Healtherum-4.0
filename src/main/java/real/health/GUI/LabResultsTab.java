@@ -759,6 +759,10 @@ public class LabResultsTab {
             }
         });
 
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        
         // Download/Print Options
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");
@@ -771,6 +775,7 @@ public class LabResultsTab {
         if (userRole == UserRole.PROVIDER) {
             downloadPrintPanel.add(newButton2);
         }
+
         labResultsPanel.add(downloadPrintPanel, BorderLayout.SOUTH);
 
         return labResultsPanel;

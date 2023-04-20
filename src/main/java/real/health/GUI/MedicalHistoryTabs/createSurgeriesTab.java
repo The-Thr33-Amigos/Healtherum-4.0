@@ -147,17 +147,79 @@ public class createSurgeriesTab {
             }
         });
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BorderLayout());
-        if (userRole == UserRole.PROVIDER) {
-            buttonPanel.add(addButton);
-        }
-        
+        // Create the delete button and add an ActionListener
+        // to delete the selected sexual history
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = surgeriesTable.getSelectedRow();
+
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(surgeriesTable, "Please select a row to delete.");
+                    return;
+                }
+
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(surgeriesTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                // If the user confirms the deletion, proceed
+                if (confirmation == JOptionPane.YES_OPTION) {
+
+                    // Get the primary key or unique identifier of the record from the selected row
+                    // Assuming the first column of the table contains the primary key
+                    String primaryKey = surgeriesTable.getValueAt(selectedRow, 0).toString();
+
+                    // Execute an SQL DELETE statement to delete
+                    // the corresponding record from the database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "DELETE FROM surgeries WHERE id = ? AND surgery_procedure = ? AND surgeon = ? AND location = ? AND date = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id);
+                        statement.setString(2, surgeriesTable.getValueAt(selectedRow, 0).toString());
+                        statement.setString(3, surgeriesTable.getValueAt(selectedRow, 1).toString());
+                        statement.setString(4, surgeriesTable.getValueAt(selectedRow, 2).toString());
+                        statement.setString(5, surgeriesTable.getValueAt(selectedRow, 3).toString());
+
+
+                        statement.executeUpdate();
+
+                        // Close the statement and connection
+                        statement.close();
+                        con.close();
+
+                        // Remove the selected row from the table
+                        DefaultTableModel model = (DefaultTableModel) surgeriesTable.getModel();
+                        model.removeRow(selectedRow);
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(surgeriesTable, "An error occurred while deleting the record.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
         // Add the table and buttons to the panel
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(surgeriesTable), BorderLayout.CENTER);
-        panel.add(buttonPanel, BorderLayout.PAGE_END);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+ 
+        if (userRole == UserRole.PROVIDER) {
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
+            panel.add(buttonPanel, BorderLayout.PAGE_END);
+        }
 
         return panel;
     }
