@@ -141,17 +141,75 @@ public class createMentalTab {
             }
         });
 
-        // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(addButton);
+        // Create the delete button and add an ActionListener
+        // to delete the selected mental illness
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = mentalTable.getSelectedRow();
+
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(mentalTable, "Please select a row to delete.");
+                    return;
+                }
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(mentalTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                // If the user confirms the deletion, proceed
+                if (confirmation == JOptionPane.YES_OPTION) {
+
+                    // Get the primary key or unique identifier of the record from the selected row
+                    // Assuming the first column of the table contains the primary key
+                    String primaryKey = mentalTable.getValueAt(selectedRow, 0).toString();
+
+                    // Execute an SQL DELETE statement to delete
+                    // the corresponding record from the database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "DELETE FROM mental_health WHERE id = ? AND issue = ? AND status = ? AND dateDiagnosed = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id);
+                        statement.setString(2, mentalTable.getValueAt(selectedRow, 0).toString());
+                        statement.setString(3, mentalTable.getValueAt(selectedRow, 1).toString());
+                        statement.setString(4, mentalTable.getValueAt(selectedRow, 2).toString());
+
+                        statement.executeUpdate();
+
+                        // Close the statement and connection
+                        statement.close();
+                        con.close();
+
+                        // Remove the selected row from the table
+                        DefaultTableModel model = (DefaultTableModel) mentalTable.getModel();
+                        model.removeRow(selectedRow);
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(mentalTable, "An error occurred while deleting the record.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
         // Create the mental health tab panel and add the mental health table and add
         // button panel
         JPanel mentalTabPanel = new JPanel(new BorderLayout());
         mentalTabPanel.add(new JScrollPane(mentalTable), BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+
         if (userRole == UserRole.PROVIDER) {
-            mentalTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
+            mentalTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
 
         return mentalTabPanel;

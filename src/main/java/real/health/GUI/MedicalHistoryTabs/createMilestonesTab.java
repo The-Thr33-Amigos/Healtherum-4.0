@@ -131,21 +131,76 @@ public class createMilestonesTab {
             }
         });
 
-        // Create the milestones tab panel and add the milestones table and add button
-        // panel
+        // Create the delete button and add an ActionListener
+        // to delete the selected milestones
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = milestonesTable.getSelectedRow();
+
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(milestonesTable, "Please select a row to delete.");
+                    return;
+                }
+
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(milestonesTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                // If the user confirms the deletion, proceed
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    // Get the primary key or unique identifier of the record from the selected row
+                    // Assuming the first column of the table contains the primary key
+                    String primaryKey = milestonesTable.getValueAt(selectedRow, 0).toString();
+
+                    // Execute an SQL DELETE statement to delete
+                    // the corresponding record from the database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "DELETE FROM milestones WHERE id = ? AND milestone = ? AND dateAchieved = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id);
+                        statement.setString(2, milestonesTable.getValueAt(selectedRow, 0).toString());
+                        statement.setString(3, milestonesTable.getValueAt(selectedRow, 1).toString());
+                        statement.executeUpdate();
+
+                        // Close the statement and connection
+                        statement.close();
+                        con.close();
+
+                        // Remove the selected row from the table
+                        DefaultTableModel model = (DefaultTableModel) milestonesTable.getModel();
+                        model.removeRow(selectedRow);
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(milestonesTable, "An error occurred while deleting the record.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        // Create the milestones tab panel and add 
+        // the milestones table and add button panel
         JPanel milestonesTabPanel = new JPanel();
         milestonesTabPanel.setLayout(new BorderLayout());
         milestonesTabPanel.add(new JScrollPane(milestonesTable), BorderLayout.CENTER);
 
-        // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new BorderLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+
         if (userRole == UserRole.PROVIDER) {
-            addButtonPanel.add(addButton);
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
+            milestonesTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
         
-        milestonesTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
-
         return milestonesTabPanel;
     }
 }

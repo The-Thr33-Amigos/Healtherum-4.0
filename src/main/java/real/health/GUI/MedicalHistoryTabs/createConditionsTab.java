@@ -135,18 +135,76 @@ public class createConditionsTab {
             }
         });
 
-        // Create a panel for the add button
-        JPanel addButtonPanel = new JPanel();
-        addButtonPanel.setLayout(new BorderLayout());
-        if (userRole == UserRole.PROVIDER) {
-            addButtonPanel.add(addButton);
-        }
+        // Create the delete button and add an ActionListener
+        // to delete the selected condition
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row in the table
+                int selectedRow = conditionsTable.getSelectedRow();
+
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(conditionsTable, "Please select a row to delete.");
+                    return;
+                }
+
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(conditionsTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                // If the user confirms the deletion, proceed
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    
+                    // Get the primary key or unique identifier of the record from the selected row
+                    // Assuming the first column of the table contains the primary key
+                    String primaryKey = conditionsTable.getValueAt(selectedRow, 0).toString();
+
+                    // Execute an SQL DELETE statement to delete
+                    // the corresponding record from the database
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection con = newConnection.connect();
+                        String sql = "DELETE FROM conditions WHERE id = ? AND medical_condition = ? AND status = ?";
+                        PreparedStatement statement = con.prepareStatement(sql);
+                        statement.setString(1, id); 
+                        statement.setString(2, conditionsTable.getValueAt(selectedRow, 0).toString());
+                        statement.setString(3, conditionsTable.getValueAt(selectedRow, 1).toString());
+                        statement.executeUpdate();
+
+                        // Close the statement and connection
+                        statement.close();
+                        con.close();
+
+                        // Remove the selected row from the table
+                        DefaultTableModel model = (DefaultTableModel) conditionsTable.getModel();
+                        model.removeRow(selectedRow);
+
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(conditionsTable, "An error occurred while deleting the record.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
         // Create the medical conditions tab panel and add the medical conditions table
         // and add button panel
         JPanel conditionsTabPanel = new JPanel(new BorderLayout());
         conditionsTabPanel.add(new JScrollPane(conditionsTable), BorderLayout.CENTER);
-        conditionsTabPanel.add(addButtonPanel, BorderLayout.PAGE_END);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        // Create a panel for the add button
+        JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+
+        if (userRole == UserRole.PROVIDER) {
+            addDeletePanel.add(addButton);
+            addDeletePanel.add(deleteButton);
+            buttonPanel.add(addDeletePanel);
+            conditionsTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        }
 
         return conditionsTabPanel;
     }
