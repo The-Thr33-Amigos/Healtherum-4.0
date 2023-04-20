@@ -1,6 +1,8 @@
 package real.health.PatientLogin;
 
 import real.health.PatientLogin.*;
+import real.health.UTIL.FieldFormat;
+import real.health.UTIL.ValidFields;
 import real.health.*;
 import real.health.API.AddressFill;
 import real.health.API.AutoCompleteListener;
@@ -20,16 +22,21 @@ public class createNewUser {
 
         // Panel for basic user information
         JPanel panel1 = new JPanel(new GridLayout(0, 2));
+        
         JLabel firstNameLabel = new JLabel("First Name:");
         JTextField firstNameField = new JTextField();
+
         JLabel lastNameLabel = new JLabel("Last Name:");
         JTextField lastNameField = new JTextField();
+
         JLabel dobLabel = new JLabel("Date of Birth (MM/DD/YYYY):");
-        JTextField dobField = new JTextField();
+        JFormattedTextField dobField = FieldFormat.createPhoneNumber(false);
+
         JLabel emailLabel = new JLabel("Email:");
         JTextField emailField = new JTextField();
+
         JLabel phoneLabel = new JLabel("Phone Number:");
-        JTextField phoneField = new JTextField();
+        JFormattedTextField phoneField = FieldFormat.createPhoneNumber(true);
 
         String[] bioSexOptions = { "Male", "Female", "Intersex"};
         JComboBox<String> bioCombo = new JComboBox<>(bioSexOptions);
@@ -40,7 +47,7 @@ public class createNewUser {
         JLabel mailingLabel = new JLabel("Mailing Address:");
         
         AddressFill mailingFill = new AddressFill(20, null);
-        String selectedAddress = mailingFill.getSelectedAddress();
+        final String[] selectedAddress = new String[1];
         
 
         String[] raceNames = {"African American / Black", "Alaska Native", "Asian American / Asian", "Middle Eastern", "Native American / Indigenous", "Native Hawaiin / Other Pacific Islander", "Multiracial", "European American / White", "Other race or ethincity"};
@@ -65,16 +72,39 @@ public class createNewUser {
         panel1.add(raceLabel);
         panel1.add(raceCombo);
 
+
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dialog.getContentPane().removeAll();
-                dialog.add(createAccountPanel.createAccountPanel(firstNameField.getText(), lastNameField.getText(), dobField.getText(),
-                        emailField.getText(),
-                        phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress,
-                        (String) raceCombo.getSelectedItem()));
-                dialog.pack();
-                dialog.revalidate();
+                // email, and name validation
+                String email = emailField.getText();
+                String firstName = firstNameField.getText();
+                String lastName = lastNameField.getText();
+                String date = dobField.getText();
+
+                ValidFields emailCheck = new ValidFields();
+                if (!emailCheck.isValidEmail(email)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid email. Please enter a valid email.", "Email Validation Error", JOptionPane.ERROR_MESSAGE);
+                } else if (!emailCheck.isValidName(firstName)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid First Name. Please enter a valid first name.", "Name Validation Error", JOptionPane.ERROR_MESSAGE);
+                } else if (!emailCheck.isValidName(lastName)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid Last Name. Please enter a valid last name.", "Name Validation Error", JOptionPane.ERROR_MESSAGE); 
+                } else if (!emailCheck.isValidDate(date)) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid Date. Please enter a valid date.", "Name Validation Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+
+                    selectedAddress[0] = mailingFill.getSelectedAddress(); // Add this line to get the selected address
+                                                                           // when the Next button is clicked
+                    dialog.getContentPane().removeAll();
+                    dialog.add(createAccountPanel.createAccountPanel(firstNameField.getText(), lastNameField.getText(),
+                            dobField.getText(),
+                            emailField.getText(),
+                            phoneField.getText(), (String) bioCombo.getSelectedItem(), selectedAddress[0],
+                            (String) raceCombo.getSelectedItem()));
+                    dialog.pack();
+                    dialog.revalidate();
+                }
+                
             }
         });
 

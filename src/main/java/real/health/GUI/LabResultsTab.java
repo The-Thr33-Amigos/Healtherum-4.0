@@ -7,6 +7,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 import real.health.Patient.BloodTest;
 import real.health.Patient.BloodItem;
 import real.health.SQL.*;
+import real.health.UTIL.CustomBooleanRenderer;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -88,6 +90,9 @@ public class LabResultsTab {
                         }
 
                         JTable bloodTable = new JTable(bloodTestModel);
+                        int lastColumnIndex = bloodTable.getColumnCount() - 1;
+                        bloodTable.getColumnModel().getColumn(lastColumnIndex).setCellRenderer(new CustomBooleanRenderer());
+                        
                         JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                         bloodFrame.add(scrollPane, BorderLayout.CENTER);
@@ -116,7 +121,7 @@ public class LabResultsTab {
         nextButtonPanel.add(cancelButton);
         nextButtonPanel.add(nextButton2);
 
-        String[] testName = { "Generic Blood Panel" };
+        String[] testName = { "Generic Blood Panel", "Liver Panel", "Kidney Panel"};
         JComboBox<String> nameCombo = new JComboBox<String>(testName);
         JLabel tNameLabel = new JLabel("Test Name:");
 
@@ -170,7 +175,8 @@ public class LabResultsTab {
         nextButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BloodTest newBloodTest = new BloodTest("White");
+                String testName = (String) nameCombo.getSelectedItem();
+                BloodTest newBloodTest = new BloodTest("Female", "White", testName);
                 LocalDate currentDate = LocalDate.now();
                 LocalDate oldDate = currentDate.minusDays(4);
 
@@ -179,7 +185,7 @@ public class LabResultsTab {
 
                 newBloodTest.testDate = old;
                 newBloodTest.resultDate = curr;
-                String testName = (String) nameCombo.getSelectedItem();
+                
                 newBloodTest.testName = testName;
 
                 String resultSelect = (String) resultCombo.getSelectedItem();
@@ -226,6 +232,9 @@ public class LabResultsTab {
                 }
 
                 JTable bloodTable = new JTable(model);
+
+                int lastColumnIndex = bloodTable.getColumnCount() - 1;
+                bloodTable.getColumnModel().getColumn(lastColumnIndex).setCellRenderer(new CustomBooleanRenderer());
                 JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                 JButton saveButton = new JButton("Save");

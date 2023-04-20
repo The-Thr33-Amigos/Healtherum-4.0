@@ -21,14 +21,31 @@ public class BloodTest {
     public String mmol = "mmol/L";
     public String gdl = "g/dL";
     public String IUL = "IU/L";
+    public String ML = "mL/min";
+    public String PGML = "pg/mL/hr";
+    public String MEQ = "meq/L";
 
     public String race;
+    public String bio;
 
     // blood test is the first iteration of a generic blood panel
-    public BloodTest(String newRace) {
+    public BloodTest(String bio, String newRace, String testName) {
         this.race = newRace;
-        this.createBloodTestGen();
-        this.initResults();
+        this.bio = bio;
+
+        if (testName.equals("Generic Blood Panel")) {
+            this.createBloodTestGen();
+            this.initResults();
+        }
+        else if (testName.equals("Liver Panel")) {
+            this.createLiverPanel();
+            this.initResults();
+        }
+        else if (testName.equals("Kidney Panel")) {
+            this.createKidneyPanel();
+            this.initResults();
+        }
+        
     }
 
 
@@ -115,7 +132,18 @@ public class BloodTest {
     public BloodItem Alkaline = new BloodItem("Alkaline Phosphatase", 0, 39, 117, IUL, false);
     public BloodItem AST = new BloodItem("AST (SGOT)", 0, 0, 40, IUL, false);
     public BloodItem ALT = new BloodItem("ALT (SGPT)", 0, 0, 44, IUL, false);
-
+    public BloodItem Chol = new BloodItem("Cholesterol", 0, 110, 220, mgDL, false);
+    public BloodItem ALP = new BloodItem("ALP", 0, 24, 147, IUL, false);
+    public BloodItem GGP = new BloodItem("GGP", 0, 0, 25, IUL, false);
+    public BloodItem UA = new BloodItem("Uric Acid", 0, 2.5, 7.0, mgDL, false);
+    public BloodItem CRF = new BloodItem("Creatine Clearence", 0, 78, 116, ML, false);
+    public BloodItem CRM = new BloodItem("Creatine Clearence", 0, 71, 135, ML, false);
+    public BloodItem Renin = new BloodItem("Renin", 0, 0.15, 3.95, PGML, false);
+    public BloodItem Na = new BloodItem("Natrium", 0, 135, 145, MEQ, false);
+    public BloodItem K = new BloodItem("Potassium", 0, 3.4, 4.5, MEQ, false);
+    public BloodItem Ca = new BloodItem("Calcium", 0, 8.4, 10.6, mgDL, false);
+    public BloodItem IP = new BloodItem("Phosphorus", 0, 2.1, 4.7, mgDL, false);
+    
     public void add_Item(String newName, BloodItem new_BI) {
         bloodTest.put(newName, new_BI);
     }
@@ -123,6 +151,41 @@ public class BloodTest {
     public BloodItem getItem(String itemName) {
         return bloodTest.get(itemName);
     }
+
+    public void createKidneyPanel() {
+        this.add_Item(BUN.getTestName(), BUN);
+        this.add_Item(creatine.getTestName(), creatine);
+        this.add_Item(UA.getTestName(), UA);
+        this.add_Item(AG.getTestName(), AG);
+        if (bio == "Male") {
+            this.add_Item(CRM.getTestName(), CRM);
+        } else {
+            this.add_Item(CRF.getTestName(), CRF);
+        }
+        this.add_Item(Renin.getTestName(), Renin);
+        this.add_Item(creatine.getTestName(), creatine);
+        this.add_Item(Na.getTestName(), Na);
+        this.add_Item(K.getTestName(), K);
+        this.add_Item(Ca.getTestName(), Ca);
+        this.add_Item(IP.getTestName(), IP);
+        this.add_Item(ALP.getTestName(), ALP);
+
+        
+    }
+
+    public void createLiverPanel() {
+        this.add_Item(BUN.getTestName(), BUN);
+        this.add_Item(Protein.getTestName(), Protein);
+        this.add_Item(Albumin.getTestName(), Albumin);
+        this.add_Item(Chol.getTestName(), Chol);
+        this.add_Item(glucose.getTestName(), glucose);
+        this.add_Item(ALT.getTestName(), ALT);
+        this.add_Item(AST.getTestName(), AST);
+        this.add_Item(ALP.getTestName(), ALP);
+        this.add_Item(GGP.getTestName(), GGP);
+        this.add_Item(Bilirubin.getTestName(), Bilirubin);
+    }
+
     // this creates the test and puts it into the hash-map/dictionary to be used
     // once again will be dynamic eventually
     public void createBloodTestGen() {
