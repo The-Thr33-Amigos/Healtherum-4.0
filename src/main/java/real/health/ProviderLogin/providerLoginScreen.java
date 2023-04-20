@@ -70,7 +70,7 @@ public class providerLoginScreen {
                     if (rs.next()) {
                         // Login successful
                         JOptionPane.showMessageDialog(frame, "Login successful.");
-                        providerSystem.initialize();
+                        providerSystem.initialize(sql);
                         frame.dispose();
                     } else {
                         // Login failed
