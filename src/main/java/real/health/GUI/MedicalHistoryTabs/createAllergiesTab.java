@@ -1,6 +1,8 @@
 package real.health.GUI.MedicalHistoryTabs;
 
 import java.sql.*;
+import java.util.Collections;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
@@ -68,26 +70,88 @@ public class createAllergiesTab {
                 addAllergiesFrame.setLayout(new GridLayout(5, 2, 10, 10));
                 addAllergiesFrame.setLocationRelativeTo(null);
 
+                // NOTE POSSIBLE XGAME MODE ON THESE
+                String[] foodBorne = {"Crustacean Shellfish", "Eggs", "Fish", "Milk", "Peanuts", "Soybeans", "Tree Nuts", "Wheat"};
+                String[] drugAllergens = {"Anti Inflammatory", "Anti seizure", "Antibiotics", "Antibody therapy", "Aspirin", "Chemotherapy drugs", "Hiv Drugs", "Insulin", "Muscle Relaxers", "Sufla"};
+                String[] misc = {"Chemicals", "Dust mites", "Insect stings and bites", "Latex", "Mold", "Pet dander", "Pollen"};
+                String[] typeNames = {"FoodBorne", "Drug", "Miscellaneous"};
+
                 // Add form components for entering the medication details
-                JLabel nameLabel = new JLabel("Name:");
-                JTextField nameField = new JTextField();
-                addAllergiesFrame.add(nameLabel);
-                addAllergiesFrame.add(nameField);
+                
 
                 JLabel typeLabel = new JLabel("Type:");
-                JTextField typeField = new JTextField();
+                JComboBox<String> typeBox = new JComboBox<>(typeNames);
                 addAllergiesFrame.add(typeLabel);
-                addAllergiesFrame.add(typeField);
+                addAllergiesFrame.add(typeBox);
+                typeBox.setSelectedItem(null);
+
+                JLabel nameLabel = new JLabel("Name:");
+                JComboBox<String> nameBox = new JComboBox<>();
+                addAllergiesFrame.add(nameLabel);
+                addAllergiesFrame.add(nameBox);
 
                 JLabel reactionLabel = new JLabel("Reaction:");
-                JTextField reactionField = new JTextField();
+                
+                String[] react = {"Hives", "Rashes", "Swelling", "Coughing", "Wheezing", "Shortness of Breath", "Anaphylaxis"};
+                JComboBox<String> reactions = new JComboBox<>(react);
+                reactions.setSelectedItem(null);
+
                 addAllergiesFrame.add(reactionLabel);
-                addAllergiesFrame.add(reactionField);
+                addAllergiesFrame.add(reactions);
+
 
                 JLabel severityLabel = new JLabel("Severity:");
-                JTextField severityField = new JTextField();
+                String[] severityLevels = {"Mild", "Moderate", "Severe"};
+                JComboBox<String> sevBox = new JComboBox<>();
                 addAllergiesFrame.add(severityLabel);
-                addAllergiesFrame.add(severityField);
+                addAllergiesFrame.add(sevBox);
+
+                typeBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String[] selection = {};
+                        
+                        String selectedType = (String) typeBox.getSelectedItem();
+                        if (selectedType.equals("FoodBorne")) {
+                            selection = foodBorne;
+                        }
+                        else if (selectedType.equals("Drug")) {
+                            selection = drugAllergens;
+                        }
+                        else if (selectedType.equals("Miscellaneous")) {
+                            selection = misc;
+                        }
+                        else {
+                            String[] temp = {"No Selection"};
+                            selection = temp;
+                        }
+                        
+                        
+                        nameBox.setModel(new DefaultComboBoxModel<>(selection));
+                        nameBox.setSelectedItem(null);
+                        nameBox.repaint();
+                    }
+                });
+
+                reactions.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String reactSelect = (String) reactions.getSelectedItem();
+                        String[] selection = {};
+                        if (reactSelect.equals("Anaphylaxis")) {
+                            String[] onlySevere = {"Severe"};
+                            selection = onlySevere;
+                        }
+                        else {
+                            selection  = severityLevels;
+                        }
+                        
+                        
+                        sevBox.setModel(new DefaultComboBoxModel<>(selection));
+                        sevBox.setSelectedItem(null);
+                        sevBox.repaint();
+                    }
+                });
 
                 // Add a button for submitting the form
                 JButton submitButton = new JButton("Submit");
@@ -95,10 +159,10 @@ public class createAllergiesTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
-                        String allergyName = nameField.getText();
-                        String type = typeField.getText();
-                        String reaction = reactionField.getText();
-                        String severity = severityField.getText();
+                        String allergyName = (String) nameBox.getSelectedItem();
+                        String type = (String) typeBox.getSelectedItem();
+                        String reaction = (String) reactions.getSelectedItem();
+                        String severity = (String) sevBox.getSelectedItem();
 
                         // Upload the new medication to the SQL server
                         try {
