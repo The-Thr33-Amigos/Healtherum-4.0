@@ -7,6 +7,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
 import java.util.List;
@@ -33,13 +35,15 @@ public class providerSystem {
         private String type;
         private String provider;
         private String status;
+        private String patientId;
 
-        public Appointment(String date, String time, String type, String patientName, String provider, String status) {
+        public Appointment(String date, String time, String type, String provider, String status, String patientId) {
             this.date = date;
             this.time = time;
             this.type = type;
             this.provider = provider;
             this.status = status;
+            this.patientId = patientId;
         }
 
         public String getDate() {
@@ -61,11 +65,16 @@ public class providerSystem {
         public String getStatus() {
             return status;
         }
+
+        public String getPatientId() {
+            return patientId;
+        }
+
     }
 
     public static class User {
         private String id;
-        private String firstName;
+        private static String firstName;
         private String lastName;
         private String bDate;
         private String phone;
@@ -75,8 +84,8 @@ public class providerSystem {
             return id;
         }
 
-        public void setId(String string) {
-            this.id = string;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getFirstName() {
@@ -139,12 +148,12 @@ public class providerSystem {
         // Create a panel for the appointments list and add it to the main panel
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
         mainPanel.add(appointmentsPanel, BorderLayout.WEST);
-        createAppointmentsList(appointmentsPanel, id);
+        createAppointmentsList(appointmentsPanel, id, "123");
 
         // Create a panel for the calendar and add it to the main panel
         JPanel calendarPanel = new JPanel(new BorderLayout());
         mainPanel.add(calendarPanel, BorderLayout.EAST);
-        createCalendar(calendarPanel, id, getAppointments(id), "123");
+        createCalendar(calendarPanel, id, getAppointments(id, "123"), "123");
 
         // Create a panel for the patient search and add it to the main panel
         JPanel searchPanel = new JPanel(new BorderLayout());
@@ -155,7 +164,7 @@ public class providerSystem {
         homeScreen.setVisible(true);
     }
 
-    private static void createAppointmentsList(JPanel panel, String id) {
+    private static void createAppointmentsList(JPanel panel, String id, String providerName) {
         // Add components for the daily appointments list
         JLabel appointmentsLabel = new JLabel("Today's Appointments");
         appointmentsLabel.setFont(new Font("Serif", Font.BOLD, 18));
@@ -177,11 +186,13 @@ public class providerSystem {
         Date selectedDate = new Date();
 
         // Fetches appointments from the database
-        List<Appointment> allAppointments = getAppointments(id);
+        List<Appointment> allAppointments = getAppointments(id, providerName);
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, selectedDate);
 
         for (Appointment appointment : appointments) {
-            tableModel.addRow(new Object[] { appointment.getTime(), appointment.getStatus() });
+            User patient = getUserById(appointment.getPatientId());
+            String patientName = patient.getFirstName() + " " + patient.getLastName();
+            tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getStatus() });
         }
 
         appointmentsTable = new JTable(tableModel);
@@ -191,29 +202,32 @@ public class providerSystem {
     }
 
     // Add this method to fetch appointments from the database
-    private static List<Appointment> getAppointments(String id) {
+    private static List<Appointment> getAppointments(String id, String providerName) {
         List<Appointment> appointments = new ArrayList<>();
 
         try {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedSelectedDate = dtf.format(LocalDate.now());
 
-            String sql = "SELECT appointments.appointment_date, appointments.appointment_time, appointments.appointment_type, appointments.provider, appointments.status, basic.first_name, basic.last_name FROM appointments JOIN basic ON appointments.id = basic.id WHERE appointments.provider = ? AND appointments.appointment_date = ?";
+            String sql = "SELECT appointment_date, appointment_time, appointment_type, provider, status, id FROM appointments WHERE provider = ? AND appointment_date = ?";
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, id);
+            statement.setString(1, providerName);
+            statement.setString(2, formattedSelectedDate);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String patientName = firstName + " " + lastName;
                 String date = resultSet.getString("appointment_date");
                 String time = resultSet.getString("appointment_time");
                 String type = resultSet.getString("appointment_type");
                 String provider = resultSet.getString("provider");
                 String status = resultSet.getString("status");
+                String patientId = resultSet.getString("id"); 
 
-                appointments.add(new Appointment(date, time, type, patientName, provider, status));
+
+                appointments.add(new Appointment(date, time, type, provider, status, patientId));
             }
 
             resultSet.close();
@@ -258,42 +272,40 @@ public class providerSystem {
     // and provider
     private static List<Appointment> getAppointmentsForSelectedDateAndProvider(String providerName, Date selectedDate) {
         List<Appointment> appointments = new ArrayList<>();
-
+    
         try {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-
+    
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String formattedSelectedDate = sdf.format(selectedDate);
-
-            String sql = "SELECT appointments.appointment_date, appointments.appointment_time, appointments.appointment_type, appointments.provider, appointments.status, basic.first_name, basic.last_name FROM appointments JOIN basic ON appointments.id = basic.id WHERE appointments.provider = ? AND appointments.appointment_date = ?";
+        
+            String sql = "SELECT appointment_date, appointment_time, appointment_type, provider, status, id FROM appointments WHERE provider = ? AND appointment_date = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, providerName);
             statement.setString(2, formattedSelectedDate);
             ResultSet resultSet = statement.executeQuery();
-
+    
             while (resultSet.next()) {
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String patientName = firstName + " " + lastName;
                 String date = resultSet.getString("appointment_date");
                 String time = resultSet.getString("appointment_time");
                 String type = resultSet.getString("appointment_type");
                 String provider = resultSet.getString("provider");
                 String status = resultSet.getString("status");
-
-                appointments.add(new Appointment(date, time, type, patientName, provider, status));
+                String patientId = resultSet.getString("id"); 
+    
+                appointments.add(new Appointment(date, time, type, provider, status, patientId));
             }
-
+    
             resultSet.close();
             statement.close();
             con.close();
-
+    
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Error: unable to connect to MySQL database");
             ex.printStackTrace();
         }
-
+    
         return appointments;
     }
 
@@ -303,14 +315,14 @@ public class providerSystem {
     
         // 1. Clear the current appointments table
         tableModel.setRowCount(0);
-        System.out.println("Number of appointments for selected date: " + appointments.size());
 
         // 2. Update the appointments table with the new data
         for (Appointment appointment : appointments) {
-            tableModel.addRow(new Object[]{appointment.getTime(), appointment.getStatus()});
+            User patient = getUserById(appointment.getPatientId());
+            String patientName = patient.getFirstName() + " " + patient.getLastName();
+            tableModel.addRow(new Object[]{appointment.getTime(), patientName, appointment.getStatus()});
         }
     }
-    
 
     private static List<Appointment> filterAppointmentsByDate(List<Appointment> allAppointments, Date selectedDate) {
         if (selectedDate == null) {
@@ -329,6 +341,39 @@ public class providerSystem {
         }
 
         return filteredAppointments;
+    }
+
+    private static User getUserById(String userId) {
+        User user = new User();
+    
+        try {
+            HealthConn newConnection = new HealthConn();
+            Connection con = newConnection.connect();
+    
+            String sql = "SELECT * FROM basic WHERE id = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+    
+            if (resultSet.next()) {
+                user.setId(resultSet.getString("id"));
+                user.setFirstName(resultSet.getString("firstName"));
+                user.setLastName(resultSet.getString("lastName"));
+                user.setBdate(resultSet.getString("bdate"));
+                user.setPhone(resultSet.getString("phone"));
+                user.setAddress(resultSet.getString("mailing"));
+            }
+    
+            resultSet.close();
+            statement.close();
+            con.close();
+    
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("Error: unable to connect to MySQL database");
+            ex.printStackTrace();
+        }
+    
+        return user;
     }
 
     private static void createNavigationButtons(JPanel panel) {
