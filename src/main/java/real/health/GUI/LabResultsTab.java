@@ -111,6 +111,7 @@ public class LabResultsTab {
         JButton newButton2 = new JButton("New Test");
         JButton nextButton2 = new JButton("Next");
         JButton cancelButton = new JButton("Cancel");
+        JButton deleteButton = new JButton("Delete");
         nextButton2.setPreferredSize(new Dimension(200, nextButton2.getPreferredSize().height));
         cancelButton.setPreferredSize(new Dimension(200, cancelButton.getPreferredSize().height));
 
@@ -169,6 +170,12 @@ public class LabResultsTab {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 newFrame.dispose();
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                return;
             }
         });
 
@@ -783,6 +790,7 @@ public class LabResultsTab {
         downloadPrintPanel.add(printButton);
         if (userRole == UserRole.PROVIDER) {
             downloadPrintPanel.add(newButton2);
+            downloadPrintPanel.add(deleteButton);
         }
 
         labResultsPanel.add(downloadPrintPanel, BorderLayout.SOUTH);
