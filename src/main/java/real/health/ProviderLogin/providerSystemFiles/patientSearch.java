@@ -20,7 +20,7 @@ import real.health.ProviderLogin.providerSystem.User;
 import real.health.SQL.HealthConn;
 
 public class patientSearch {
-    
+
     public static void createPatientSearch(JPanel panel) {
         // Create a new panel with FlowLayout for the search components
         JPanel searchComponentsPanel = new JPanel(new FlowLayout());

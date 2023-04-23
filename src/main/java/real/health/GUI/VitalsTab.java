@@ -227,7 +227,7 @@ public class VitalsTab {
             }
         });
 
-                        // Create the delete button and add an ActionListener
+        // Create the delete button and add an ActionListener
         // to delete the selected sexual history
         JButton deleteButton = new JButton("Delete");
         deleteButton.addActionListener(new ActionListener() {
@@ -243,7 +243,9 @@ public class VitalsTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -292,7 +294,7 @@ public class VitalsTab {
         JPanel vitalSignsPanel = new JPanel(new BorderLayout());
         vitalSignsPanel.add(new JScrollPane(vitalSigns), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         // Show the "Add" button only for the provider role

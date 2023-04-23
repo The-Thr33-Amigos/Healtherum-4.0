@@ -91,8 +91,9 @@ public class LabResultsTab {
 
                         JTable bloodTable = new JTable(bloodTestModel);
                         int lastColumnIndex = bloodTable.getColumnCount() - 1;
-                        bloodTable.getColumnModel().getColumn(lastColumnIndex).setCellRenderer(new CustomBooleanRenderer());
-                        
+                        bloodTable.getColumnModel().getColumn(lastColumnIndex)
+                                .setCellRenderer(new CustomBooleanRenderer());
+
                         JScrollPane scrollPane = new JScrollPane(bloodTable);
 
                         bloodFrame.add(scrollPane, BorderLayout.CENTER);
@@ -121,9 +122,8 @@ public class LabResultsTab {
 
         nextButtonPanel.add(cancelButton);
         nextButtonPanel.add(nextButton2);
-        
 
-        String[] testName = { "Generic Blood Panel", "Liver Panel", "Kidney Panel"};
+        String[] testName = { "Generic Blood Panel", "Liver Panel", "Kidney Panel" };
         JComboBox<String> nameCombo = new JComboBox<String>(testName);
         JLabel tNameLabel = new JLabel("Test Name:");
 
@@ -160,21 +160,24 @@ public class LabResultsTab {
         newFrame.add(nextButtonPanel);
 
         // deleteButton.addActionListner(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         int selectedRow = table.getSelectedRow();
+        // @Override
+        // public void actionPerformed(ActionEvent e) {
+        // int selectedRow = table.getSelectedRow();
 
-        //         // If no row is selected, display an error message
-        //         if (selectedRow == -1) {
-        //             JOptionPane.showMessageDialog(vaccinationTable, "Please select a row to delete.");
-        //             return;
-        //         }
+        // // If no row is selected, display an error message
+        // if (selectedRow == -1) {
+        // JOptionPane.showMessageDialog(vaccinationTable, "Please select a row to
+        // delete.");
+        // return;
+        // }
 
-        //         // Display a confirmation dialog
-        //         int confirmation = JOptionPane.showConfirmDialog(vaccinationTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-        //         // bloodTestMap.remove(selectedRow);
-                 
-        //     }
+        // // Display a confirmation dialog
+        // int confirmation = JOptionPane.showConfirmDialog(vaccinationTable, "Are you
+        // sure you want to delete the selected row?", "Confirm Deletion",
+        // JOptionPane.YES_NO_OPTION);
+        // // bloodTestMap.remove(selectedRow);
+
+        // }
         // })
 
         newButton2.addActionListener(new ActionListener() {
@@ -205,7 +208,7 @@ public class LabResultsTab {
 
                 newBloodTest.testDate = old;
                 newBloodTest.resultDate = curr;
-                
+
                 newBloodTest.testName = testName;
 
                 String resultSelect = (String) resultCombo.getSelectedItem();
@@ -788,10 +791,9 @@ public class LabResultsTab {
             }
         });
 
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        
+
         // Download/Print Options
         JPanel downloadPrintPanel = new JPanel();
         JButton downloadButton = new JButton("Download");

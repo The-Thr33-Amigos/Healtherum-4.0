@@ -57,7 +57,8 @@ public class PendingAppointmentsFrame extends JFrame {
         for (Appointment appointment : pendingAppointments) {
             User patient = providerSystem.getUserById(appointment.getPatientId());
             String patientName = patient.getFirstName() + " " + patient.getLastName();
-            tableModel.addRow(new Object[]{appointment.getTime(), patientName, appointment.getType(), appointment.getStatus()});
+            tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType(),
+                    appointment.getStatus() });
         }
 
         pendingAppointmentsTable = new JTable(tableModel);
@@ -104,8 +105,10 @@ public class PendingAppointmentsFrame extends JFrame {
     }
 
     // Add getAppointments, getUserById, and filterPendingAppointments methods here.
-    // You can use the same code as you have in the main class for getAppointments and getUserById.
-    // For filterPendingAppointments, you can create a new method that filters out appointments based on their status:
+    // You can use the same code as you have in the main class for getAppointments
+    // and getUserById.
+    // For filterPendingAppointments, you can create a new method that filters out
+    // appointments based on their status:
     private List<Appointment> filterPendingAppointments(List<Appointment> allAppointments) {
         List<Appointment> filteredAppointments = new ArrayList<>();
 

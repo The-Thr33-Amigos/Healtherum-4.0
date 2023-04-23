@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class createChronicTab {
     private UserRole userRole;
+
     public JComponent createChronicTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable chronicTable = new JTable();
@@ -155,7 +156,9 @@ public class createChronicTab {
                     return;
                 }
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(chronicTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(chronicTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -201,7 +204,7 @@ public class createChronicTab {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         if (userRole == UserRole.PROVIDER) {

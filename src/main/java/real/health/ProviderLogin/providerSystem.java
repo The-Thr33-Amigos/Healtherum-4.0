@@ -30,7 +30,6 @@ import real.health.SQL.HealthConn;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
 public class providerSystem {
 
     private static JList<Appointment> appointmentsList;
@@ -176,7 +175,7 @@ public class providerSystem {
         JLabel appointmentsLabel = new JLabel("Today's Appointments");
         appointmentsLabel.setFont(new Font("Serif", Font.BOLD, 18));
         panel.add(appointmentsLabel);
-    
+
         // Create a table model for the appointments list
         DefaultTableModel tableModel = new DefaultTableModel() {
             @Override
@@ -184,18 +183,18 @@ public class providerSystem {
                 return false;
             }
         };
-    
+
         tableModel.addColumn("Time");
         tableModel.addColumn("Patient");
         tableModel.addColumn("Reason");
-    
+
         // Set the current date as the selected date
         Date selectedDate = new Date();
-    
+
         // Fetches appointments from the database
         List<Appointment> allAppointments = getAppointments(id, providerName);
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, selectedDate);
-    
+
         for (Appointment appointment : appointments) {
             if (appointment.getStatus().equalsIgnoreCase("accepted")) {
                 User patient = getUserById(appointment.getPatientId());
@@ -203,12 +202,12 @@ public class providerSystem {
                 tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
             }
         }
-    
+
         appointmentsTable = new JTable(tableModel); // Assign the JTable to appointmentsTable
         JScrollPane appointmentsScrollPane = new JScrollPane(appointmentsTable);
         appointmentsScrollPane.setPreferredSize(new Dimension(600, 300));
         panel.add(appointmentsScrollPane);
-    
+
         // Add MouseListener to the appointmentsTable
         appointmentsTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -224,7 +223,6 @@ public class providerSystem {
             }
         });
     }
-    
 
     // Add this method to fetch appointments from the database
     public static List<Appointment> getAppointments(String id, String providerName) {
@@ -233,7 +231,7 @@ public class providerSystem {
         try {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-            
+
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedSelectedDate = dtf.format(LocalDate.now());
 
@@ -249,8 +247,7 @@ public class providerSystem {
                 String type = resultSet.getString("appointment_type");
                 String provider = resultSet.getString("provider");
                 String status = resultSet.getString("status");
-                String patientId = resultSet.getString("id"); 
-
+                String patientId = resultSet.getString("id");
 
                 appointments.add(new Appointment(date, time, type, provider, status, patientId));
             }
@@ -267,7 +264,8 @@ public class providerSystem {
         return appointments;
     }
 
-    private static void createCalendar(JPanel panel, String id, List<Appointment> initialAppointments, String providerName) {
+    private static void createCalendar(JPanel panel, String id, List<Appointment> initialAppointments,
+            String providerName) {
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
         p.put("text.today", "Today");
@@ -283,7 +281,8 @@ public class providerSystem {
                     Date selectedDate = (Date) datePicker.getModel().getValue();
                     if (selectedDate != null) {
                         // Fetch appointments for the selected date and provider
-                        List<Appointment> appointmentsForSelectedDate = getAppointmentsForSelectedDateAndProvider(providerName, selectedDate);
+                        List<Appointment> appointmentsForSelectedDate = getAppointmentsForSelectedDateAndProvider(
+                                providerName, selectedDate);
                         updateAppointmentsList(appointmentsForSelectedDate);
                     }
                 }
@@ -297,60 +296,59 @@ public class providerSystem {
     // and provider
     private static List<Appointment> getAppointmentsForSelectedDateAndProvider(String providerName, Date selectedDate) {
         List<Appointment> appointments = new ArrayList<>();
-    
+
         try {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-    
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String formattedSelectedDate = sdf.format(selectedDate);
-        
+
             String sql = "SELECT appointment_date, appointment_time, appointment_type, provider, status, id FROM appointments WHERE provider = ? AND appointment_date = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, providerName);
             statement.setString(2, formattedSelectedDate);
             ResultSet resultSet = statement.executeQuery();
-    
+
             while (resultSet.next()) {
                 String date = resultSet.getString("appointment_date");
                 String time = resultSet.getString("appointment_time");
                 String type = resultSet.getString("appointment_type");
                 String provider = resultSet.getString("provider");
                 String status = resultSet.getString("status");
-                String patientId = resultSet.getString("id"); 
-    
+                String patientId = resultSet.getString("id");
+
                 appointments.add(new Appointment(date, time, type, provider, status, patientId));
             }
-    
+
             resultSet.close();
             statement.close();
             con.close();
-    
+
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Error: unable to connect to MySQL database");
             ex.printStackTrace();
         }
-    
+
         return appointments;
     }
 
     // Add a method to update the appointments list based on the selected date
     private static void updateAppointmentsList(List<Appointment> appointments) {
         DefaultTableModel tableModel = (DefaultTableModel) appointmentsTable.getModel();
-    
+
         // 1. Clear the current appointments table
         tableModel.setRowCount(0);
-    
+
         // 2. Update the appointments table with the new data
         for (Appointment appointment : appointments) {
             if (appointment.getStatus().equalsIgnoreCase("accepted")) {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
-                tableModel.addRow(new Object    []{appointment.getTime(), patientName, appointment.getType()});
+                tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
             }
         }
     }
-    
 
     private static List<Appointment> filterAppointmentsByDate(List<Appointment> allAppointments, Date selectedDate) {
         if (selectedDate == null) {
@@ -373,16 +371,16 @@ public class providerSystem {
 
     public static User getUserById(String userId) {
         User user = new User();
-    
+
         try {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
-    
+
             String sql = "SELECT * FROM basic WHERE id = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, userId);
             ResultSet resultSet = statement.executeQuery();
-    
+
             if (resultSet.next()) {
                 user.setId(resultSet.getString("id"));
                 user.setFirstName(resultSet.getString("firstName"));
@@ -391,16 +389,16 @@ public class providerSystem {
                 user.setPhone(resultSet.getString("phone"));
                 user.setAddress(resultSet.getString("mailing"));
             }
-    
+
             resultSet.close();
             statement.close();
             con.close();
-    
+
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Error: unable to connect to MySQL database");
             ex.printStackTrace();
         }
-    
+
         return user;
     }
 

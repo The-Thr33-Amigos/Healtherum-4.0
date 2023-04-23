@@ -90,10 +90,10 @@ public class PatientInformation {
                 mailingAddressField.setText(result.getString("mailing"));
             }
 
-        // Clean up resources
-        result.close();
-        statement.close();
-        con.close();
+            // Clean up resources
+            result.close();
+            statement.close();
+            con.close();
 
         } catch (ClassNotFoundException ex) {
             System.out.println("Error: unable to load MySQL JDBC driver");
@@ -114,7 +114,7 @@ public class PatientInformation {
         if (userRole == UserRole.PATIENT) {
             panel.add(driversLicenseButton, constraints);
         }
-        
+
         // Action listener for "Upload Driver's License" button
         driversLicenseButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -131,14 +131,13 @@ public class PatientInformation {
             }
         });
 
-
         JButton editButton = new JButton("Edit");
         constraints.gridx = 2;
         constraints.gridy = 7;
         if (userRole == UserRole.PATIENT) {
             panel.add(editButton, constraints);
         }
-        
+
         JButton submitButton = new JButton("Submit");
         constraints.gridx = 2;
         constraints.gridy = 7;

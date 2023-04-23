@@ -10,6 +10,7 @@ import real.health.GUI.UserRole;
 
 public class createSurgeriesTab {
     private UserRole userRole;
+
     public JComponent createSurgeriesTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable surgeriesTable = new JTable();
@@ -163,7 +164,9 @@ public class createSurgeriesTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(surgeriesTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(surgeriesTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -184,7 +187,6 @@ public class createSurgeriesTab {
                         statement.setString(3, surgeriesTable.getValueAt(selectedRow, 1).toString());
                         statement.setString(4, surgeriesTable.getValueAt(selectedRow, 2).toString());
                         statement.setString(5, surgeriesTable.getValueAt(selectedRow, 3).toString());
-
 
                         statement.executeUpdate();
 
@@ -211,9 +213,9 @@ public class createSurgeriesTab {
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(surgeriesTable), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
- 
+
         if (userRole == UserRole.PROVIDER) {
             addDeletePanel.add(addButton);
             addDeletePanel.add(deleteButton);

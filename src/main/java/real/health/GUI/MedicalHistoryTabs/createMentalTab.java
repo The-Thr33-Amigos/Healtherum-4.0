@@ -10,6 +10,7 @@ import real.health.GUI.UserRole;
 
 public class createMentalTab {
     private UserRole userRole;
+
     public JComponent createMentalTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable mentalTable = new JTable();
@@ -68,7 +69,9 @@ public class createMentalTab {
 
                 // Add form components for entering the mental health issue details
                 JLabel issueLabel = new JLabel("Issue:");
-                String[] issueList = {"Autism Spectrum Disorder", "ADHD",  "Scizophrenia", "Schizoaffective Disorder", "Bipolar Disorder I or II", "Major Depressive Disorder", "Anxiety Disorders", "Obsessive Compulsive Disorder", "PTSD", "Disociative Disorders"};
+                String[] issueList = { "Autism Spectrum Disorder", "ADHD", "Scizophrenia", "Schizoaffective Disorder",
+                        "Bipolar Disorder I or II", "Major Depressive Disorder", "Anxiety Disorders",
+                        "Obsessive Compulsive Disorder", "PTSD", "Disociative Disorders" };
                 // JTextField issueField = new JTextField();
                 JComboBox<String> issueCombo = new JComboBox<>(issueList);
                 addMentalFrame.add(issueLabel);
@@ -156,7 +159,9 @@ public class createMentalTab {
                     return;
                 }
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(mentalTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(mentalTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -202,7 +207,7 @@ public class createMentalTab {
         JPanel mentalTabPanel = new JPanel(new BorderLayout());
         mentalTabPanel.add(new JScrollPane(mentalTable), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         if (userRole == UserRole.PROVIDER) {

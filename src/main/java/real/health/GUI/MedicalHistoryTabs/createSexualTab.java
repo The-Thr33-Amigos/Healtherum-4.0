@@ -10,6 +10,7 @@ import real.health.GUI.UserRole;
 
 public class createSexualTab {
     private UserRole userRole;
+
     public JComponent createSexualTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable sexualTable = new JTable();
@@ -163,7 +164,9 @@ public class createSexualTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(sexualTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(sexualTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -211,9 +214,9 @@ public class createSexualTab {
         sexualTabPanel.setLayout(new BorderLayout());
         sexualTabPanel.add(new JScrollPane(sexualTable), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
- 
+
         // Create a panel for the add button
         JPanel addButtonPanel = new JPanel();
         addButtonPanel.setLayout(new BorderLayout());
@@ -223,7 +226,7 @@ public class createSexualTab {
             buttonPanel.add(addDeletePanel);
             sexualTabPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
-        
+
         return sexualTabPanel;
     }
 

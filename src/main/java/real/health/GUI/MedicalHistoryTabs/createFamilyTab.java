@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class createFamilyTab {
     private UserRole userRole;
+
     public JComponent createFamilyTab(String id, UserRole userRole) {
         this.userRole = userRole;
         // Create a JTable to display the patient's family history
@@ -151,11 +152,13 @@ public class createFamilyTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(familyTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(familyTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
-                        
+
                     // Get the primary key or unique identifier of the record from the selected row
                     // Assuming the first column of the table contains the primary key
                     String primaryKey = familyTable.getValueAt(selectedRow, 0).toString();
@@ -167,7 +170,7 @@ public class createFamilyTab {
                         Connection con = newConnection.connect();
                         String sql = "DELETE FROM family_history WHERE id = ? AND relationship = ? AND health_condition = ?";
                         PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id); 
+                        statement.setString(1, id);
                         statement.setString(2, familyTable.getValueAt(selectedRow, 0).toString());
                         statement.setString(3, familyTable.getValueAt(selectedRow, 1).toString());
                         statement.executeUpdate();
@@ -194,9 +197,9 @@ public class createFamilyTab {
         JPanel familyPanel = new JPanel();
         familyPanel.setLayout(new BorderLayout());
         familyPanel.add(new JScrollPane(familyTable), BorderLayout.CENTER);
-        
+
         // Create a panel for the add and delete button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         if (userRole == UserRole.PROVIDER) {
@@ -205,7 +208,6 @@ public class createFamilyTab {
             buttonPanel.add(addDeletePanel);
             familyPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
-
 
         return familyPanel;
 

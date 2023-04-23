@@ -10,6 +10,7 @@ import real.health.GUI.UserRole;
 
 public class createLifestyleTab {
     private UserRole userRole;
+
     public JComponent createLifestyleTab(String id, UserRole userRole) {
         this.userRole = userRole;
         // Create the lifestyle factors table
@@ -148,7 +149,9 @@ public class createLifestyleTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(lifestyleTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(lifestyleTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -164,7 +167,7 @@ public class createLifestyleTab {
                         Connection con = newConnection.connect();
                         String sql = "DELETE FROM lifestyle WHERE id = ? AND factor = ? AND status = ?";
                         PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id); 
+                        statement.setString(1, id);
                         statement.setString(2, lifestyleTable.getValueAt(selectedRow, 0).toString());
                         statement.setString(3, lifestyleTable.getValueAt(selectedRow, 1).toString());
                         statement.executeUpdate();
@@ -194,7 +197,7 @@ public class createLifestyleTab {
         lifestyleTabPanel.add(new JScrollPane(lifestyleTable), BorderLayout.CENTER);
 
         // Create a panel for the add and delete button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         if (userRole == UserRole.PROVIDER) {
