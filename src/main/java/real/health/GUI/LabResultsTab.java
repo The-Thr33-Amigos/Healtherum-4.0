@@ -111,6 +111,7 @@ public class LabResultsTab {
         JButton newButton2 = new JButton("New Test");
         JButton nextButton2 = new JButton("Next");
         JButton cancelButton = new JButton("Cancel");
+        JButton deleteButton = new JButton("Delete");
         nextButton2.setPreferredSize(new Dimension(200, nextButton2.getPreferredSize().height));
         cancelButton.setPreferredSize(new Dimension(200, cancelButton.getPreferredSize().height));
 
@@ -120,6 +121,7 @@ public class LabResultsTab {
 
         nextButtonPanel.add(cancelButton);
         nextButtonPanel.add(nextButton2);
+        
 
         String[] testName = { "Generic Blood Panel", "Liver Panel", "Kidney Panel"};
         JComboBox<String> nameCombo = new JComboBox<String>(testName);
@@ -156,6 +158,24 @@ public class LabResultsTab {
         newFrame.add(commentField);
         newFrame.add(emptyLabel);
         newFrame.add(nextButtonPanel);
+
+        // deleteButton.addActionListner(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         int selectedRow = table.getSelectedRow();
+
+        //         // If no row is selected, display an error message
+        //         if (selectedRow == -1) {
+        //             JOptionPane.showMessageDialog(vaccinationTable, "Please select a row to delete.");
+        //             return;
+        //         }
+
+        //         // Display a confirmation dialog
+        //         int confirmation = JOptionPane.showConfirmDialog(vaccinationTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        //         // bloodTestMap.remove(selectedRow);
+                 
+        //     }
+        // })
 
         newButton2.addActionListener(new ActionListener() {
             @Override
@@ -783,6 +803,7 @@ public class LabResultsTab {
         downloadPrintPanel.add(printButton);
         if (userRole == UserRole.PROVIDER) {
             downloadPrintPanel.add(newButton2);
+            downloadPrintPanel.add(deleteButton);
         }
 
         labResultsPanel.add(downloadPrintPanel, BorderLayout.SOUTH);

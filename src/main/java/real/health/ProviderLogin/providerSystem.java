@@ -2,6 +2,7 @@ package real.health.ProviderLogin;
 // Copilot, how can we optimize this file to make it shorter and more efficient?
 
 import real.health.ProviderLogin.DateLabelFormatter;
+import real.health.ProviderLogin.providerSystemFiles.PendingAppointmentsFrame;
 import real.health.ProviderLogin.providerSystemFiles.patientSearch;
 
 import java.awt.*;
@@ -149,7 +150,7 @@ public class providerSystem {
         // Create a panel for the navigation buttons and add it to the main panel
         JPanel navigationPanel = new JPanel();
         mainPanel.add(navigationPanel, BorderLayout.PAGE_END);
-        createNavigationButtons(navigationPanel);
+        createNavigationButtons(id, navigationPanel, "123");
 
         // Create a panel for the appointments list and add it to the main panel
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
@@ -226,7 +227,7 @@ public class providerSystem {
     
 
     // Add this method to fetch appointments from the database
-    private static List<Appointment> getAppointments(String id, String providerName) {
+    public static List<Appointment> getAppointments(String id, String providerName) {
         List<Appointment> appointments = new ArrayList<>();
 
         try {
@@ -370,7 +371,7 @@ public class providerSystem {
         return filteredAppointments;
     }
 
-    private static User getUserById(String userId) {
+    public static User getUserById(String userId) {
         User user = new User();
     
         try {
@@ -403,7 +404,7 @@ public class providerSystem {
         return user;
     }
 
-    private static void createNavigationButtons(JPanel panel) {
+    private static void createNavigationButtons(String id, JPanel panel, String providerName) {
         // Add quick navigation buttons for prescription management, referral
         // management, messaging, and analytics/reporting
         JButton appointmentsButton = new JButton("Appointments");
@@ -417,6 +418,15 @@ public class providerSystem {
         panel.add(referralsButton);
         panel.add(messagingButton);
         panel.add(analyticsButton);
+
+        // Add action listener to the appointmentsButton
+        appointmentsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PendingAppointmentsFrame pendingAppointmentsFrame = new PendingAppointmentsFrame(id, providerName);
+                pendingAppointmentsFrame.setVisible(true);
+            }
+        });
     }
 
     public static void viewPatientInfo(User user, UserRole role) {
