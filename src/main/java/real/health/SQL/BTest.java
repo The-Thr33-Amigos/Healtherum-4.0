@@ -66,42 +66,4 @@ public class BTest {
         testHistory.add(newBlood);
     }
 
-    // public static void main(String[] args) {
-    //     BloodTest test = new BloodTest("White");
-    //     BTest newB = new BTest("3");
-    //     LocalDate local = LocalDate.now();
-    //     LocalDate oldDate = local.minusDays(4);
-
-    //     String newlocal = local.toString();
-    //     String newOld = oldDate.toString();
-
-    //     test.testDate = newOld;
-    //     test.resultDate = newlocal;
-
-    //     ArrayList<BloodTest> arr = new ArrayList<>();
-    //     arr.add(test);
-    //     ArrayList<String> toJson = newB.BJson(arr);
-
-    //     try {
-            
-
-    //         HealthConn newConnection = new HealthConn();
-    //         Connection conn = newConnection.connect();
-    //         String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
-
-    //         PreparedStatement statement = conn.prepareStatement(sql);
-    //         for (String json : toJson) {
-    //             statement.setString(1,newB.patientID);
-    //             statement.setString(2, json);
-    //             System.out.println("test");
-    //             statement.executeUpdate();
-    //         }
-
-    //     } catch (ClassNotFoundException c) {
-    //         c.printStackTrace();
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-
-    // }
 }
