@@ -69,9 +69,10 @@ public class createVaccinationTab {
 
                 // Add form components for entering the vaccination details
                 JLabel vaccineLabel = new JLabel("Vaccine:");
-                JTextField vaccineField = new JTextField();
+                // JTextField vaccineField = new JTextField();
+                JComboBox vaccines = new JComboBox<>();
                 addVaccinationFrame.add(vaccineLabel);
-                addVaccinationFrame.add(vaccineField);
+                addVaccinationFrame.add(vaccines);
 
                 JLabel dateAdministeredLabel = new JLabel("Date Administered:");
                 JTextField dateAdministeredField = new JTextField();
@@ -94,7 +95,7 @@ public class createVaccinationTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
-                        String vaccineName = vaccineField.getText();
+                        String vaccineName = (String) vaccines.getSelectedItem();
                         String dateAdministered = dateAdministeredField.getText();
                         String locationAdministered = locationAdministeredField.getText();
                         String administeringProvider = administeringProviderField.getText();
@@ -210,7 +211,7 @@ public class createVaccinationTab {
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(vaccinationTable), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         if (userRole == UserRole.PROVIDER) {

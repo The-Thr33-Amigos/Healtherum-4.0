@@ -8,7 +8,7 @@ import java.util.Random;
 public class BloodTest {
     public HashMap<String,BloodItem> bloodTest = new HashMap<>();
     // Will combine all the test for one person into a personal hash map
-    
+
     public String testName;
     public String resultIndicator;
     public String testDate;
@@ -105,14 +105,13 @@ public class BloodTest {
         }
 
         return results;
-        
     }
 
     public void initResults() {
         ArrayList<Double> randResults = generateBloodTest();
         int i = 0;
         for (HashMap.Entry<String, BloodItem> entry : bloodTest.entrySet()) {
-            
+
             entry.getValue().setResult(randResults.get(i));
             i++;
             entry.getValue().setFlag(entry.getValue().getResult());
@@ -194,7 +193,7 @@ public class BloodTest {
         this.add_Item(IP.getTestName(), IP);
         this.add_Item(ALP.getTestName(), ALP);
 
-        
+
     }
 
     public void createLiverPanel() {
