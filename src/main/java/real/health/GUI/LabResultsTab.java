@@ -159,8 +159,8 @@ public class LabResultsTab {
         JLabel emptyLabel = new JLabel();
         newFrame.add(tNameLabel);
         newFrame.add(nameCombo);
-        newFrame.add(resultLabel);
-        newFrame.add(resultCombo);
+        // newFrame.add(resultLabel);
+        // newFrame.add(resultCombo);
         newFrame.add(interpLabel);
         newFrame.add(interpCombo);
         newFrame.add(sigLabel);
@@ -191,12 +191,12 @@ public class LabResultsTab {
 
                 // If no row is selected, display an error message
                 if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(table, "Please select a row to delete.");
+                    JOptionPane.showMessageDialog(table, "Please select a test to delete.");
                     return;
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(table, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(table, "Are you sure you want to delete the selected test?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
                 if (confirmation == JOptionPane.YES_OPTION) {
                     int unique = uniqueMap.get(selectedRow);
@@ -206,7 +206,7 @@ public class LabResultsTab {
                         String sql = "DELETE FROM bloodtest WHERE `unique` = ?";
                         PreparedStatement statement = conn.prepareStatement(sql);
                         statement.setInt(1, unique);
-                        
+
                         statement.executeUpdate();
 
                         statement.close();
@@ -239,11 +239,12 @@ public class LabResultsTab {
 
                 newBloodTest.testDate = old;
                 newBloodTest.resultDate = curr;
-                
+
                 newBloodTest.testName = testName;
 
-                String resultSelect = (String) resultCombo.getSelectedItem();
-                newBloodTest.resultIndicator = resultSelect;
+                // String resultSelect = (String) resultCombo.getSelectedItem();
+                int resultSelect = newBloodTest.flagSeverity();
+                newBloodTest.resultIndicator = result[resultSelect];
 
                 String interpSelect = (String) interpCombo.getSelectedItem();
                 newBloodTest.testInterp = interpSelect;

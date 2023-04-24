@@ -45,9 +45,33 @@ public class BloodTest {
             this.createKidneyPanel();
             this.initResults();
         }
-        
+
     }
 
+    public ArrayList<Boolean> getFlags() {
+        ArrayList<Boolean> flags = new ArrayList<>();
+        for (HashMap.Entry<String, BloodItem> entry : getMap().entrySet()) {
+            flags.add(entry.getValue().getFlag());
+        }
+        return flags;
+    }
+
+    public int flagSeverity() {
+        int count = 0;
+        for (boolean i : getFlags()) {
+            if (i) {
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            return 0;
+        } else if (count > 0 && count < 7) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 
     // Race of patient is important for GFR which means creatine levels, people with african heritage have a higher level of GFR then other races/ethnicities
     public String getRace() {
