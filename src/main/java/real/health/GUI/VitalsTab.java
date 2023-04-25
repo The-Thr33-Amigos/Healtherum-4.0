@@ -6,6 +6,7 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import real.health.SQL.HealthConn;
+import real.health.UTIL.ValidFields;
 
 public class VitalsTab {
 
@@ -176,37 +177,63 @@ public class VitalsTab {
                         String heartRate = heartRateField.getText();
                         String oxygen = oxygenField.getText();
 
+
                         // Upload the new medication to the SQL server
                         try {
                             // Load the MySQL JDBC driver
-                            HealthConn newConnection = new HealthConn();
-                            Connection con = newConnection.connect();
+                            if (!ValidFields.isValidVital(Double.parseDouble(weight))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid weight. Please enter a decimal.", "Weight Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else if (!ValidFields.isValidVital(Integer.parseInt(height))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid height. Please enter an integer", "Height Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else if (!ValidFields.isValidVital(Integer.parseInt(sysbp))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid Sys BP. Please enter an integer", "SysBP Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else if (!ValidFields.isValidVital(Integer.parseInt(diabp))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid Dia BP. Please enter an integer", "DiaBP Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else if (!ValidFields.isValidVital(Integer.parseInt(heartRate))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid Heart Rate. Please enter an integer", "HR Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else if (!ValidFields.isValidVital(Double.parseDouble(oxygen))) {
+                                JOptionPane.showMessageDialog(addVitalFrame, "Invalid Oxygen. Please enter a decimal", "Oxygen Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else {
+                                HealthConn newConnection = new HealthConn();
+                                Connection con = newConnection.connect();
 
-                            // Create a SQL statement to insert the new vital
-                            String sql = "INSERT INTO vitals (id, weight, height, sysbp, diabp, hr, oxygen) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                            PreparedStatement statement = con.prepareStatement(sql);
-                            statement.setString(1, id);
-                            statement.setString(2, weight);
-                            statement.setString(3, height);
-                            statement.setString(4, sysbp);
-                            statement.setString(5, diabp);
-                            statement.setString(6, heartRate);
-                            statement.setString(7, oxygen);
-                            statement.executeUpdate();
+                                // Create a SQL statement to insert the new vital
+                                String sql = "INSERT INTO vitals (id, weight, height, sysbp, diabp, hr, oxygen) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                                PreparedStatement statement = con.prepareStatement(sql);
+                                statement.setString(1, id);
+                                statement.setString(2, weight);
+                                statement.setString(3, height);
+                                statement.setString(4, sysbp);
+                                statement.setString(5, diabp);
+                                statement.setString(6, heartRate);
+                                statement.setString(7, oxygen);
+                                statement.executeUpdate();
 
-                            // Refresh the vital table to show the newly added vital
-                            DefaultTableModel tableModel = (DefaultTableModel) vitalSigns.getModel();
-                            tableModel.addRow(new Object[] { weight, height, sysbp, diabp, heartRate, oxygen });
+                                // Refresh the vital table to show the newly added vital
+                                DefaultTableModel tableModel = (DefaultTableModel) vitalSigns.getModel();
+                                tableModel.addRow(new Object[] { weight, height, sysbp, diabp, heartRate, oxygen });
 
-                            // Clean up resources
-                            statement.close();
-                            con.close();
+                                // Clean up resources
+                                statement.close();
+                                con.close();
+                            }
+                            
+                            
                         } catch (ClassNotFoundException ex) {
                             System.out.println("Error: unable to load MySQL JDBC driver");
                             ex.printStackTrace();
                         } catch (SQLException ex) {
                             System.out.println("Error: unable to connect to MySQL database");
                             ex.printStackTrace();
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(addVitalFrame, "Invalid Input", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            return;
                         }
 
                         // Close the add vital frame
