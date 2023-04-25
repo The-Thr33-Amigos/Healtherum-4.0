@@ -28,6 +28,7 @@ public class LabResultsTab {
     }
 
     public HashMap<Integer, BloodTest> bloodTestMap = new HashMap<>();
+    public HashMap<Integer, Integer> uniqueMap = new HashMap<>();
 
     public ArrayList<Object> getColumnValues(JTable table, int columnIndex) {
         ArrayList<Object> columnValues = new ArrayList<>();
@@ -36,6 +37,8 @@ public class LabResultsTab {
         }
         return columnValues;
     }
+
+    
 
     // TODO add race as a parameter to be based on patient race
     public JComponent createLabResultsTab(String id) throws IOException {
@@ -49,7 +52,12 @@ public class LabResultsTab {
         JPanel labResultsPanel = new JPanel(new BorderLayout());
 
         // Create table to display lab results
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         model.addColumn("Test");
         model.addColumn("Result");
         model.addColumn("Date");
@@ -58,10 +66,13 @@ public class LabResultsTab {
         model.addColumn("Signature");
         model.addColumn("Comments");
         JTable table = new JTable(model);
+        
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
+                    System.out.println("Double click");
                     int row = table.rowAtPoint(e.getPoint());
                     if (row >= 0) {
                         BloodTest selectedBT = bloodTestMap.get(row);
@@ -105,7 +116,8 @@ public class LabResultsTab {
             }
         });
 
-        table.setEnabled(false);
+        table.setEnabled(true);
+        
         JScrollPane scrollPane = new JScrollPane(table);
         labResultsPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -148,8 +160,8 @@ public class LabResultsTab {
         JLabel emptyLabel = new JLabel();
         newFrame.add(tNameLabel);
         newFrame.add(nameCombo);
-        newFrame.add(resultLabel);
-        newFrame.add(resultCombo);
+        // newFrame.add(resultLabel);
+        // newFrame.add(resultCombo);
         newFrame.add(interpLabel);
         newFrame.add(interpCombo);
         newFrame.add(sigLabel);
@@ -195,6 +207,64 @@ public class LabResultsTab {
             }
         });
 
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+
+                // If no row is selected, display an error message
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(table, "Please select a test to delete.");
+                    return;
+                }
+
+                // Display a confirmation dialog
+                int confirmation = JOptionPane.showConfirmDialog(table, "Are you sure you want to delete the selected test?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    Integer unique = uniqueMap.get(selectedRow);
+
+                    if (unique == null) {
+                        JOptionPane.showMessageDialog(table, "An error occurred while trying to delete the selected test.");
+                        return;
+                    }
+                    try {
+                        HealthConn newConnection = new HealthConn();
+                        Connection conn = newConnection.connect();
+                        String sql = "DELETE FROM bloodtest WHERE `unique` = ?";
+                        PreparedStatement statement = conn.prepareStatement(sql);
+                        statement.setInt(1, unique);
+
+                        statement.executeUpdate();
+
+                        statement.close();
+                        conn.close();
+
+                        bloodTestMap.remove(selectedRow);
+                        model.removeRow(selectedRow);
+                        uniqueMap.remove(selectedRow);
+
+                        HashMap<Integer, Integer> newUniqueMap = new HashMap<>();
+                        HashMap<Integer, BloodTest> newBloodTestMap = new HashMap<>();
+
+                        for (int i = 0; i < table.getRowCount(); i++) {
+                            newUniqueMap.put(i, uniqueMap.get(i + (i >= selectedRow ? 1 : 0)));
+                            newBloodTestMap.put(i, bloodTestMap.get(i + (i >= selectedRow ? 1 : 0)));
+
+                        }
+                        uniqueMap = newUniqueMap;
+                        bloodTestMap = newBloodTestMap;
+
+                    }
+                    catch (SQLException sqlError) {
+                        sqlError.printStackTrace();
+                    }
+                    catch (ClassNotFoundException cle) {
+                        cle.printStackTrace();
+                    }
+                }
+            }
+        });
+
         nextButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -211,8 +281,9 @@ public class LabResultsTab {
 
                 newBloodTest.testName = testName;
 
-                String resultSelect = (String) resultCombo.getSelectedItem();
-                newBloodTest.resultIndicator = resultSelect;
+                // String resultSelect = (String) resultCombo.getSelectedItem();
+                int resultSelect = newBloodTest.flagSeverity();
+                newBloodTest.resultIndicator = result[resultSelect];
 
                 String interpSelect = (String) interpCombo.getSelectedItem();
                 newBloodTest.testInterp = interpSelect;
@@ -290,15 +361,26 @@ public class LabResultsTab {
 
                             HealthConn newConnection = new HealthConn();
                             Connection conn = newConnection.connect();
-                            String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
+                            Statement firstStatement = conn.createStatement();
+                            ResultSet result = firstStatement.executeQuery("SHOW TABLE STATUS LIKE 'bloodtest'");
+                            if (result.next()) {
+                                int nextAutoInc = result.getInt("Auto_increment");
+                                String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
 
-                            PreparedStatement statement = conn.prepareStatement(sql);
-                            statement.setString(1, id);
-                            statement.setString(2, json);
-                            statement.executeUpdate();
+                                PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                                statement.setString(1, id);
+                                statement.setString(2, json);
+                                statement.executeUpdate();
+                                
+                                ResultSet generatedKeys = statement.getGeneratedKeys();
+                                if (generatedKeys.next()) {
+                                    int unique = generatedKeys.getInt(1);
+                                    uniqueMap.put(rowIndex, unique);
+                                }
 
-                            statement.close();
-                            conn.close();
+                                statement.close();
+                                conn.close();
+                            }
 
                         } catch (ClassNotFoundException c) {
                             // TODO: Error handling
@@ -338,7 +420,7 @@ public class LabResultsTab {
         try {
             HealthConn newConnection = new HealthConn();
             Connection conn = newConnection.connect();
-            String sql = "SELECT test FROM bloodtest WHERE id = ?";
+            String sql = "SELECT test, `unique` FROM bloodtest WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result2 = statement.executeQuery();
@@ -348,10 +430,12 @@ public class LabResultsTab {
             while (result2.next()) {
                 BloodTest newBlood;
                 newBlood = newTest.jsonToBT(result2.getString(1));
+                int unique = result2.getInt(2);
                 newTest.addToList(newBlood);
                 model.addRow(new Object[] { newBlood.testName, newBlood.resultIndicator, newBlood.testDate,
                         newBlood.testInterp, newBlood.resultDate, newBlood.signature, newBlood.comment });
                 bloodTestMap.put(count, newBlood);
+                uniqueMap.put(count, unique);
                 count++;
             }
 

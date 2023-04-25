@@ -8,7 +8,7 @@ import java.util.Random;
 public class BloodTest {
     public HashMap<String,BloodItem> bloodTest = new HashMap<>();
     // Will combine all the test for one person into a personal hash map
-    
+
     public String testName;
     public String resultIndicator;
     public String testDate;
@@ -45,9 +45,33 @@ public class BloodTest {
             this.createKidneyPanel();
             this.initResults();
         }
-        
+
     }
 
+    public ArrayList<Boolean> getFlags() {
+        ArrayList<Boolean> flags = new ArrayList<>();
+        for (HashMap.Entry<String, BloodItem> entry : getMap().entrySet()) {
+            flags.add(entry.getValue().getFlag());
+        }
+        return flags;
+    }
+
+    public int flagSeverity() {
+        int count = 0;
+        for (boolean i : getFlags()) {
+            if (i) {
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            return 0;
+        } else if (count > 0 && count < 7) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 
     // Race of patient is important for GFR which means creatine levels, people with african heritage have a higher level of GFR then other races/ethnicities
     public String getRace() {
@@ -81,14 +105,13 @@ public class BloodTest {
         }
 
         return results;
-        
     }
 
     public void initResults() {
         ArrayList<Double> randResults = generateBloodTest();
         int i = 0;
         for (HashMap.Entry<String, BloodItem> entry : bloodTest.entrySet()) {
-            
+
             entry.getValue().setResult(randResults.get(i));
             i++;
             entry.getValue().setFlag(entry.getValue().getResult());
@@ -170,7 +193,7 @@ public class BloodTest {
         this.add_Item(IP.getTestName(), IP);
         this.add_Item(ALP.getTestName(), ALP);
 
-        
+
     }
 
     public void createLiverPanel() {

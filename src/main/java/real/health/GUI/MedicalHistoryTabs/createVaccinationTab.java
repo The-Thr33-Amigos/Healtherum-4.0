@@ -1,10 +1,17 @@
 package real.health.GUI.MedicalHistoryTabs;
 
 import java.sql.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.table.*;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import java.awt.event.*;
 import real.health.SQL.*;
+import real.health.UTIL.Vax;
+
 import java.awt.*;
 import real.health.GUI.UserRole;
 
@@ -70,9 +77,16 @@ public class createVaccinationTab {
 
                 // Add form components for entering the vaccination details
                 JLabel vaccineLabel = new JLabel("Vaccine:");
-                JTextField vaccineField = new JTextField();
+                // JTextField vaccineField = new JTextField();
+                Vax newVax = new Vax(id);
+                ArrayList<String> relativeVax = newVax.vaxToList();
+                JComboBox vaccines = new JComboBox<>(relativeVax.toArray(new String[0]));
+                vaccines.setEditable(true);
+                vaccines.setSelectedItem(null);
+                AutoCompleteDecorator.decorate(vaccines);
+
                 addVaccinationFrame.add(vaccineLabel);
-                addVaccinationFrame.add(vaccineField);
+                addVaccinationFrame.add(vaccines);
 
                 JLabel dateAdministeredLabel = new JLabel("Date Administered:");
                 JTextField dateAdministeredField = new JTextField();
@@ -95,7 +109,7 @@ public class createVaccinationTab {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
-                        String vaccineName = vaccineField.getText();
+                        String vaccineName = (String) vaccines.getSelectedItem();
                         String dateAdministered = dateAdministeredField.getText();
                         String locationAdministered = locationAdministeredField.getText();
                         String administeringProvider = administeringProviderField.getText();

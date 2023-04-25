@@ -3,9 +3,16 @@ package real.health.GUI.MedicalHistoryTabs;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import java.awt.event.*;
 import real.health.SQL.*;
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
+
+import real.health.API.readCSV;
 import real.health.GUI.UserRole;
 
 public class createSurgeriesTab {
@@ -74,10 +81,18 @@ public class createSurgeriesTab {
                 addSurgeryFrame.add(dateLabel);
                 addSurgeryFrame.add(dateField);
 
+                readCSV rc = new readCSV();
+                List<String> surgList = rc.readDrugNames("surg_proc.csv");
+                Collections.sort(surgList);
+
                 JLabel procedureLabel = new JLabel("Procedure:");
-                JTextField procedureField = new JTextField();
+                JComboBox<String> proCombo = new JComboBox<>(surgList.toArray(new String[0]));
+                proCombo.setEditable(true);
+                proCombo.setSelectedItem(null);
+                AutoCompleteDecorator.decorate(proCombo);
                 addSurgeryFrame.add(procedureLabel);
-                addSurgeryFrame.add(procedureField);
+                addSurgeryFrame.add(proCombo);
+
 
                 JLabel surgeonLabel = new JLabel("Surgeon:");
                 JTextField surgeonField = new JTextField();
@@ -96,7 +111,7 @@ public class createSurgeriesTab {
                     public void actionPerformed(ActionEvent e) {
                         // Get the values from the form fields
                         String date = dateField.getText();
-                        String procedure = procedureField.getText();
+                        String procedure = (String) proCombo.getSelectedItem();
                         String surgeon = surgeonField.getText();
                         String location = locationField.getText();
 
@@ -118,7 +133,7 @@ public class createSurgeriesTab {
 
                             // Refresh the surgeries table to show the newly added record
                             DefaultTableModel tableModel = (DefaultTableModel) surgeriesTable.getModel();
-                            tableModel.addRow(new Object[] { date, procedure, surgeon, location });
+                            tableModel.addRow(new Object[] { procedure, surgeon, location, date });
 
                             // Clean up resources
                             statement.close();
