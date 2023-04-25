@@ -1,5 +1,9 @@
 package real.health.UTIL;
 
+import java.util.List;
+
+import real.health.SQL.HealthConn;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,13 +12,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
-import real.health.SQL.HealthConn;
-
-public class Vax {
+public class Vaxxes {
     private  String id;
-    public Vax(String id) {
+    public Vaxxes(String id) {
         this.id = id;
     }
 

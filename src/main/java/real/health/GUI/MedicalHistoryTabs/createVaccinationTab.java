@@ -10,7 +10,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import java.awt.event.*;
 import real.health.SQL.*;
-import real.health.UTIL.Vax;
+import real.health.UTIL.Vaxxes;
 
 import java.awt.*;
 import real.health.GUI.UserRole;
@@ -78,7 +78,7 @@ public class createVaccinationTab {
                 // Add form components for entering the vaccination details
                 JLabel vaccineLabel = new JLabel("Vaccine:");
                 // JTextField vaccineField = new JTextField();
-                Vax newVax = new Vax(id);
+                Vaxxes newVax = new Vaxxes(id);
                 ArrayList<String> relativeVax = newVax.vaxToList();
                 JComboBox vaccines = new JComboBox<>(relativeVax.toArray(new String[0]));
                 vaccines.setEditable(true);
