@@ -272,7 +272,7 @@ public class AppointmentsTab {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String[] newAppointment = { dateField.getText(), (String) timeComboBox.getSelectedItem(),
-                        (String) typeCombo.getSelectedItem(), (String) providerComboBox.getSelectedItem() };
+                        (String) typeCombo.getSelectedItem(), (String) providerComboBox.getSelectedItem(), "PENDING" };
 
                 // Check if there is no existing appointment for the same date and time
                 boolean isDuplicate = false;
@@ -301,12 +301,13 @@ public class AppointmentsTab {
                         statement.setString(3, newAppointment[1]);
                         statement.setString(4, newAppointment[2]);
                         statement.setString(5, newAppointment[3]);
-
+                        statement.setString(6, newAppointment[4]);
                         if (user == UserRole.PATIENT) {
-                            statement.setString(6, "PENDING");
-                        } else {
-                            statement.setString(6, newAppointment[4]);
-                        }
+                            //newAppointment[4] = "PENDING";
+                        } 
+
+
+                        
 
                         int rowsInserted = statement.executeUpdate();
                         if (rowsInserted > 0) {

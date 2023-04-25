@@ -17,6 +17,7 @@ import real.health.GUI.UserRole;
 
 public class createVaccinationTab {
     private UserRole userRole;
+
     public JComponent createVaccinationTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable vaccinationTable = new JTable();
@@ -177,7 +178,9 @@ public class createVaccinationTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(vaccinationTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(vaccinationTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -197,7 +200,6 @@ public class createVaccinationTab {
                         statement.setString(3, vaccinationTable.getValueAt(selectedRow, 1).toString());
                         statement.setString(4, vaccinationTable.getValueAt(selectedRow, 2).toString());
                         statement.setString(5, vaccinationTable.getValueAt(selectedRow, 3).toString());
-
 
                         statement.executeUpdate();
 
@@ -235,7 +237,5 @@ public class createVaccinationTab {
         }
 
         return panel;
-
     }
-
 }

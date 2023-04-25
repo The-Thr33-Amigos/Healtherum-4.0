@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import real.health.GUI.MedicalHistoryTabs.*;
 
-
 public class MedicalHistoryTab {
     private UserRole userRole;
 

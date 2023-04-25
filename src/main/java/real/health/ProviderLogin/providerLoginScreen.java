@@ -8,7 +8,6 @@ import javax.swing.*;
 import real.health.GUI.UserRole;
 import real.health.SQL.*;
 
-
 public class providerLoginScreen {
     public static void loginScreen() {
         JFrame frame = new JFrame("Provider Login");
@@ -66,7 +65,6 @@ public class providerLoginScreen {
                     statement.setString(1, username);
                     ResultSet rs = statement.executeQuery();
 
-
                     if (rs.next()) {
                         // Login successful
                         JOptionPane.showMessageDialog(frame, "Login successful.");
@@ -103,4 +101,3 @@ public class providerLoginScreen {
         frame.setVisible(true);
     }
 }
-

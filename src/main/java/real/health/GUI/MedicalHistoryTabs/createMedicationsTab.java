@@ -22,6 +22,7 @@ import real.health.GUI.UserRole;
 
 public class createMedicationsTab {
     private UserRole userRole;
+
     public JComponent createMedicationsTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable medicationsTable = new JTable();
@@ -89,13 +90,12 @@ public class createMedicationsTab {
                 readCSV rc = new readCSV();
                 List<String> drugList = rc.readDrugNames("output.csv");
                 Collections.sort(drugList);
-                
+
                 JLabel nameLabel = new JLabel("Name:");
                 JComboBox<String> drugCombo = new JComboBox<>(drugList.toArray(new String[0]));
                 drugCombo.setEditable(true);
                 drugCombo.setSelectedItem(null);
                 AutoCompleteDecorator.decorate(drugCombo);
-
 
                 addMedicationFrame.add(nameLabel);
                 addMedicationFrame.add(drugCombo);
@@ -105,10 +105,10 @@ public class createMedicationsTab {
                 drugCombo.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        
+
                         String selectedDrug = (String) drugCombo.getSelectedItem();
                         List<String> newDoses;
-                        
+
                         if (selectedDrug != null && !selectedDrug.isEmpty() && drugList.contains(selectedDrug)) {
                             FDAPI newFDA = new FDAPI();
                             try {
@@ -126,12 +126,9 @@ public class createMedicationsTab {
                         doseCombo.repaint();
                     }
                 });
-                
-                
-                
+
                 addMedicationFrame.add(doseLabel);
                 addMedicationFrame.add(doseCombo);
-
 
                 JLabel frequencyLabel = new JLabel("Frequency:");
                 String[] freq = { "Daily", "Twice A Day", "Three Times a Day", "When Needed" };
@@ -244,7 +241,9 @@ public class createMedicationsTab {
                     return;
                 }
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(medicationsTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(medicationsTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
@@ -260,7 +259,7 @@ public class createMedicationsTab {
                         Connection con = newConnection.connect();
                         String sql = "DELETE FROM medications WHERE id = ? AND medication = ? AND dose = ? AND frequency = ? AND datePrescribed = ?";
                         PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id); 
+                        statement.setString(1, id);
                         statement.setString(2, medicationsTable.getValueAt(selectedRow, 0).toString());
                         statement.setString(3, medicationsTable.getValueAt(selectedRow, 1).toString());
                         statement.setString(4, medicationsTable.getValueAt(selectedRow, 2).toString());
@@ -286,13 +285,13 @@ public class createMedicationsTab {
             }
         });
 
-        // Create the medications tab panel and add 
+        // Create the medications tab panel and add
         // the medications table and add button panel
         JPanel medicationsTabPanel = new JPanel(new BorderLayout());
         medicationsTabPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
 
         // Create a panel for the add button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 

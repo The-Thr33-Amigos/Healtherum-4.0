@@ -27,11 +27,8 @@ public class createNewProvider {
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField();
         
-        
-
         JLabel emailLabel = new JLabel("Email:");
         JTextField emailField = new JTextField();
-
 
         JLabel phoneLabel = new JLabel("Phone Number:");
         JFormattedTextField phoneField = FieldFormat.createPhoneNumber(true);

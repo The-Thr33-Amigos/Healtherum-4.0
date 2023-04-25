@@ -36,7 +36,8 @@ public class CalendarPanel {
     }
 
     private void drawCalendar(int month, int year) {
-        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December" };
 
         JLabel monthLabel = new JLabel(months[month]);
         monthLabel.setBounds(60, 0, 90, 25);
@@ -48,7 +49,7 @@ public class CalendarPanel {
         yearLabel.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(yearLabel);
 
-        int[] daysInMonth = {31,28,31,30,31,30,31,31,30,31,30,31};
+        int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
         if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
             daysInMonth[1] = 29;
         }
@@ -81,7 +82,7 @@ public class CalendarPanel {
     }
 
     private String getDayOfWeekName(int dayOfWeek) {
-        String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String[] daysOfWeek = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
         return daysOfWeek[dayOfWeek];
     }
 }

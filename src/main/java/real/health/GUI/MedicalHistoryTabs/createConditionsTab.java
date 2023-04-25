@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class createConditionsTab {
     private UserRole userRole;
+
     public JComponent createConditionsTab(String id, UserRole userRole) {
         this.userRole = userRole;
         JTable conditionsTable = new JTable();
@@ -120,7 +121,7 @@ public class createConditionsTab {
                         }
                     }
                 });
-                
+
                 JButton cancelButton = new JButton("Cancel");
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -151,11 +152,13 @@ public class createConditionsTab {
                 }
 
                 // Display a confirmation dialog
-                int confirmation = JOptionPane.showConfirmDialog(conditionsTable, "Are you sure you want to delete the selected row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(conditionsTable,
+                        "Are you sure you want to delete the selected row?", "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
 
                 // If the user confirms the deletion, proceed
                 if (confirmation == JOptionPane.YES_OPTION) {
-                    
+
                     // Get the primary key or unique identifier of the record from the selected row
                     // Assuming the first column of the table contains the primary key
                     String primaryKey = conditionsTable.getValueAt(selectedRow, 0).toString();
@@ -167,7 +170,7 @@ public class createConditionsTab {
                         Connection con = newConnection.connect();
                         String sql = "DELETE FROM conditions WHERE id = ? AND medical_condition = ? AND status = ?";
                         PreparedStatement statement = con.prepareStatement(sql);
-                        statement.setString(1, id); 
+                        statement.setString(1, id);
                         statement.setString(2, conditionsTable.getValueAt(selectedRow, 0).toString());
                         statement.setString(3, conditionsTable.getValueAt(selectedRow, 1).toString());
                         statement.executeUpdate();
@@ -195,7 +198,7 @@ public class createConditionsTab {
         JPanel conditionsTabPanel = new JPanel(new BorderLayout());
         conditionsTabPanel.add(new JScrollPane(conditionsTable), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         // Create a panel for the add button
         JPanel addDeletePanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
