@@ -10,8 +10,10 @@ import real.health.ProviderLogin.providerSystem.User;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.text.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.List;
 
 public class PendingAppointmentsFrame extends JFrame {
@@ -47,17 +49,23 @@ public class PendingAppointmentsFrame extends JFrame {
 
         tableModel.addColumn("Time");
         tableModel.addColumn("Patient");
+        tableModel.addColumn("Date");
         tableModel.addColumn("Reason");
         tableModel.addColumn("Status");
 
         // Fetches pending appointments from the database
         List<Appointment> allAppointments = providerSystem.getAppointments(id, providerName);
-        List<Appointment> pendingAppointments = filterPendingAppointments(allAppointments);
+        List<Appointment> pendingAppointments = new ArrayList<>();
+        try {
+            pendingAppointments = filterPendingAppointments(allAppointments);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         for (Appointment appointment : pendingAppointments) {
             User patient = providerSystem.getUserById(appointment.getPatientId());
             String patientName = patient.getFirstName() + " " + patient.getLastName();
-            tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType(),
+            tableModel.addRow(new Object[] { appointment.getTime(), appointment.getDate(), patientName, appointment.getType(),
                     appointment.getStatus() });
         }
 
@@ -109,15 +117,24 @@ public class PendingAppointmentsFrame extends JFrame {
     // and getUserById.
     // For filterPendingAppointments, you can create a new method that filters out
     // appointments based on their status:
-    private List<Appointment> filterPendingAppointments(List<Appointment> allAppointments) {
+    private List<Appointment> filterPendingAppointments(List<Appointment> allAppointments) throws ParseException {
         List<Appointment> filteredAppointments = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        String currentDateString = sdf.format(currentDate);
+
+        System.out.println("Current date: " + currentDateString);
+        System.out.println("All appointments: " + allAppointments);
 
         for (Appointment appointment : allAppointments) {
-            if (appointment.getStatus().equalsIgnoreCase("pending")) {
+            Date appointmentDate = sdf.parse(appointment.getDate());
+            if (appointment.getStatus().equalsIgnoreCase("PENDING") && 
+                appointmentDate.compareTo(sdf.parse(currentDateString)) >= 0) {
                 filteredAppointments.add(appointment);
             }
         }
-
+    
         return filteredAppointments;
     }
+
 }

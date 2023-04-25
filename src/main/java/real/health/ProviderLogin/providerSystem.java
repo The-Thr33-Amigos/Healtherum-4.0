@@ -235,10 +235,11 @@ public class providerSystem {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedSelectedDate = dtf.format(LocalDate.now());
 
-            String sql = "SELECT appointment_date, appointment_time, appointment_type, provider, status, id FROM appointments WHERE provider = ? AND appointment_date = ?";
+            String sql = "SELECT appointment_date, appointment_time, appointment_type, provider, status, id FROM appointments WHERE provider = ? AND appointment_date >= ? AND status = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, providerName);
             statement.setString(2, formattedSelectedDate);
+            statement.setString(3, "PENDING");
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
