@@ -199,7 +199,12 @@ public class LabResultsTab {
                 int confirmation = JOptionPane.showConfirmDialog(table, "Are you sure you want to delete the selected test?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
                 if (confirmation == JOptionPane.YES_OPTION) {
-                    int unique = uniqueMap.get(selectedRow);
+                    Integer unique = uniqueMap.get(selectedRow);
+
+                    if (unique == null) {
+                        JOptionPane.showMessageDialog(table, "An error occurred while trying to delete the selected test.");
+                        return;
+                    }
                     try {
                         HealthConn newConnection = new HealthConn();
                         Connection conn = newConnection.connect();
@@ -215,6 +220,18 @@ public class LabResultsTab {
                         bloodTestMap.remove(selectedRow);
                         model.removeRow(selectedRow);
                         uniqueMap.remove(selectedRow);
+
+                        HashMap<Integer, Integer> newUniqueMap = new HashMap<>();
+                        HashMap<Integer, BloodTest> newBloodTestMap = new HashMap<>();
+
+                        for (int i = 0; i < table.getRowCount(); i++) {
+                            newUniqueMap.put(i, uniqueMap.get(i + (i >= selectedRow ? 1 : 0)));
+                            newBloodTestMap.put(i, bloodTestMap.get(i + (i >= selectedRow ? 1 : 0)));
+
+                        }
+                        uniqueMap = newUniqueMap;
+                        bloodTestMap = newBloodTestMap;
+
                     }
                     catch (SQLException sqlError) {
                         sqlError.printStackTrace();
@@ -326,13 +343,18 @@ public class LabResultsTab {
                             ResultSet result = firstStatement.executeQuery("SHOW TABLE STATUS LIKE 'bloodtest'");
                             if (result.next()) {
                                 int nextAutoInc = result.getInt("Auto_increment");
-                                String sql = "INSERT INTO bloodtest (id, test, `unique`) VALUES (?, ?, ?)";
+                                String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
 
-                                PreparedStatement statement = conn.prepareStatement(sql);
+                                PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                                 statement.setString(1, id);
                                 statement.setString(2, json);
-                                statement.setInt(3, nextAutoInc);
                                 statement.executeUpdate();
+                                
+                                ResultSet generatedKeys = statement.getGeneratedKeys();
+                                if (generatedKeys.next()) {
+                                    int unique = generatedKeys.getInt(1);
+                                    uniqueMap.put(rowIndex, unique);
+                                }
 
                                 statement.close();
                                 conn.close();
