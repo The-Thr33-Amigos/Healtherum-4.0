@@ -326,12 +326,11 @@ public class LabResultsTab {
                             ResultSet result = firstStatement.executeQuery("SHOW TABLE STATUS LIKE 'bloodtest'");
                             if (result.next()) {
                                 int nextAutoInc = result.getInt("Auto_increment");
-                                String sql = "INSERT INTO bloodtest (id, test, `unique`) VALUES (?, ?, ?)";
+                                String sql = "INSERT INTO bloodtest (id, test) VALUES (?, ?)";
 
                                 PreparedStatement statement = conn.prepareStatement(sql);
                                 statement.setString(1, id);
                                 statement.setString(2, json);
-                                statement.setInt(3, nextAutoInc);
                                 statement.executeUpdate();
 
                                 statement.close();
