@@ -31,8 +31,8 @@ public class CustomBooleanRenderer extends DefaultTableCellRenderer {
             goodIcon = new ImageIcon(greenImage.getScaledInstance(width, height, Image.SCALE_SMOOTH));
             badIcon = new ImageIcon(redImage.getScaledInstance(width, height, Image.SCALE_SMOOTH));
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (IOException IO) {
+            IO.printStackTrace();
         }
     }
 

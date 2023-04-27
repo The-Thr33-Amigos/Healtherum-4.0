@@ -40,4 +40,16 @@ public class ValidFields {
 
         return fullNameList;
     }
+
+    public static boolean isValidVital(Number val) {
+        if (val instanceof Integer) {
+            return ((Integer) val) > 0;
+        }
+        else if (val instanceof Double) {
+            return ((Double) val) > 0;
+        }
+        else {
+            return false;
+        }
+    }
 }
