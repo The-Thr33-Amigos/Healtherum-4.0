@@ -140,7 +140,7 @@ public class createAccountPanel {
                         statement.setString(2, user);
                         statement.setString(3, password);
                         statement.executeUpdate();
-                        System.out.println("Sentttttt");
+                        System.out.println("Successfully created user.");
                         // Close the connection and dispose of the dialog
                         statement.close();
                         con.close();
