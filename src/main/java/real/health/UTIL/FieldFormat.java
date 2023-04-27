@@ -15,8 +15,8 @@ public class FieldFormat {
                 maskFormatter = new MaskFormatter("##/##/####");
             }
             
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException pe) {
+            pe.printStackTrace();
         }
 
         if (maskFormatter != null && phone) {

@@ -77,7 +77,7 @@ public class Vaxxes {
         int age = getAge();
         ArrayList<String> vaxxes = new ArrayList<>();
         for (Pair<String, Double> v : vaccinations) {
-            if (age > v.getSecond() && !existing.contains(v.getFirst())) {
+            if (age > v.getSecond() && !existing.contains(v.getFirst()) || repeatVax.contains(v)) {
                 vaxxes.add(v.getFirst());
             }
             
