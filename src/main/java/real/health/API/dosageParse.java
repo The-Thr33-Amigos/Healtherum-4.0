@@ -10,14 +10,14 @@ public class dosageParse {
 
     public List<String> drugDose;
 
-    public Boolean isValidMG(String inputText) {
+    public Boolean isValidMG(String input) {
         Pattern pattern = Pattern.compile("(\\d+\\.?\\d*)\\s+mg");
-        Matcher matcher = pattern.matcher(inputText);
-        List<String> dosages = new ArrayList<>();
+        Matcher match = pattern.matcher(input);
+        ArrayList<String> dosages = new ArrayList<>();
 
-        while (matcher.find()) {
-            if (!dosages.contains(matcher.group())) {
-                dosages.add(matcher.group());
+        while (match.find()) {
+            if (!dosages.contains(match.group())) {
+                dosages.add(match.group());
             }
         }
 
@@ -30,12 +30,12 @@ public class dosageParse {
 
     }
 
-    public List<String> sortDrugDose(List<String> mgs) {
+    public ArrayList<String> sortDrugDose(ArrayList<String> mgs) {
         HashMap<Integer,String> doseMap = new HashMap<>();
         Pattern pattern = Pattern.compile("\\d+");
         
 
-        List<String> sortedDoses = new ArrayList<>();
+        ArrayList<String> sortedDoses = new ArrayList<>();
         for (int i = 0; i < mgs.size(); i++) {
             String currentVal = mgs.get(i);
             Matcher matcher = pattern.matcher(currentVal);
@@ -46,7 +46,7 @@ public class dosageParse {
             
         }
 
-        List<Integer> keys = new ArrayList<>(doseMap.keySet());
+        ArrayList<Integer> keys = new ArrayList<>(doseMap.keySet());
         Collections.sort(keys);
         for (int i = 0; i < keys.size(); i++) {
             sortedDoses.add(doseMap.get(keys.get(i)));

@@ -25,7 +25,7 @@ public class AddressFill extends JTextField {
     private final AutoCompleteListener listener;
     private final JPopupMenu suggestionsPop;
     private String selectedSuggestion;
-    private Timer searchTimer;
+    private Timer newTimer;
     private boolean suggestionSelected = false;
 
     public AddressFill(int columns, AutoCompleteListener listener) {
@@ -33,28 +33,28 @@ public class AddressFill extends JTextField {
         this.listener = listener;
         this.suggestionsPop = new JPopupMenu();
 
-        this.searchTimer = new Timer(500 ,new ActionListener() {
+        this.newTimer = new Timer(500 ,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateSuggestions();
             }
         });
-        searchTimer.setRepeats(false);
+        newTimer.setRepeats(false);
 
         this.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                searchTimer.restart();
+                newTimer.restart();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                searchTimer.restart();
+                newTimer.restart();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                searchTimer.restart();
+                newTimer.restart();
             }
         });
     }
