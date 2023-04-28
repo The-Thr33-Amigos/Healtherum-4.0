@@ -148,8 +148,18 @@ public class providerSystem {
 
         // Create a panel for the navigation buttons and add it to the main panel
         JPanel navigationPanel = new JPanel();
-        mainPanel.add(navigationPanel, BorderLayout.PAGE_END);
+        mainPanel.add(navigationPanel, BorderLayout.PAGE_END);        
         createNavigationButtons(id, navigationPanel, "123");
+
+        // Add refresh button
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshAppointmentsList(id, "123");
+            }
+        });
+        navigationPanel.add(refreshButton, BorderLayout.PAGE_START);
 
         // Create a panel for the appointments list and add it to the main panel
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
@@ -159,7 +169,7 @@ public class providerSystem {
         // Create a panel for the calendar and add it to the main panel
         JPanel calendarPanel = new JPanel(new BorderLayout());
         mainPanel.add(calendarPanel, BorderLayout.EAST);
-        createCalendar(calendarPanel, id, getAppointments(id, "123"), "123");
+        createCalendar(calendarPanel, id, getAppointments(id, "123", "ACCEPTED"), "123");
 
         // Create a panel for the patient search and add it to the main panel
         JPanel searchPanel = new JPanel(new BorderLayout());
@@ -192,7 +202,7 @@ public class providerSystem {
         Date selectedDate = new Date();
 
         // Fetches appointments from the database
-        List<Appointment> allAppointments = getAppointments(id, providerName);
+        List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, selectedDate);
 
         for (Appointment appointment : appointments) {
@@ -224,8 +234,26 @@ public class providerSystem {
         });
     }
 
+    public static void refreshAppointmentsList(String id, String providerName) {
+        // Clear the current appointments from the table
+        DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
+        model.setRowCount(0);
+    
+        // Fetch the updated appointments list from the database and add them to the table
+        List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
+        List<Appointment> appointments = filterAppointmentsByDate(allAppointments, new Date());
+        for (Appointment appointment : appointments) {
+            if (appointment.getStatus().equalsIgnoreCase("accepted")) {
+                User patient = getUserById(appointment.getPatientId());
+                String patientName = patient.getFirstName() + " " + patient.getLastName();
+                model.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
+            }
+        }
+    }
+    
+
     // Add this method to fetch appointments from the database
-    public static List<Appointment> getAppointments(String id, String providerName) {
+    public static List<Appointment> getAppointments(String id, String providerName, String desiredStatus) {
         List<Appointment> appointments = new ArrayList<>();
 
         try {
@@ -239,7 +267,7 @@ public class providerSystem {
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, providerName);
             statement.setString(2, formattedSelectedDate);
-            statement.setString(3, "PENDING");
+            statement.setString(3, desiredStatus);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
