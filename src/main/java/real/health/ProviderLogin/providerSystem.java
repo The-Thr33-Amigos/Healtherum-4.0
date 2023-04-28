@@ -148,7 +148,7 @@ public class providerSystem {
 
         // Create a panel for the navigation buttons and add it to the main panel
         JPanel navigationPanel = new JPanel();
-        mainPanel.add(navigationPanel, BorderLayout.PAGE_END);        
+        mainPanel.add(navigationPanel, BorderLayout.PAGE_END);
         createNavigationButtons(id, navigationPanel, "123");
 
         // Add refresh button
@@ -184,7 +184,7 @@ public class providerSystem {
         // Add components for the daily appointments list
         JLabel appointmentsLabel = new JLabel("Today's Appointments");
         appointmentsLabel.setFont(new Font("Serif", Font.BOLD, 18));
-        panel.add(appointmentsLabel);
+        panel.add(appointmentsLabel, BorderLayout.NORTH);
 
         // Create a table model for the appointments list
         DefaultTableModel tableModel = new DefaultTableModel() {
@@ -238,8 +238,9 @@ public class providerSystem {
         // Clear the current appointments from the table
         DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
         model.setRowCount(0);
-    
-        // Fetch the updated appointments list from the database and add them to the table
+
+        // Fetch the updated appointments list from the database and add them to the
+        // table
         List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, new Date());
         for (Appointment appointment : appointments) {
@@ -250,7 +251,6 @@ public class providerSystem {
             }
         }
     }
-    
 
     // Add this method to fetch appointments from the database
     public static List<Appointment> getAppointments(String id, String providerName, String desiredStatus) {
@@ -301,13 +301,12 @@ public class providerSystem {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-
-        datePicker.getModel().addPropertyChangeListener(new PropertyChangeListener() {
+        datePanel.setPreferredSize(new Dimension(185, 200));
+        datePanel.getModel().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("value")) {
-                    Date selectedDate = (Date) datePicker.getModel().getValue();
+                    Date selectedDate = (Date) datePanel.getModel().getValue();
                     if (selectedDate != null) {
                         // Fetch appointments for the selected date and provider
                         List<Appointment> appointmentsForSelectedDate = getAppointmentsForSelectedDateAndProvider(
@@ -318,7 +317,7 @@ public class providerSystem {
             }
         });
 
-        panel.add(datePicker);
+        panel.add(datePanel);
     }
 
     // Add a method to fetch appointments from the database for the selected date
