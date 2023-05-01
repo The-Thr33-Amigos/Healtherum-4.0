@@ -32,7 +32,7 @@ public class providerHomeScreen {
         constraints.gridy = 1;
         panel.add(infoLabel, constraints);
 
-        JButton existingUserButton = new JButton("Existing");
+        JButton existingUserButton = new JButton("Existing User");
         existingUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 providerLoginScreen.loginScreen();
@@ -44,7 +44,7 @@ public class providerHomeScreen {
         constraints.gridy = 2;
         panel.add(existingUserButton, constraints);
 
-        JButton newUserButton = new JButton("New");
+        JButton newUserButton = new JButton("New User");
         newUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createNewProvider.newProviderRegistration();

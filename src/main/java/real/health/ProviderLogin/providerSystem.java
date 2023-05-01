@@ -149,14 +149,14 @@ public class providerSystem {
         // Create a panel for the navigation buttons and add it to the main panel
         JPanel navigationPanel = new JPanel();
         mainPanel.add(navigationPanel, BorderLayout.PAGE_END);
-        createNavigationButtons(id, navigationPanel, "123");
+        createNavigationButtons(id, navigationPanel, "Davis");
 
         // Add refresh button
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                refreshAppointmentsList(id, "123");
+                refreshAppointmentsList(id, "Davis");
             }
         });
         navigationPanel.add(refreshButton, BorderLayout.PAGE_START);
@@ -164,12 +164,12 @@ public class providerSystem {
         // Create a panel for the appointments list and add it to the main panel
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
         mainPanel.add(appointmentsPanel, BorderLayout.WEST);
-        createAppointmentsList(appointmentsPanel, id, "123");
+        createAppointmentsList(appointmentsPanel, id, "Davis");
 
         // Create a panel for the calendar and add it to the main panel
         JPanel calendarPanel = new JPanel(new BorderLayout());
         mainPanel.add(calendarPanel, BorderLayout.EAST);
-        createCalendar(calendarPanel, id, getAppointments(id, "123", "ACCEPTED"), "123");
+        createCalendar(calendarPanel, id, getAppointments(id, "Davis", "ACCEPTED"), "Davis");
 
         // Create a panel for the patient search and add it to the main panel
         JPanel searchPanel = new JPanel(new BorderLayout());
@@ -440,10 +440,10 @@ public class providerSystem {
         JButton analyticsButton = new JButton("Analytics");
 
         panel.add(appointmentsButton);
-        panel.add(prescriptionsButton);
-        panel.add(referralsButton);
-        panel.add(messagingButton);
-        panel.add(analyticsButton);
+        //panel.add(prescriptionsButton);
+        //panel.add(referralsButton);
+        //panel.add(messagingButton);
+        //panel.add(analyticsButton);
 
         // Add action listener to the appointmentsButton
         appointmentsButton.addActionListener(new ActionListener() {
