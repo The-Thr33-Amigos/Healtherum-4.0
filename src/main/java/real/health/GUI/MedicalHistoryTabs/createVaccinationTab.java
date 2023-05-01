@@ -77,7 +77,6 @@ public class createVaccinationTab {
 
                 // Add form components for entering the vaccination details
                 JLabel vaccineLabel = new JLabel("Vaccine:");
-                // JTextField vaccineField = new JTextField();
                 Vaxxes newVax = new Vaxxes(id);
                 ArrayList<String> relativeVax = newVax.vaxToList();
                 JComboBox vaccines = new JComboBox<>(relativeVax.toArray(new String[0]));

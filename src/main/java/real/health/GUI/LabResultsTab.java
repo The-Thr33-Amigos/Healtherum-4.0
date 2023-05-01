@@ -171,26 +171,6 @@ public class LabResultsTab {
         newFrame.add(emptyLabel);
         newFrame.add(nextButtonPanel);
 
-        // deleteButton.addActionListner(new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-        // int selectedRow = table.getSelectedRow();
-
-        // // If no row is selected, display an error message
-        // if (selectedRow == -1) {
-        // JOptionPane.showMessageDialog(vaccinationTable, "Please select a row to
-        // delete.");
-        // return;
-        // }
-
-        // // Display a confirmation dialog
-        // int confirmation = JOptionPane.showConfirmDialog(vaccinationTable, "Are you
-        // sure you want to delete the selected row?", "Confirm Deletion",
-        // JOptionPane.YES_NO_OPTION);
-        // // bloodTestMap.remove(selectedRow);
-
-        // }
-        // })
 
         newButton2.addActionListener(new ActionListener() {
             @Override
