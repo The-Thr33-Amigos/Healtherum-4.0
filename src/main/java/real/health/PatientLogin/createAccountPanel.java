@@ -13,6 +13,22 @@ import java.util.*;
 import java.awt.event.*;
 
 public class createAccountPanel {
+
+    public class TimeSlotRenderer extends DefaultListCellRenderer {
+        private JTable appointmentsTable;
+    
+        public TimeSlotRenderer(JTable appointmentsTable) {
+            this.appointmentsTable = appointmentsTable;
+        }
+    
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            // Add any custom rendering logic here
+    
+            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        }
+    }
+    
     public static JPanel createAccountPanel(String firstName, String lastName, String bdate, String email, String phone, String gender,
             String mailing, String race) {
         JPanel panel2 = new JPanel(new GridLayout(3, 2));
@@ -124,7 +140,7 @@ public class createAccountPanel {
                         statement.setString(2, user);
                         statement.setString(3, password);
                         statement.executeUpdate();
-                        System.out.println("Sentttttt");
+                        System.out.println("Successfully created user.");
                         // Close the connection and dispose of the dialog
                         statement.close();
                         con.close();

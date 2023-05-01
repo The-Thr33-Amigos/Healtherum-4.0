@@ -1,6 +1,10 @@
 package real.health.GUI;
 
 import java.awt.*;
+
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.DialogOwner;
 import javax.swing.*;
 import javax.swing.table.*;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -10,6 +14,7 @@ import real.health.SQL.*;
 import real.health.UTIL.CustomBooleanRenderer;
 
 import java.sql.*;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PrinterException;
 import java.io.IOException;
 
 public class LabResultsTab {
@@ -72,7 +78,6 @@ public class LabResultsTab {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    System.out.println("Double click");
                     int row = table.rowAtPoint(e.getPoint());
                     if (row >= 0) {
                         BloodTest selectedBT = bloodTestMap.get(row);
@@ -880,11 +885,13 @@ public class LabResultsTab {
 
         // Download/Print Options
         JPanel downloadPrintPanel = new JPanel();
-        JButton downloadButton = new JButton("Download");
         JButton printButton = new JButton("Print");
-        if (userRole == UserRole.PATIENT) {
-            downloadPrintPanel.add(downloadButton);
-        }
+        printButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                printResults(table, labResultsPanel); // Replace 'yourResultsTable' with the actual JTable instance you want to print, and 'yourParentPanel' with the parent JPanel of your application
+            }
+        });
 
         downloadPrintPanel.add(printButton);
         if (userRole == UserRole.PROVIDER) {
@@ -896,6 +903,27 @@ public class LabResultsTab {
 
         return labResultsPanel;
     }
+
+    private void printResults(JTable table, JPanel parentPanel) {
+        MessageFormat headerFormat = new MessageFormat("Results"); // Define the header text
+        MessageFormat footerFormat = new MessageFormat("Page {0}"); // Define the footer text
+
+        try {
+            PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+            
+            Window parentWindow = SwingUtilities.getWindowAncestor(parentPanel);
+            if (parentWindow != null) {
+                attributes.add(new DialogOwner(parentWindow));
+            }
+
+            // Print the table with the header and footer formats and the custom attribute set
+            table.print(JTable.PrintMode.FIT_WIDTH, headerFormat, footerFormat, true, attributes, false);
+        } catch (PrinterException e) {
+            JOptionPane.showMessageDialog(null, "Error: Unable to print the table.\n" + e.getMessage(), "Print Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    
 
     private int checkOptInStatus(String userId) throws SQLException {
         int optInStatus = 0;

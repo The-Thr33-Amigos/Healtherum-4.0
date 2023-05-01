@@ -71,7 +71,6 @@ public class PatientInformation {
             HealthConn newConnection = new HealthConn();
             Connection con = newConnection.connect();
             String sql = "SELECT firstName, lastName, email, phone, bdate, gender, race, mailing FROM basic WHERE id = ?";
-            System.out.println(id);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet result = statement.executeQuery();
