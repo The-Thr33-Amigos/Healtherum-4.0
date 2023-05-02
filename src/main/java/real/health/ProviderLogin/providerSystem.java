@@ -34,6 +34,7 @@ public class providerSystem {
 
     private static JList<Appointment> appointmentsList;
     private static JTable appointmentsTable;
+    static List<Appointment> displayedAppointments = new ArrayList<>();
 
     public static class Appointment {
         private String date;
@@ -210,6 +211,7 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
             }
         }
 
@@ -225,7 +227,7 @@ public class providerSystem {
                 if (e.getClickCount() == 2) {
                     int selectedRow = appointmentsTable.getSelectedRow();
                     if (selectedRow != -1) {
-                        String patientId = appointments.get(selectedRow).getPatientId();
+                        String patientId = displayedAppointments.get(selectedRow).getPatientId();
                         User patient = getUserById(patientId);
                         viewPatientInfo(patient, UserRole.PROVIDER);
                     }
@@ -235,12 +237,13 @@ public class providerSystem {
     }
 
     public static void refreshAppointmentsList(String id, String providerName) {
-        // Clear the current appointments from the table
+        // Clear the current appointments from the table and displayedAppointments list
         DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
         model.setRowCount(0);
-
+        displayedAppointments.clear(); // Clear the displayedAppointments list
+    
         // Fetch the updated appointments list from the database and add them to the
-        // table
+        // table and displayedAppointments list
         List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, new Date());
         for (Appointment appointment : appointments) {
@@ -248,6 +251,7 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 model.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
             }
         }
     }
