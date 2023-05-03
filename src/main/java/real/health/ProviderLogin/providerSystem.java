@@ -35,6 +35,7 @@ public class providerSystem {
     private static JList<Appointment> appointmentsList;
     private static JTable appointmentsTable;
     static List<Appointment> displayedAppointments = new ArrayList<>();
+    private static JLabel appointmentsLabel;
 
     public static class Appointment {
         private String date;
@@ -183,7 +184,7 @@ public class providerSystem {
 
     private static void createAppointmentsList(JPanel panel, String id, String providerName) {
         // Add components for the daily appointments list
-        JLabel appointmentsLabel = new JLabel("Today's Appointments");
+        appointmentsLabel = new JLabel("Today's Appointments");
         appointmentsLabel.setFont(new Font("Serif", Font.BOLD, 18));
         panel.add(appointmentsLabel, BorderLayout.NORTH);
 
@@ -211,7 +212,8 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
-                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments
+                                                        // list
             }
         }
 
@@ -236,12 +238,18 @@ public class providerSystem {
         });
     }
 
+    private static void updateAppointmentsLabel(Date selectedDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM dd");
+        String formattedDate = dateFormat.format(selectedDate);
+        appointmentsLabel.setText(formattedDate + "'s Appointments");
+    }
+    
     public static void refreshAppointmentsList(String id, String providerName) {
         // Clear the current appointments from the table and displayedAppointments list
         DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
         model.setRowCount(0);
         displayedAppointments.clear(); // Clear the displayedAppointments list
-    
+
         // Fetch the updated appointments list from the database and add them to the
         // table and displayedAppointments list
         List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
@@ -251,7 +259,8 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 model.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
-                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments
+                                                        // list
             }
         }
     }
@@ -316,6 +325,9 @@ public class providerSystem {
                         List<Appointment> appointmentsForSelectedDate = getAppointmentsForSelectedDateAndProvider(
                                 providerName, selectedDate);
                         updateAppointmentsList(appointmentsForSelectedDate);
+
+                        // Update the appointmentsLabel
+                        updateAppointmentsLabel(selectedDate);
                     }
                 }
             }
@@ -444,10 +456,10 @@ public class providerSystem {
         JButton analyticsButton = new JButton("Analytics");
 
         panel.add(appointmentsButton);
-        //panel.add(prescriptionsButton);
-        //panel.add(referralsButton);
-        //panel.add(messagingButton);
-        //panel.add(analyticsButton);
+        // panel.add(prescriptionsButton);
+        // panel.add(referralsButton);
+        // panel.add(messagingButton);
+        // panel.add(analyticsButton);
 
         // Add action listener to the appointmentsButton
         appointmentsButton.addActionListener(new ActionListener() {

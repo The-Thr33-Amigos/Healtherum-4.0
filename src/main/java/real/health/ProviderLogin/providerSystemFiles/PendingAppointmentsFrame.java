@@ -99,7 +99,7 @@ public class PendingAppointmentsFrame extends JFrame {
 
         // Add action buttons for Accept, Decline, and Reschedule
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton acceptButton = new JButton("Accept");
         JButton declineButton = new JButton("Decline");
         JButton rescheduleButton = new JButton("Reschedule");
