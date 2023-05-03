@@ -88,7 +88,7 @@ public class PendingAppointmentsFrame extends JFrame {
             User patient = providerSystem.getUserById(appointment.getPatientId());
             String patientName = patient.getFirstName() + " " + patient.getLastName();
             tableModel.addRow(
-                    new Object[] { appointment.getTime(), appointment.getDate(), patientName, appointment.getType(),
+                    new Object[] { appointment.getTime(), patientName, appointment.getDate(), appointment.getType(),
                             appointment.getStatus() });
         }
 
