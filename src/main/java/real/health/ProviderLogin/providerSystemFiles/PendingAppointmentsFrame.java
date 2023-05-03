@@ -118,7 +118,7 @@ public class PendingAppointmentsFrame extends JFrame {
                 int selectedRow = pendingAppointmentsTable.getSelectedRow();
                 if (selectedRow >= 0) {
                     String patientId = pendingAppointments.get(selectedRow).getPatientId();
-                    String appointmentDate = (String) pendingAppointmentsTable.getValueAt(selectedRow, 1);
+                    String appointmentDate = (String) pendingAppointmentsTable.getValueAt(selectedRow, 2);
                     String appointmentTime = (String) pendingAppointmentsTable.getValueAt(selectedRow, 0);
                     updateAppointmentStatus(patientId, "ACCEPTED", appointmentDate, appointmentTime);
                     ((DefaultTableModel) pendingAppointmentsTable.getModel()).removeRow(selectedRow);
