@@ -326,10 +326,10 @@ public class VitalsTab {
 
         // Show the "Add" button only for the provider role
         if (userRole == UserRole.PROVIDER) {
-            addDeletePanel.add(addButton);
-            addDeletePanel.add(deleteButton);
-            buttonPanel.add(addDeletePanel);
-            vitalSignsPanel.add(addDeletePanel, BorderLayout.PAGE_END);
+            buttonPanel.add(addButton);
+            buttonPanel.add(deleteButton);
+
+            vitalSignsPanel.add(buttonPanel, BorderLayout.PAGE_END);
         }
 
         return vitalSignsPanel;

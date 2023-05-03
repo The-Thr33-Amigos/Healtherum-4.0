@@ -73,18 +73,10 @@ public class AppointmentsTab {
         });
 
         // Button panel
-        JPanel buttonPanel = new JPanel(new BorderLayout());
-        buttonPanel.add(addAppointmentButton, BorderLayout.WEST);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(addAppointmentButton);
         appointmentsPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        JButton rescheduleButton = new JButton("Reschedule");
-        rescheduleButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                rescheduleAppointment(appointmentsTable, id);
-            }
-        });
-
-        buttonPanel.add(rescheduleButton, BorderLayout.EAST);
         if (user == UserRole.PROVIDER) {
             // Add provider buttons
             JButton acceptButton = new JButton("Accept");
@@ -103,8 +95,16 @@ public class AppointmentsTab {
                 }
             });
 
-            buttonPanel.add(acceptButton, BorderLayout.CENTER);
-            buttonPanel.add(declineButton, BorderLayout.WEST);
+            buttonPanel.add(acceptButton);
+            buttonPanel.add(declineButton);
+            
+            JButton rescheduleButton = new JButton("Reschedule");
+            buttonPanel.add(rescheduleButton);
+            rescheduleButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    rescheduleAppointment(appointmentsTable, id);
+                }
+            });
 
         } else {
             // Add appointment button for patients and doctors

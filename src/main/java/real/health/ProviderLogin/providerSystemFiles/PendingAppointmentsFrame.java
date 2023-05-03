@@ -88,7 +88,7 @@ public class PendingAppointmentsFrame extends JFrame {
             User patient = providerSystem.getUserById(appointment.getPatientId());
             String patientName = patient.getFirstName() + " " + patient.getLastName();
             tableModel.addRow(
-                    new Object[] { appointment.getTime(), appointment.getDate(), patientName, appointment.getType(),
+                    new Object[] { appointment.getTime(), patientName, appointment.getDate(), appointment.getType(),
                             appointment.getStatus() });
         }
 
@@ -99,7 +99,7 @@ public class PendingAppointmentsFrame extends JFrame {
 
         // Add action buttons for Accept, Decline, and Reschedule
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton acceptButton = new JButton("Accept");
         JButton declineButton = new JButton("Decline");
         JButton rescheduleButton = new JButton("Reschedule");
@@ -118,7 +118,7 @@ public class PendingAppointmentsFrame extends JFrame {
                 int selectedRow = pendingAppointmentsTable.getSelectedRow();
                 if (selectedRow >= 0) {
                     String patientId = pendingAppointments.get(selectedRow).getPatientId();
-                    String appointmentDate = (String) pendingAppointmentsTable.getValueAt(selectedRow, 1);
+                    String appointmentDate = (String) pendingAppointmentsTable.getValueAt(selectedRow, 2);
                     String appointmentTime = (String) pendingAppointmentsTable.getValueAt(selectedRow, 0);
                     updateAppointmentStatus(patientId, "ACCEPTED", appointmentDate, appointmentTime);
                     ((DefaultTableModel) pendingAppointmentsTable.getModel()).removeRow(selectedRow);
