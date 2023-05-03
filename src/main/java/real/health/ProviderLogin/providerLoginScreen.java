@@ -18,35 +18,44 @@ public class providerLoginScreen {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titleLabel = new JLabel("Provider Login");
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        panel.add(titleLabel, constraints);
-
         JLabel usernameLabel = new JLabel("Username:");
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         constraints.gridwidth = 1;
         panel.add(usernameLabel, constraints);
 
-        JTextField usernameField = new JTextField(20);
+        JTextField usernameField = new JTextField();
+        usernameField.setPreferredSize(new Dimension(200, 30));
         constraints.gridx = 1;
-        constraints.gridy = 1;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
         panel.add(usernameField, constraints);
 
         JLabel passwordLabel = new JLabel("Password:");
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
         panel.add(passwordLabel, constraints);
 
-        JPasswordField passwordField = new JPasswordField(20);
+        JPasswordField passwordField = new JPasswordField();
+        passwordField.setPreferredSize(new Dimension(200, 30));
         constraints.gridx = 1;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
+        constraints.gridwidth = 2;
         panel.add(passwordField, constraints);
 
         JButton loginButton = new JButton("Login");
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        panel.add(loginButton, constraints);
+
+        JButton cancelButton = new JButton("Cancel");
+        constraints.gridx = 2;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        panel.add(cancelButton, constraints);
+
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
@@ -79,21 +88,13 @@ public class providerLoginScreen {
                 }
             }
         });
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        constraints.gridwidth = 1;
-        panel.add(loginButton, constraints);
 
-        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 providerHomeScreen.homeScreen(UserRole.PROVIDER);
             }
         });
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        panel.add(cancelButton, constraints);
 
         frame.add(panel);
         frame.pack();
