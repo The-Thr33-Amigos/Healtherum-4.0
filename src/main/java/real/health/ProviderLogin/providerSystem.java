@@ -34,6 +34,7 @@ public class providerSystem {
 
     private static JList<Appointment> appointmentsList;
     private static JTable appointmentsTable;
+    static List<Appointment> displayedAppointments = new ArrayList<>();
 
     public static class Appointment {
         private String date;
@@ -149,14 +150,14 @@ public class providerSystem {
         // Create a panel for the navigation buttons and add it to the main panel
         JPanel navigationPanel = new JPanel();
         mainPanel.add(navigationPanel, BorderLayout.PAGE_END);
-        createNavigationButtons(id, navigationPanel, "123");
+        createNavigationButtons(id, navigationPanel, "Davis");
 
         // Add refresh button
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                refreshAppointmentsList(id, "123");
+                refreshAppointmentsList(id, "Davis");
             }
         });
         navigationPanel.add(refreshButton, BorderLayout.PAGE_START);
@@ -164,12 +165,12 @@ public class providerSystem {
         // Create a panel for the appointments list and add it to the main panel
         JPanel appointmentsPanel = new JPanel(new BorderLayout());
         mainPanel.add(appointmentsPanel, BorderLayout.WEST);
-        createAppointmentsList(appointmentsPanel, id, "123");
+        createAppointmentsList(appointmentsPanel, id, "Davis");
 
         // Create a panel for the calendar and add it to the main panel
         JPanel calendarPanel = new JPanel(new BorderLayout());
         mainPanel.add(calendarPanel, BorderLayout.EAST);
-        createCalendar(calendarPanel, id, getAppointments(id, "123", "ACCEPTED"), "123");
+        createCalendar(calendarPanel, id, getAppointments(id, "Davis", "ACCEPTED"), "Davis");
 
         // Create a panel for the patient search and add it to the main panel
         JPanel searchPanel = new JPanel(new BorderLayout());
@@ -210,6 +211,7 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 tableModel.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
             }
         }
 
@@ -225,7 +227,7 @@ public class providerSystem {
                 if (e.getClickCount() == 2) {
                     int selectedRow = appointmentsTable.getSelectedRow();
                     if (selectedRow != -1) {
-                        String patientId = appointments.get(selectedRow).getPatientId();
+                        String patientId = displayedAppointments.get(selectedRow).getPatientId();
                         User patient = getUserById(patientId);
                         viewPatientInfo(patient, UserRole.PROVIDER);
                     }
@@ -235,12 +237,13 @@ public class providerSystem {
     }
 
     public static void refreshAppointmentsList(String id, String providerName) {
-        // Clear the current appointments from the table
+        // Clear the current appointments from the table and displayedAppointments list
         DefaultTableModel model = (DefaultTableModel) appointmentsTable.getModel();
         model.setRowCount(0);
-
+        displayedAppointments.clear(); // Clear the displayedAppointments list
+    
         // Fetch the updated appointments list from the database and add them to the
-        // table
+        // table and displayedAppointments list
         List<Appointment> allAppointments = getAppointments(id, providerName, "ACCEPTED");
         List<Appointment> appointments = filterAppointmentsByDate(allAppointments, new Date());
         for (Appointment appointment : appointments) {
@@ -248,6 +251,7 @@ public class providerSystem {
                 User patient = getUserById(appointment.getPatientId());
                 String patientName = patient.getFirstName() + " " + patient.getLastName();
                 model.addRow(new Object[] { appointment.getTime(), patientName, appointment.getType() });
+                displayedAppointments.add(appointment); // Add the accepted appointment to the displayedAppointments list
             }
         }
     }
@@ -440,10 +444,10 @@ public class providerSystem {
         JButton analyticsButton = new JButton("Analytics");
 
         panel.add(appointmentsButton);
-        panel.add(prescriptionsButton);
-        panel.add(referralsButton);
-        panel.add(messagingButton);
-        panel.add(analyticsButton);
+        //panel.add(prescriptionsButton);
+        //panel.add(referralsButton);
+        //panel.add(messagingButton);
+        //panel.add(analyticsButton);
 
         // Add action listener to the appointmentsButton
         appointmentsButton.addActionListener(new ActionListener() {
