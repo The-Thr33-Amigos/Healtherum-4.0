@@ -11,9 +11,9 @@ public class UserPass {
     private String currentUserName;
     private String currentPassword;
 
-    public static String url = "jdbc:mysql://35.161.231.206:3306/patient";
+    public static String url = ";
     public static String user = "Hunter";
-    public static String password = "H@mmer2525";
+    public static String password = "";
 
     public UserPass(String user, String pass) {
         this.currentUserName = user;
